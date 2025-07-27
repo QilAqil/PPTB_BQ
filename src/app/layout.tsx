@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'PPTB BQ - Custom Auth System',
+  title: 'PPTB BQ',
   description: 'Custom authentication system with role management',
 }
 
