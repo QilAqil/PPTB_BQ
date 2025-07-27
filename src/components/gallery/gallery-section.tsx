@@ -235,12 +235,9 @@ export default function GallerySection() {
             <div className="text-center">
               <Link href="/gallery">
                 <Button size="lg" variant="outline" className="mr-4">
-                  View All Projects
+                  View All Gallery
                 </Button>
               </Link>
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
-                Start Your Project
-              </Button>
             </div>
           </>
         )}
