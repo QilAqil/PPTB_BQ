@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../lib/prisma'
-import { verifyToken } from '../../../../lib/auth'
+import { validateSession } from '../../../../lib/auth'
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,39 +13,30 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Verify JWT token
-    const payload = verifyToken(authToken)
-    if (!payload) {
+    // Validate session
+    const user = await validateSession(authToken)
+    if (!user) {
       return NextResponse.json(
-        { error: 'Invalid token' },
+        { error: 'Invalid or expired session' },
         { status: 401 }
       )
     }
 
-    // Get user from database
-    const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        isActive: true,
-        isVerified: true,
-        lastLoginAt: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    if (!user.isActive) {
+      return NextResponse.json(
+        { error: 'User account is inactive' },
+        { status: 401 }
+      )
+    }
+
+    // Return user data (excluding sensitive fields)
+    return NextResponse.json({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      isActive: user.isActive,
     })
-
-    if (!user || !user.isActive) {
-      return NextResponse.json(
-        { error: 'User not found or inactive' },
-        { status: 401 }
-      )
-    }
-
-    return NextResponse.json(user)
   } catch (error) {
     console.error('Get user error:', error)
     return NextResponse.json(
