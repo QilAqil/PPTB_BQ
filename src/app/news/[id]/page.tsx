@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,12 +25,13 @@ interface News {
 }
 
 interface NewsDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function NewsDetailPage({ params }: NewsDetailPageProps) {
+  const { id } = use(params);
   const [news, setNews] = useState<News | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +41,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`/api/news/${params.id}`);
+        const response = await fetch(`/api/news/${id}`);
         if (!response.ok) {
           if (response.status === 404) {
             notFound();
@@ -57,7 +58,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
     };
 
     fetchNews();
-  }, [params.id]);
+  }, [id]);
 
   // Helper function to calculate read time
   const calculateReadTime = (content: string) => {

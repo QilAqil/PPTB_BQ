@@ -131,25 +131,6 @@ export default function VisionMission() {
             </div>
           </div>
         </div>
-
-        {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold mb-4">
-            Siap Memulai Proyek Anda?
-          </h3>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Mari kita diskusikan bagaimana kami dapat membantu mewujudkan visi digital Anda 
-            dengan solusi teknologi yang tepat dan inovatif.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold">
-              Konsultasi Gratis
-            </button>
-            <button className="px-8 py-3 border border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-semibold">
-              Lihat Portfolio
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   )

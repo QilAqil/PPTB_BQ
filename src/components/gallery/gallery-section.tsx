@@ -173,7 +173,7 @@ export default function GallerySection() {
                     </Card>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                    <DialogTitle className="sr-only">{item.title}</DialogTitle>
+                    <DialogTitle className="sr-only">{item.title || 'Gallery Item'}</DialogTitle>
                     <div className="relative">
                       <div className="absolute top-4 right-4 z-10 flex gap-2">
                         <Button size="icon" variant="secondary" className="bg-white/20 text-white border-white/30">
@@ -225,10 +225,6 @@ export default function GallerySection() {
                         <p className="text-muted-foreground mb-4">
                           {item.description || 'No description available.'}
                         </p>
-                        <div className="flex gap-2">
-                          <Button>View Project</Button>
-                          <Button variant="outline">Learn More</Button>
-                        </div>
                       </div>
                     </div>
                   </DialogContent>

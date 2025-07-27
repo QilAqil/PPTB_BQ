@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, Download, Share2, Loader2, ArrowLeft } from "lucide-react";
@@ -151,7 +150,7 @@ export default function GalleryPage() {
                   </Card>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                  <DialogTitle className="sr-only">{item.title}</DialogTitle>
+                  <DialogTitle className="sr-only">{item.title || 'Gallery Item'}</DialogTitle>
                   <div className="relative">
                     <div className="absolute top-4 right-4 z-10 flex gap-2">
                       <Button size="icon" variant="secondary" className="bg-white/20 text-white border-white/30">
@@ -204,8 +203,7 @@ export default function GalleryPage() {
                         {item.description || 'No description available.'}
                       </p>
                       <div className="flex gap-2">
-                        <Button>View Project</Button>
-                        <Button variant="outline">Learn More</Button>
+                       
                       </div>
                     </div>
                   </div>

@@ -5,11 +5,12 @@ import { verifyToken } from '../../../../lib/auth'
 // GET /api/gallery/[id] - Get single gallery item
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const galleryItem = await prisma.gallery.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         author: {
           select: {
@@ -41,7 +42,7 @@ export async function GET(
 // PUT /api/gallery/[id] - Update gallery item (Admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get auth token from cookie
@@ -93,9 +94,10 @@ export async function PUT(
     const body = await request.json()
     const { title, description, imageUrl, isPublished } = body
 
+    const { id } = await params
     // Check if gallery item exists
     const existingItem = await prisma.gallery.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingItem) {
@@ -107,7 +109,7 @@ export async function PUT(
 
     // Update gallery item
     const updatedItem = await prisma.gallery.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -139,7 +141,7 @@ export async function PUT(
 // DELETE /api/gallery/[id] - Delete gallery item (Admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get auth token from cookie
@@ -188,9 +190,10 @@ export async function DELETE(
       )
     }
 
+    const { id } = await params
     // Check if gallery item exists
     const existingItem = await prisma.gallery.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingItem) {
@@ -202,7 +205,7 @@ export async function DELETE(
 
     // Delete gallery item
     await prisma.gallery.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'Gallery item deleted successfully' })

@@ -5,11 +5,12 @@ import { verifyToken } from '../../../../lib/auth'
 // GET /api/news/[id] - Get single news
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const news = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         author: {
           select: {
@@ -41,9 +42,10 @@ export async function GET(
 // PUT /api/news/[id] - Update news (Admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     // Get auth token from cookie
     const authToken = request.cookies.get('auth-token')?.value
     
@@ -95,7 +97,7 @@ export async function PUT(
 
     // Check if news exists
     const existingNews = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingNews) {
@@ -107,7 +109,7 @@ export async function PUT(
 
     // Update news
     const updatedNews = await prisma.news.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         content,
@@ -139,7 +141,7 @@ export async function PUT(
 // DELETE /api/news/[id] - Delete news (Admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get auth token from cookie
@@ -188,9 +190,10 @@ export async function DELETE(
       )
     }
 
+    const { id } = await params
     // Check if news exists
     const existingNews = await prisma.news.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!existingNews) {
@@ -202,7 +205,7 @@ export async function DELETE(
 
     // Delete news
     await prisma.news.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'News deleted successfully' })

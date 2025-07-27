@@ -5,9 +5,10 @@ import { authenticate, requireAuth, requireAdmin } from '../../../../lib/middlew
 // GET /api/users/[id] - Get user by ID (Admin or self)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authenticatedRequest = await authenticate(request)
     const authError = requireAuth(authenticatedRequest)
     
@@ -17,7 +18,7 @@ export async function GET(
 
     // Check if user is admin or accessing their own data
     const isAdmin = authenticatedRequest.user!.role === 'ADMIN'
-    const isOwnData = authenticatedRequest.user!.id === params.id
+    const isOwnData = authenticatedRequest.user!.id === id
 
     if (!isAdmin && !isOwnData) {
       return NextResponse.json(
@@ -27,7 +28,7 @@ export async function GET(
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         email: true,
@@ -61,9 +62,10 @@ export async function GET(
 // PUT /api/users/[id] - Update user (Admin or self)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const authenticatedRequest = await authenticate(request)
     const authError = requireAuth(authenticatedRequest)
     
@@ -73,7 +75,7 @@ export async function PUT(
 
     // Check if user is admin or updating their own data
     const isAdmin = authenticatedRequest.user!.role === 'ADMIN'
-    const isOwnData = authenticatedRequest.user!.id === params.id
+    const isOwnData = authenticatedRequest.user!.id === id
 
     if (!isAdmin && !isOwnData) {
       return NextResponse.json(
@@ -97,7 +99,7 @@ export async function PUT(
     }
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -140,7 +142,7 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete user (Admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authenticatedRequest = await authenticate(request)
@@ -150,8 +152,9 @@ export async function DELETE(
       return adminError
     }
 
+    const { id } = await params
     // Prevent admin from deleting themselves
-    if (authenticatedRequest.user!.id === params.id) {
+    if (authenticatedRequest.user!.id === id) {
       return NextResponse.json(
         { error: 'Cannot delete your own account' },
         { status: 400 }
@@ -159,7 +162,7 @@ export async function DELETE(
     }
 
     await prisma.user.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json(
