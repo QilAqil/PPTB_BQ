@@ -66,11 +66,6 @@ const Navbar = () => {
                 <Link href="/sign-in">
                   <Button variant="ghost">Sign In</Button>
                 </Link>
-                <Link href="/sign-up">
-                  <Button className="bg-primary text-primary-foreground rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5">
-                    Sign Up
-                  </Button>
-                </Link>
               </>
             )}
             

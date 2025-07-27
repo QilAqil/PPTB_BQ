@@ -6,7 +6,9 @@ import { Button } from '../../components/ui/button'
 import { Badge } from '../../components/ui/badge'
 import UserList from '../../components/users/user-list'
 import CreateUserForm from '../../components/admin/create-user-form'
-import { Users, UserCheck, Shield, Plus, LogOut, AlertTriangle, Lock, User } from 'lucide-react'
+import NewsManagement from '../../components/admin/news-management'
+import GalleryManagement from '../../components/admin/gallery-management'
+import { Users, UserCheck, Shield, Plus, LogOut, AlertTriangle, Lock, User, FileText, Image } from 'lucide-react'
 
 interface User {
   id: string
@@ -24,6 +26,8 @@ interface Stats {
   totalAdmins: number
 }
 
+type TabType = 'users' | 'news' | 'gallery'
+
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null)
   const [stats, setStats] = useState<Stats | null>(null)
@@ -31,6 +35,7 @@ export default function AdminPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [statsLoading, setStatsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<TabType>('users')
   const router = useRouter()
 
   useEffect(() => {
@@ -97,6 +102,45 @@ export default function AdminPage() {
         .then(res => res.json())
         .then(data => setStats(data))
         .catch(err => console.error('Error refreshing stats:', err))
+    }
+  }
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'users':
+        return <UserList />
+      case 'news':
+        return <NewsManagement />
+      case 'gallery':
+        return <GalleryManagement />
+      default:
+        return <UserList />
+    }
+  }
+
+  const getTabTitle = () => {
+    switch (activeTab) {
+      case 'users':
+        return 'User Management'
+      case 'news':
+        return 'News Management'
+      case 'gallery':
+        return 'Gallery Management'
+      default:
+        return 'User Management'
+    }
+  }
+
+  const getTabDescription = () => {
+    switch (activeTab) {
+      case 'users':
+        return 'Manage all users in the system'
+      case 'news':
+        return 'Create and manage news articles'
+      case 'gallery':
+        return 'Manage gallery items and images'
+      default:
+        return 'Manage all users in the system'
     }
   }
 
@@ -323,17 +367,65 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* User Management */}
+          {/* Main Content Area */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow">
+              {/* Tab Navigation */}
+              <div className="border-b border-gray-200">
+                <nav className="flex space-x-8 px-6">
+                  <button
+                    onClick={() => setActiveTab('users')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'users'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      Users
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('news')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'news'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      News
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('gallery')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'gallery'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Image className="h-4 w-4" />
+                      Gallery
+                    </div>
+                  </button>
+                </nav>
+              </div>
+
+              {/* Tab Content Header */}
               <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">User Management</h2>
+                <h2 className="text-xl font-semibold text-gray-900">{getTabTitle()}</h2>
                 <p className="text-sm text-gray-600 mt-1">
-                  Manage all users in the system
+                  {getTabDescription()}
                 </p>
               </div>
+
+              {/* Tab Content */}
               <div className="p-6">
-                <UserList />
+                {renderTabContent()}
               </div>
             </div>
           </div>
