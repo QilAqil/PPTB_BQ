@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ChevronLeft, ChevronRight, Download, Share2, Loader2, ArrowLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Share2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -86,7 +86,7 @@ export default function GalleryPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">Error: {error}</p>
-            <Button onClick={() => window.location.reload()}>Try Again</Button>
+            <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
           </div>
         </div>
       </div>
@@ -98,22 +98,16 @@ export default function GalleryPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Link>
-          <h1 className="text-4xl font-bold mb-4">Gallery</h1>
+          <h1 className="text-4xl font-bold mb-4">Galeri</h1>
           <p className="text-muted-foreground">
-            Explore our latest projects and creative solutions.
+            Jelajahi proyek terbaru dan solusi kreatif kami.
           </p>
         </div>
-
-
 
         {/* Gallery Grid */}
         {gallery.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No published gallery items available yet.</p>
+            <p className="text-muted-foreground">Belum ada item galeri yang dipublikasikan.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -132,7 +126,7 @@ export default function GalleryPage() {
                         />
                       ) : (
                         <div className="w-full h-48 bg-muted flex items-center justify-center">
-                          <span className="text-muted-foreground">No Image</span>
+                          <span className="text-muted-foreground">Tidak Ada Gambar</span>
                         </div>
                       )}
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-center justify-center">
@@ -150,7 +144,7 @@ export default function GalleryPage() {
                   </Card>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                  <DialogTitle className="sr-only">{item.title || 'Gallery Item'}</DialogTitle>
+                  <DialogTitle className="sr-only">{item.title || 'Item Galeri'}</DialogTitle>
                   <div className="relative">
                     <div className="absolute top-4 right-4 z-10 flex gap-2">
                       <Button size="icon" variant="secondary" className="bg-white/20 text-white border-white/30">
@@ -172,7 +166,7 @@ export default function GalleryPage() {
                         />
                       ) : (
                         <div className="w-full h-96 bg-muted flex items-center justify-center">
-                          <span className="text-muted-foreground">No Image</span>
+                          <span className="text-muted-foreground">Tidak Ada Gambar</span>
                         </div>
                       )}
                       
@@ -196,11 +190,11 @@ export default function GalleryPage() {
                     </div>
                     
                     <div className="p-6">
-                                              <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-2xl font-bold">{item.title}</h3>
-                        </div>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-2xl font-bold">{item.title}</h3>
+                      </div>
                       <p className="text-muted-foreground mb-4">
-                        {item.description || 'No description available.'}
+                        {item.description || 'Tidak ada deskripsi yang tersedia.'}
                       </p>
                       <div className="flex gap-2">
                        

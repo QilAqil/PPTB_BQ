@@ -53,7 +53,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="h-16 bg-background border-b">
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-sm border-b z-50">
         <div className="h-full flex items-center justify-between max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
           <Logo />
 
@@ -64,20 +64,18 @@ const Navbar = () => {
             {!loading && !user && (
               <>
                 <Link href="/sign-in">
-                  <Button variant="ghost">Sign In</Button>
+                  <Button variant="ghost">Masuk</Button>
                 </Link>
               </>
             )}
             
             {!loading && user && (
               <>
-                {user.role === 'ADMIN' && (
-                  <Link href="/admin">
-                    <Button variant="outline" className="hidden sm:inline-flex">
-                      Admin
-                    </Button>
-                  </Link>
-                )}
+                <Link href="/dashboard">
+                  <Button variant="outline" className="hidden sm:inline-flex">
+                    Dashboard
+                  </Button>
+                </Link>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground hidden sm:block">
                     {user.name || user.email}
@@ -88,7 +86,7 @@ const Navbar = () => {
                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    Logout
+                    Keluar
                   </Button>
                 </div>
               </>
@@ -108,10 +106,10 @@ const Navbar = () => {
           <div className="bg-white rounded-lg p-6 max-w-md mx-4">
             <div className="flex items-center gap-3 mb-4">
               <AlertTriangle className="h-6 w-6 text-yellow-500" />
-              <h3 className="text-lg font-semibold text-gray-900">Confirm Logout</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Konfirmasi Keluar</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to logout? You will need to login again to access your account.
+              Apakah Anda yakin ingin keluar? Anda perlu masuk kembali untuk mengakses akun Anda.
             </p>
             <div className="flex gap-3">
               <Button
@@ -119,14 +117,14 @@ const Navbar = () => {
                 onClick={() => setShowLogoutConfirm(false)}
                 className="flex-1"
               >
-                Cancel
+                Batal
               </Button>
               <Button
                 onClick={handleLogout}
                 className="flex-1 bg-red-600 hover:bg-red-700"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                Keluar
               </Button>
             </div>
           </div>
