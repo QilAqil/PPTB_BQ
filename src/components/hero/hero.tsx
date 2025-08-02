@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CirclePlay, Phone, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Phone, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -34,13 +34,6 @@ const Hero = () => {
                 Admisi / Pendaftaran <ArrowUpRight className="h-5 w-5 ml-2" />
             </Button>
             </Link>
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full text-base shadow-none border-white text-white hover:bg-white hover:text-teal-600"
-            >
-              <CirclePlay className="h-5 w-5 mr-2" /> Lihat Video
-            </Button>
           </div>
         </div>
 
@@ -117,11 +110,11 @@ const Hero = () => {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 text-white text-sm">
               <MessageCircle className="h-4 w-4" />
-              <span>0813-2424-7010</span>
+              <span>0852-2055-8881</span>
             </div>
             <div className="flex items-center gap-2 text-white text-sm">
               <Phone className="h-4 w-4" />
-              <span>0813-2424-7010</span>
+              <span>0852-2972-2907</span>
             </div>
           </div>
         </div>
