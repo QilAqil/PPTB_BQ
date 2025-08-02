@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, User, ArrowRight, Loader2, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, User, ArrowRight, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -87,7 +87,7 @@ export default function NewsPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">Error: {error}</p>
-            <Button onClick={() => window.location.reload()}>Try Again</Button>
+            <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
           </div>
         </div>
       </div>
@@ -99,20 +99,16 @@ export default function NewsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </Link>
-          <h1 className="text-4xl font-bold mb-4">All News</h1>
+          <h1 className="text-4xl font-bold mb-4">Semua Berita</h1>
           <p className="text-muted-foreground">
-            Stay updated with our latest news, insights, and announcements.
+            Dapatkan informasi terbaru tentang berita, wawasan, dan pengumuman kami.
           </p>
         </div>
 
         {/* News Grid */}
         {news.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No published news available yet.</p>
+            <p className="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -129,11 +125,11 @@ export default function NewsPage() {
                     />
                   ) : (
                     <div className="w-full h-48 bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground">No Image</span>
+                      <span className="text-muted-foreground">Tidak Ada Gambar</span>
                     </div>
                   )}
                   <Badge className="absolute top-3 left-3">
-                    News
+                    Berita
                   </Badge>
                 </div>
                 <CardHeader className="pb-3">
@@ -160,14 +156,14 @@ export default function NewsPage() {
                       <Calendar className="h-4 w-4" />
                       <span>
                         {newsItem.publishedAt 
-                          ? new Date(newsItem.publishedAt).toLocaleDateString()
-                          : new Date(newsItem.createdAt).toLocaleDateString()
+                          ? new Date(newsItem.publishedAt).toLocaleDateString('id-ID')
+                          : new Date(newsItem.createdAt).toLocaleDateString('id-ID')
                         }
                       </span>
                     </div>
                     <Link href={`/news/${newsItem.id}`}>
                       <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground">
-                        Read More
+                        Baca Selengkapnya
                         <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>

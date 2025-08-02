@@ -41,27 +41,27 @@ export const NavMenu = (props: NavigationMenuProps) => {
       <NavigationMenuList className="gap-6 space-x-0 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start">
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/">Home</Link>
+            <Link href="/">Beranda</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/news">News</Link>
+            <Link href="/news">Berita</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/gallery">Gallery</Link>
+            <Link href="/gallery">Galeri</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="#">About</Link>
+            <Link href="#">Tentang</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="#">Contact Us</Link>
+            <Link href="/contact">Kontak</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         {user && user.role === 'ADMIN' && (

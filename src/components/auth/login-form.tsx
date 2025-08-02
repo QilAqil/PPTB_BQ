@@ -76,8 +76,11 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
       // Redirect based on role
       if (data.user.role === 'ADMIN') {
         router.push('/admin')
+      } else if (data.user.role === 'USER') {
+        router.push('/user')
       } else {
-        router.push('/admin')
+        // Default redirect to home page
+        router.push('/')
       }
     } catch (error) {
       console.error('Login error:', error)

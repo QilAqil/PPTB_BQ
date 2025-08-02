@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const protectedRoutes = [
   '/admin',
+  '/user',
   '/users',
 ]
 
 const adminRoutes = [
   '/admin',
   '/users',
+]
+
+const userRoutes = [
+  '/user',
 ]
 
 export async function middleware(request: NextRequest) {

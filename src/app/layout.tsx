@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import Navbar from '@/components/navbar/navbar'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'PPTB BQ',
-  description: 'Custom authentication system with role management',
+  title: 'PPTB BAROKATUL QUR\'AN',
+  description: 'Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR\'AN',
 }
 
 export default function RootLayout({
@@ -23,9 +24,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="id" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
+        <Navbar />
+        <main className="pt-16">
+          {children}
+        </main>
       </body>
     </html>
   )
