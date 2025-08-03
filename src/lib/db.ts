@@ -44,7 +44,7 @@ export const userOperations = {
   },
 
   // Create user
-  create: async (data: { email: string; name?: string }) => {
+  create: async (data: { email: string; name?: string; password: string }) => {
     return await prisma.user.create({
       data,
       select: {
