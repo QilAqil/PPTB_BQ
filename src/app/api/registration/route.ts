@@ -1,10 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const limit = searchParams.get('limit');
+    const page = searchParams.get('page');
+
+    const where: Record<string, unknown> = {};
+    
+    if (status && status !== 'ALL') {
+      where.status = status;
+    }
+
+    const take = limit ? parseInt(limit) : 10;
+    const skip = page ? (parseInt(page) - 1) * take : 0;
+
+    const registrations = await prisma.registration.findMany({
+      where,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take,
+      skip,
+    });
+
+    const total = await prisma.registration.count({ where });
+
+    return NextResponse.json({
+      data: registrations,
+      pagination: {
+        total,
+        page: page ? parseInt(page) : 1,
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching registrations:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
     const {
       fullName,
       nik,
@@ -22,60 +68,35 @@ export async function POST(request: NextRequest) {
       graduationYear,
       motivation,
       healthCondition,
-      specialNeeds
+      specialNeeds,
     } = body;
 
-    // Validasi data wajib
-    if (!fullName || !nik || !birthPlace || !birthDate || !gender || 
-        !address || !phoneNumber || !parentName || !parentPhone || 
-        !parentAddress || !educationLevel || !schoolName || !schoolAddress || !motivation) {
+    // Validate required fields
+    if (!fullName || !nik || !birthPlace || !birthDate || !gender || !address || !phoneNumber || !parentName || !parentPhone || !parentAddress || !educationLevel || !schoolName || !schoolAddress || !motivation) {
       return NextResponse.json(
-        { error: 'Semua field wajib diisi kecuali tahun lulus, kondisi kesehatan, dan kebutuhan khusus' },
+        { error: 'All required fields are required' },
         { status: 400 }
       );
     }
 
-    // Validasi format tanggal
-    const parsedBirthDate = new Date(birthDate);
-    if (isNaN(parsedBirthDate.getTime())) {
+    // Check if NIK already exists
+    const existingRegistration = await prisma.registration.findFirst({
+      where: { nik },
+    });
+
+    if (existingRegistration) {
       return NextResponse.json(
-        { error: 'Format tanggal lahir tidak valid' },
+        { error: 'NIK already registered' },
         { status: 400 }
       );
     }
 
-    // Validasi NIK (16 digit angka)
-    const nikRegex = /^\d{16}$/;
-    if (!nikRegex.test(nik)) {
-      return NextResponse.json(
-        { error: 'NIK harus berupa 16 digit angka' },
-        { status: 400 }
-      );
-    }
-
-    // Validasi nomor telepon
-    const phoneRegex = /^(\+62|62|0)8[1-9][0-9]{6,9}$/;
-    if (!phoneRegex.test(phoneNumber)) {
-      return NextResponse.json(
-        { error: 'Format nomor telepon tidak valid' },
-        { status: 400 }
-      );
-    }
-
-    if (!phoneRegex.test(parentPhone)) {
-      return NextResponse.json(
-        { error: 'Format nomor telepon orang tua tidak valid' },
-        { status: 400 }
-      );
-    }
-
-    // Buat pendaftaran baru
     const registration = await prisma.registration.create({
       data: {
         fullName,
         nik,
         birthPlace,
-        birthDate: parsedBirthDate,
+        birthDate: new Date(birthDate),
         gender,
         address,
         phoneNumber,
@@ -87,89 +108,17 @@ export async function POST(request: NextRequest) {
         schoolAddress,
         graduationYear: graduationYear ? parseInt(graduationYear) : null,
         motivation,
-        healthCondition: healthCondition || null,
-        specialNeeds: specialNeeds || null,
+        healthCondition,
+        specialNeeds,
         status: 'PENDING',
-        processedBy: null,
-        processedAt: null
-      }
+      },
     });
 
-    return NextResponse.json({
-      message: 'Pendaftaran berhasil dikirim! Kami akan menghubungi Anda segera.',
-      registrationId: registration.id
-    }, { status: 201 });
-
+    return NextResponse.json(registration, { status: 201 });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Error creating registration:', error);
     return NextResponse.json(
-      { error: 'Terjadi kesalahan saat memproses pendaftaran' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const search = searchParams.get('search') || '';
-
-    const skip = (page - 1) * limit;
-
-    // Build where clause
-    const where: any = {};
-    
-    if (status && status !== 'ALL') {
-      where.status = status;
-    }
-
-    if (search) {
-      where.OR = [
-        { fullName: { contains: search, mode: 'insensitive' } },
-        { nik: { contains: search, mode: 'insensitive' } },
-        { parentName: { contains: search, mode: 'insensitive' } },
-        { phoneNumber: { contains: search, mode: 'insensitive' } }
-      ];
-    }
-
-    // Get registrations with pagination
-    const [registrations, total] = await Promise.all([
-      prisma.registration.findMany({
-        where,
-        include: {
-          processedByUser: {
-            select: {
-              name: true,
-              email: true
-            }
-          }
-        },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit
-      }),
-      prisma.registration.count({ where })
-    ]);
-
-    const totalPages = Math.ceil(total / limit);
-
-    return NextResponse.json({
-      registrations,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
-    });
-
-  } catch (error) {
-    console.error('Get registrations error:', error);
-    return NextResponse.json(
-      { error: 'Terjadi kesalahan saat mengambil data pendaftaran' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

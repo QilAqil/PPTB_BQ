@@ -1,135 +1,146 @@
-import { Separator } from "@/components/ui/separator";
-import { Mail, Phone, MapPin } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import Image from "next/image"
+import Link from "next/link"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock,
+  ArrowRight
+} from "lucide-react"
 
-const Footer = () => {
+export function Footer() {
   return (
-    <footer className="bg-muted">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Section - Logo and Contact Information */}
-            <div className="md:col-span-1">
-          {/* Logo */}
-              <div className="mb-4">
-                <Image
-                  src="/l.svg"
-                  alt="PPTB BAROKATUL QUR'AN Logo"
-                  width={124}
-                  height={32}
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              <p className="text-muted-foreground mb-4 font-semibold">
-                Pondok Pesantren Tahfidz & Bahasa<br />
-                "BAROKATUL QUR'AN"
-              </p>
-              
-              {/* Contact Information */}
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span>Jl. Bawah, RT.05/RW.11, Munggang, Kalibeber, Kec. Mojotengah, Kabupaten Wonosobo, Jawa Tengah 56351</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
-                  <span>Telp: 0852-2055-8881</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
-                  <span>Fax: 0852-2972-2907</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <span>Email: ponpestahfidzbarokatulquran@gmail.com</span>
-                </div>
-              </div>
-              
-
+    <footer className="bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/l.svg"
+                alt="PPTB BAROKATUL QUR'AN Logo"
+                width={124}
+                height={32}
+                className="h-8 w-auto"
+              />
             </div>
+            <p className="text-muted-foreground mb-4 font-semibold">
+              Pondok Pesantren Tahfidz & Bahasa<br />
+              &quot;BAROKATUL QUR&apos;AN&quot;
+            </p>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Membentuk Generasi Qur&apos;ani yang Unggul dalam Tahfidz dan Bahasa. 
+              Berkomitmen memberikan pendidikan berkualitas yang mengintegrasikan 
+              tahfidz Al-Qur&apos;an dengan pembelajaran bahasa Arab dan Inggris.
+            </p>
+          </div>
 
-            {/* Right Section - Google Maps */}
-            <div className="md:col-span-1">
-              <Link 
-                href="https://maps.app.goo.gl/yVd1SJhdH1zSBhiG7" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block w-full h-48 bg-muted border border-border rounded-lg overflow-hidden hover:border-foreground/20 transition-colors group"
-              >
-                <div className="relative w-full h-full">
-                  {/* Map Image - Static map representation */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200">
-                    {/* Map grid pattern */}
-                    <div className="absolute inset-0 opacity-20">
-                      <div className="w-full h-full" style={{
-                        backgroundImage: `
-                          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
-                        `,
-                        backgroundSize: '20px 20px'
-                      }}></div>
-                    </div>
-                    
-                    {/* Location marker */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <div className="relative">
-                        <div className="w-8 h-8 bg-red-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full"></div>
-                        </div>
-                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded text-xs font-medium shadow-sm whitespace-nowrap">
-                          PPTB BAROKATUL QUR'AN
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Map features */}
-                    <div className="absolute top-4 left-4">
-                      <div className="w-16 h-2 bg-gray-300 rounded"></div>
-                    </div>
-                    <div className="absolute top-8 left-4">
-                      <div className="w-12 h-2 bg-gray-300 rounded"></div>
-                    </div>
-                    <div className="absolute bottom-8 right-4">
-                      <div className="w-20 h-2 bg-gray-300 rounded"></div>
-                    </div>
-                    <div className="absolute bottom-12 right-4">
-                      <div className="w-14 h-2 bg-gray-300 rounded"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Overlay with location info */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3">
-                    <div className="text-white">
-                      <p className="text-sm font-medium">Lihat di Google Maps</p>
-                      <p className="text-xs opacity-90">MWF3+8XP, Jl. Bawah, RT.05/RW.11, Munggang, Kalibeber, Kec. Mojotengah, Kabupaten Wonosobo, Jawa Tengah</p>
-                    </div>
-                  </div>
-                  
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 bg-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    <div className="bg-white/95 rounded-lg px-4 py-2 text-center shadow-lg">
-                      <p className="text-sm font-medium text-blue-700">Buka di Google Maps</p>
-                    </div>
-                  </div>
+          {/* Contact Info */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Informasi Kontak</h3>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-teal-400 mt-0.5" />
+                <div>
+                  <p className="text-sm text-gray-300">
+                    Jl. Raya Pondok Pesantren No. 123<br />
+                    Kecamatan, Kabupaten, Provinsi
+                  </p>
                 </div>
-            </Link>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-teal-400" />
+                <span className="text-sm text-gray-300">+62 852-2055-8881</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-teal-400" />
+                <span className="text-sm text-gray-300">info@pptb-bq.ac.id</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Clock className="h-5 w-5 text-teal-400" />
+                <span className="text-sm text-gray-300">Senin - Jumat: 08:00 - 16:00</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Tautan Cepat</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  Beranda
+                </Link>
+              </li>
+              <li>
+                <Link href="/news" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  Berita
+                </Link>
+              </li>
+              <li>
+                <a href="/gallery" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  Galeri
+                </a>
+              </li>
+              <li>
+                <a href="/registration" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  Pendaftaran
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="text-sm text-gray-300 hover:text-white transition-colors">
+                  Tentang Kami
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Newsletter</h3>
+            <p className="text-sm text-gray-400">
+              Dapatkan informasi terbaru tentang kegiatan dan program kami.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm text-gray-300">
+                Email
+              </Label>
+              <div className="flex space-x-2">
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Masukkan email Anda"
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
+                />
+                <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-        
-        <Separator />
-        
-        {/* Copyright */}
-        <div className="py-6 text-center">
-          <span className="text-sm text-muted-foreground">
-            Copyright © {new Date().getFullYear()} PPTB BAROKATUL QUR'AN | Developed by Sa'id Aqil
-          </span>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-sm text-gray-400">
+              © 2024 PPTB BAROKATUL QUR&apos;AN. Semua hak dilindungi.
+            </p>
+            <div className="flex space-x-6">
+              <a href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
+                Kebijakan Privasi
+              </a>
+              <a href="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
+                Syarat & Ketentuan
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
-  );
-};
-
-export default Footer;
+  )
+}

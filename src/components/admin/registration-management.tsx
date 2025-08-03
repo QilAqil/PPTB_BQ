@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Search, 
@@ -109,9 +109,14 @@ export default function RegistrationManagement() {
         throw new Error('Gagal mengambil data pendaftaran');
       }
 
-      const data = await response.json();
-      setRegistrations(data.registrations);
-      setPagination(data.pagination);
+      const result = await response.json();
+      setRegistrations(result.data || result || []);
+      setPagination(result.pagination || {
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
     } finally {
@@ -272,12 +277,16 @@ export default function RegistrationManagement() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="ALL">Semua Status</option>
-              <option value="PENDING">Menunggu</option>
-              <option value="APPROVED">Disetujui</option>
-              <option value="REJECTED">Ditolak</option>
-            </Select>
+                         <select 
+                           value={statusFilter} 
+                           onChange={(e) => setStatusFilter(e.target.value)}
+                           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                         >
+                           <option value="ALL">Semua Status</option>
+                           <option value="PENDING">Menunggu</option>
+                           <option value="APPROVED">Disetujui</option>
+                           <option value="REJECTED">Ditolak</option>
+                         </select>
             <Button onClick={fetchRegistrations} variant="outline">
               Refresh
             </Button>

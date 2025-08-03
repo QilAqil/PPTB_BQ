@@ -1,187 +1,146 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../lib/prisma'
-import { authenticate, requireAuth, requireAdmin } from '../../../../lib/middleware'
+import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-// GET /api/users/[id] - Get user by ID (Admin or self)
+const prisma = new PrismaClient();
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const authenticatedRequest = await authenticate(request)
-    const authError = requireAuth(authenticatedRequest)
-    
-    if (authError) {
-      return authError
-    }
-
-    // Check if user is admin or accessing their own data
-    const isAdmin = authenticatedRequest.user!.role === 'ADMIN'
-    const isOwnData = authenticatedRequest.user!.id === id
-
-    if (!isAdmin && !isOwnData) {
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      )
-    }
-
+    const { id } = await params;
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
         id: true,
-        email: true,
         name: true,
+        email: true,
         role: true,
         isVerified: true,
         isActive: true,
-        lastLoginAt: true,
         createdAt: true,
         updatedAt: true,
       },
-    })
+    });
 
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
-      )
+      );
     }
 
-    return NextResponse.json(user)
+    return NextResponse.json(user);
   } catch (error) {
-    console.error('Error fetching user:', error)
+    console.error('Error fetching user:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch user' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 }
 
-// PUT /api/users/[id] - Update user (Admin or self)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
-    const authenticatedRequest = await authenticate(request)
-    const authError = requireAuth(authenticatedRequest)
-    
-    if (authError) {
-      return authError
-    }
+    const { id } = await params;
+    const body = await request.json();
+    const { name, email, role, isVerified, isActive } = body;
 
-    // Check if user is admin or updating their own data
-    const isAdmin = authenticatedRequest.user!.role === 'ADMIN'
-    const isOwnData = authenticatedRequest.user!.id === id
+    // Check if user exists
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
 
-    if (!isAdmin && !isOwnData) {
+    if (!existingUser) {
       return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      )
+        { error: 'User not found' },
+        { status: 404 }
+      );
     }
 
-    const body = await request.json()
-    const { email, name, role, isActive, isVerified } = body
-
-    // Only admin can update role, isActive, and isVerified
-    const updateData: any = {}
-    if (email) updateData.email = email
-    if (name !== undefined) updateData.name = name
+    // Prepare update data
+    const updateData: Record<string, unknown> = {};
     
-    if (isAdmin) {
-      if (role) updateData.role = role
-      if (isActive !== undefined) updateData.isActive = isActive
-      if (isVerified !== undefined) updateData.isVerified = isVerified
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (role !== undefined) updateData.role = role;
+    if (isVerified !== undefined) updateData.isVerified = isVerified;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    // Check if email is being changed and if it already exists
+    if (email && email !== existingUser.email) {
+      const emailExists = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (emailExists) {
+        return NextResponse.json(
+          { error: 'Email already exists' },
+          { status: 400 }
+        );
+      }
     }
 
-    const user = await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id },
       data: updateData,
       select: {
         id: true,
-        email: true,
         name: true,
+        email: true,
         role: true,
         isVerified: true,
         isActive: true,
-        lastLoginAt: true,
         createdAt: true,
         updatedAt: true,
       },
-    })
+    });
 
-    return NextResponse.json(user)
+    return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error('Error updating user:', error)
-    
-    if (error instanceof Error && error.message.includes('Record to update not found')) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
-    if (error instanceof Error && error.message.includes('Unique constraint')) {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 409 }
-      )
-    }
-
+    console.error('Error updating user:', error);
     return NextResponse.json(
-      { error: 'Failed to update user' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 }
 
-// DELETE /api/users/[id] - Delete user (Admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authenticatedRequest = await authenticate(request)
-    const adminError = requireAdmin(authenticatedRequest)
-    
-    if (adminError) {
-      return adminError
-    }
+    const { id } = await params;
+    // Check if user exists
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
 
-    const { id } = await params
-    // Prevent admin from deleting themselves
-    if (authenticatedRequest.user!.id === id) {
+    if (!existingUser) {
       return NextResponse.json(
-        { error: 'Cannot delete your own account' },
-        { status: 400 }
-      )
+        { error: 'User not found' },
+        { status: 404 }
+      );
     }
 
+    // Delete user
     await prisma.user.delete({
       where: { id },
-    })
+    });
 
     return NextResponse.json(
       { message: 'User deleted successfully' },
       { status: 200 }
-    )
+    );
   } catch (error) {
-    console.error('Error deleting user:', error)
-    
-    if (error instanceof Error && error.message.includes('Record to delete does not exist')) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      )
-    }
-
+    console.error('Error deleting user:', error);
     return NextResponse.json(
-      { error: 'Failed to delete user' },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 } 

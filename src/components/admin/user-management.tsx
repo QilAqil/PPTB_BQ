@@ -80,8 +80,8 @@ export default function UserManagement() {
       setLoading(true);
       const response = await fetch('/api/users');
       if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users || data || []);
+        const result = await response.json();
+        setUsers(result.data || result || []);
       } else if (response.status === 403) {
         console.error('Access denied: Admin privileges required');
         // Show access denied message

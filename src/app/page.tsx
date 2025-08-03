@@ -1,17 +1,17 @@
-import Hero from "@/components/hero/hero";
-import VisionMission from "@/components/vision-mission/vision-mission";
-import Footer from "@/components/footer/footer";
-import NewsSection from "@/components/news/news-section";
-import GallerySection from "@/components/gallery/gallery-section";
+import { Hero } from "@/components/hero/hero"
+import { VisionMission } from "@/components/vision-mission/vision-mission"
+import NewsSection from "@/components/news/news-section"
+import GallerySection from "@/components/gallery/gallery-section"
+import { Footer } from "@/components/footer/footer"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <main>
       <Hero />
       <VisionMission />
       <NewsSection />
       <GallerySection />
       <Footer />
-    </div>
-  );
+    </main>
+  )
 }

@@ -6,14 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CheckCircle, AlertCircle, Loader2, Check, FileText, User, Shield, ArrowRight } from "lucide-react";
+
+import { CheckCircle, AlertCircle, Loader2, Check, FileText, User, Shield } from "lucide-react";
 import Link from "next/link";
 
 export default function RegistrationPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [showRequirements, setShowRequirements] = useState(true);
   const [hasSeenRequirements, setHasSeenRequirements] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -159,7 +160,7 @@ export default function RegistrationPage() {
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">Pendaftaran Santri Baru</h1>
             <p className="text-muted-foreground text-lg">
-              Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN
+              Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR&apos;AN
             </p>
           </div>
 
@@ -326,7 +327,7 @@ export default function RegistrationPage() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">Form Pendaftaran Santri</h1>
           <p className="text-muted-foreground text-lg">
-            Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN
+            Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR&apos;AN
           </p>
         </div>
 
@@ -396,15 +397,17 @@ export default function RegistrationPage() {
                   
                   <div>
                     <Label htmlFor="gender">Jenis Kelamin *</Label>
-                    <Select 
+                    <select 
+                      id="gender"
                       value={formData.gender} 
                       onChange={(e) => handleInputChange('gender', e.target.value)}
                       required
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Pilih jenis kelamin</option>
                       <option value="Laki-laki">Laki-laki</option>
                       <option value="Perempuan">Perempuan</option>
-                    </Select>
+                    </select>
                   </div>
                 </div>
                 
@@ -479,10 +482,12 @@ export default function RegistrationPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="educationLevel">Tingkat Pendidikan *</Label>
-                    <Select 
+                    <select 
+                      id="educationLevel"
                       value={formData.educationLevel} 
                       onChange={(e) => handleInputChange('educationLevel', e.target.value)}
                       required
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Pilih tingkat pendidikan</option>
                       <option value="SD">SD</option>
@@ -491,7 +496,7 @@ export default function RegistrationPage() {
                       <option value="SMK">SMK</option>
                       <option value="MA">MA</option>
                       <option value="Perguruan Tinggi">Perguruan Tinggi</option>
-                    </Select>
+                    </select>
                   </div>
                   
                   <div>

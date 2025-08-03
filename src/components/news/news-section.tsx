@@ -34,12 +34,14 @@ export default function NewsSection() {
         setLoading(true);
         setError(null);
         // Add cache-busting parameter to ensure fresh data
-        const response = await fetch(`/api/news?published=true&limit=4&t=${Date.now()}`);
+        const response = await fetch(`/api/news?published=true&limit=8&t=${Date.now()}`);
         if (!response.ok) {
           throw new Error('Failed to fetch news');
         }
-        const data = await response.json();
-        setNews(data);
+        const result = await response.json();
+        // Handle new API response format with data and pagination
+        const newsData = result.data || result;
+        setNews(Array.isArray(newsData) ? newsData : []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch news');
       } finally {
@@ -134,20 +136,20 @@ export default function NewsSection() {
           </p>
         </div>
 
-        {news.length === 0 ? (
+        {!Array.isArray(news) || news.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No published news available yet.</p>
           </div>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {news.map((newsItem) => (
-                <Card key={newsItem.id} className="group hover:shadow-lg transition-all duration-300">
-                  <div className="relative overflow-hidden rounded-t-lg">
-                    {newsItem.imageUrl ? (
+              {news.map((item) => (
+                <Card key={item.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+                  <div className="relative overflow-hidden">
+                    {item.imageUrl ? (
                       <Image
-                        src={newsItem.imageUrl}
-                        alt={newsItem.title}
+                        src={item.imageUrl}
+                        alt={item.title}
                         width={400}
                         height={250}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -157,45 +159,47 @@ export default function NewsSection() {
                         <span className="text-muted-foreground">No Image</span>
                       </div>
                     )}
-                    <Badge className="absolute top-3 left-3">
-                      News
-                    </Badge>
+                    <div className="absolute top-4 left-4">
+                      <Badge variant="secondary">News</Badge>
+                    </div>
                   </div>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">
-                      {newsItem.title}
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-sm text-muted-foreground">
+                        {item.publishedAt 
+                          ? new Date(item.publishedAt).toLocaleDateString()
+                          : new Date(item.createdAt).toLocaleDateString()
+                        }
+                      </span>
+                    </div>
+                    <CardTitle className="text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                      {item.title}
                     </CardTitle>
-                    <CardDescription className="line-clamp-2">
-                      {truncateContent(newsItem.content)}
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground border-b pb-4">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4" />
-                        <span>{newsItem.author.name}</span>
+                        <span className="truncate">By {item.author.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4" />
-                        <span>{calculateReadTime(newsItem.content)}</span>
+                        <span>{calculateReadTime(item.content)}</span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        <span>
-                          {newsItem.publishedAt 
-                            ? new Date(newsItem.publishedAt).toLocaleDateString()
-                            : new Date(newsItem.createdAt).toLocaleDateString()
-                          }
-                        </span>
-                      </div>
-                                          <Link href={`/news/${newsItem.id}`}>
-                      <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground">
-                        Read More
-                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
+
+                    <CardDescription className="text-sm leading-relaxed line-clamp-3">
+                      {truncateContent(item.content, 100)}
+                    </CardDescription>
+
+                    <div className="flex items-center justify-between pt-4">
+                      <Link href={`/news/${item.id}`}>
+                        <Button variant="outline" size="sm">
+                          Read More
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
@@ -204,9 +208,8 @@ export default function NewsSection() {
 
             <div className="text-center">
               <Link href="/news">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button size="lg" variant="outline" className="mr-4">
                   View All News
-                  <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </Link>
             </div>

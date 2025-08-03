@@ -63,8 +63,8 @@ export default function UserList() {
         throw new Error(errorData.error || 'Failed to fetch users')
       }
       
-      const data = await response.json()
-      setUsers(data)
+      const result = await response.json()
+      setUsers(result.data || result)
     } catch (err) {
       console.error('Error fetching users:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')

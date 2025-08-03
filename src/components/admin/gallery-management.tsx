@@ -123,8 +123,8 @@ export default function GalleryManagement() {
       if (!response.ok) {
         throw new Error('Failed to fetch gallery')
       }
-      const data = await response.json()
-      setGallery(data)
+      const result = await response.json()
+      setGallery(result.data || result)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch gallery')
     } finally {

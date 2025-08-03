@@ -4,10 +4,10 @@ import { validateSession } from '@/lib/auth';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     console.log('PATCH request for registration ID:', id);
     
     // Check authentication
@@ -99,14 +99,14 @@ export async function PATCH(
     console.error('Update registration error:', error);
     
     // Handle specific Prisma errors
-    if (error.code === 'P2025') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
       return NextResponse.json(
         { error: 'Pendaftaran tidak ditemukan' },
         { status: 404 }
       );
     }
     
-    if (error.code === 'P2002') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
       return NextResponse.json(
         { error: 'Data duplikat ditemukan' },
         { status: 400 }
@@ -114,7 +114,7 @@ export async function PATCH(
     }
     
     return NextResponse.json(
-      { error: `Terjadi kesalahan saat mengupdate pendaftaran: ${error.message}` },
+      { error: `Terjadi kesalahan saat mengupdate pendaftaran: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
@@ -122,10 +122,10 @@ export async function PATCH(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const registration = await prisma.registration.findUnique({
       where: { id },

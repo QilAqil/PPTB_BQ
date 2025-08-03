@@ -9,7 +9,6 @@ import {
   FileText, 
   Calendar, 
   Phone, 
-  Mail, 
   MapPin, 
   Shield, 
   Loader2,
@@ -24,7 +23,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 interface UserProfile {
   id: string;
@@ -64,7 +63,7 @@ interface UserRegistration {
 export default function UserPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userRegistrations, setUserRegistrations] = useState<UserRegistration[]>([]);
-  const [loading, setLoading] = useState(true);
+
   const [profileLoading, setProfileLoading] = useState(true);
   const [registrationsLoading, setRegistrationsLoading] = useState(true);
   
@@ -325,7 +324,7 @@ export default function UserPage() {
               <div>
                 <h1 className="text-3xl font-bold mb-2">Dashboard Pengguna</h1>
                 <p className="text-muted-foreground">
-                  Selamat datang di panel pengguna PPTB BAROKATUL QUR'AN
+                  Selamat datang di panel pengguna PPTB BAROKATUL QUR&apos;AN
                 </p>
               </div>
 
@@ -609,15 +608,17 @@ export default function UserPage() {
                         
                         <div>
                           <Label htmlFor="gender">Jenis Kelamin *</Label>
-                          <Select 
+                          <select 
+                            id="gender"
                             value={formData.gender} 
                             onChange={(e) => handleInputChange('gender', e.target.value)}
                             required
+                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                             <option value="">Pilih jenis kelamin</option>
                             <option value="Laki-laki">Laki-laki</option>
                             <option value="Perempuan">Perempuan</option>
-                          </Select>
+                          </select>
                         </div>
                       </div>
                       
@@ -692,10 +693,12 @@ export default function UserPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="educationLevel">Tingkat Pendidikan *</Label>
-                          <Select 
+                          <select 
+                            id="educationLevel"
                             value={formData.educationLevel} 
                             onChange={(e) => handleInputChange('educationLevel', e.target.value)}
                             required
+                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                             <option value="">Pilih tingkat pendidikan</option>
                             <option value="SD">SD</option>
@@ -704,7 +707,7 @@ export default function UserPage() {
                             <option value="SMK">SMK</option>
                             <option value="MA">MA</option>
                             <option value="Perguruan Tinggi">Perguruan Tinggi</option>
-                          </Select>
+                          </select>
                         </div>
                         
                         <div>

@@ -40,8 +40,10 @@ export default function GallerySection() {
         if (!response.ok) {
           throw new Error('Failed to fetch gallery');
         }
-        const data = await response.json();
-        setGallery(data);
+        const result = await response.json();
+        // Handle new API response format with data and pagination
+        const galleryData = result.data || result;
+        setGallery(Array.isArray(galleryData) ? galleryData : []);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch gallery');
       } finally {
@@ -134,7 +136,7 @@ export default function GallerySection() {
           </p>
         </div>
 
-        {gallery.length === 0 ? (
+        {!Array.isArray(gallery) || gallery.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No published gallery items available yet.</p>
           </div>
@@ -160,9 +162,9 @@ export default function GallerySection() {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-center justify-center">
-                                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center">
-                          <h3 className="font-semibold mb-2">{item.title}</h3>
-                        </div>
+                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center">
+                            <h3 className="font-semibold mb-2">{item.title}</h3>
+                          </div>
                         </div>
                       </div>
                       <CardContent className="p-4">
@@ -219,9 +221,9 @@ export default function GallerySection() {
                       </div>
                       
                       <div className="p-6">
-                                            <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-2xl font-bold">{item.title}</h3>
-                    </div>
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-2xl font-bold">{item.title}</h3>
+                        </div>
                         <p className="text-muted-foreground mb-4">
                           {item.description || 'No description available.'}
                         </p>

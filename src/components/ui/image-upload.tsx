@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { UploadDropzone, getAuthToken } from '@/utils/uploadthing'
+import { UploadDropzone } from '@/utils/uploadthing'
 import { Button } from './button'
-import { X, Upload, Image as ImageIcon } from 'lucide-react'
+import { X } from 'lucide-react'
 import Image from 'next/image'
 
 interface ImageUploadProps {
@@ -16,9 +16,9 @@ interface ImageUploadProps {
 export function ImageUpload({ value, onChange, endpoint, className }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
 
-  const handleUploadComplete = (res: { url: string }[]) => {
+  const handleUploadComplete = (res: { ufsUrl: string }[]) => {
     if (res && res.length > 0) {
-      onChange(res[0].url)
+      onChange(res[0].ufsUrl)
     }
     setIsUploading(false)
   }

@@ -99,9 +99,16 @@ export const validateSession = async (token: string) => {
 
 // Delete session
 export const deleteSession = async (token: string) => {
-  await prisma.session.delete({
+  // Check if session exists before deleting
+  const session = await prisma.session.findUnique({
     where: { token },
   })
+
+  if (session) {
+    await prisma.session.delete({
+      where: { token },
+    })
+  }
 }
 
 // Clean expired sessions

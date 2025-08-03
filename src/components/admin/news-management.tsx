@@ -123,8 +123,8 @@ export default function NewsManagement() {
       if (!response.ok) {
         throw new Error('Failed to fetch news')
       }
-      const data = await response.json()
-      setNews(data)
+      const result = await response.json()
+      setNews(result.data || result)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch news')
     } finally {
