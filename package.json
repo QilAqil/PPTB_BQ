@@ -2,6 +2,7 @@
   "name": "pptb-bq",
   "version": "0.1.0",
   "private": true,
+  "description": "Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN - Next.js Application",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
