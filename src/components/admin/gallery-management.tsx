@@ -212,7 +212,7 @@ export default function GalleryManagement() {
     }
   }
 
-  const categories = ['all', ...Array.from(new Set(gallery.map(item => item.category).filter(Boolean)))]
+  const categories = ['all']
 
   if (loading) {
     return (
@@ -301,22 +301,15 @@ export default function GalleryManagement() {
                   {item.description}
                 </p>
               )}
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  {item.author.name}
-                </div>
-                <Badge variant={item.isPublished ? 'default' : 'secondary'}>
-                  {item.isPublished ? 'Published' : 'Draft'}
-                </Badge>
-              </div>
-              {item.category && (
-                <div className="mt-2">
-                  <Badge variant="outline" className="text-xs">
-                    {item.category}
-                  </Badge>
-                </div>
-              )}
+                             <div className="flex items-center justify-between text-sm text-gray-500">
+                 <div className="flex items-center gap-1">
+                   <User className="h-4 w-4" />
+                   {item.author.name}
+                 </div>
+                 <Badge variant={item.isPublished ? 'default' : 'secondary'}>
+                   {item.isPublished ? 'Published' : 'Draft'}
+                 </Badge>
+               </div>
             </CardContent>
           </Card>
         ))}

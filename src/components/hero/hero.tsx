@@ -21,7 +21,7 @@ export function Hero() {
               </h1>
               <p className="text-xl md:text-2xl text-teal-100 leading-relaxed italic">
                 Menjadi Pondok Pesantren Tahfidz dan Bahasa yang Unggul, Profesional, 
-                Transformatif, Humanis dan Qur&apos;ani di Indonesia pada tahun 2031
+                Transformatif, Humanis dan Qur&apos;ani
               </p>
             </div>
             
@@ -66,7 +66,7 @@ export function Hero() {
             <p className="text-xs opacity-90">Saluran Siaga Pelayanan</p>
             <div className="flex items-center justify-center gap-2 mt-2">
               <span className="text-lg">📞</span>
-              <span className="font-mono text-sm">0813-2424-7010</span>
+              <span className="font-mono text-sm">0852-2055-8881</span>
             </div>
           </div>
         </div>
