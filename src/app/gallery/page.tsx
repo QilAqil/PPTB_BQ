@@ -9,7 +9,7 @@ import { PrismaClient } from '@prisma/client'
 
 export const metadata: Metadata = {
   title: "Gallery - PPTB BAROKATUL QUR'AN",
-  description: "Explore our gallery of activities and events at PPTB BAROKATUL QUR'AN - Updated",
+  description: "Explore our gallery of activities and events at PPTB BAROKATUL QUR'AN - Final Fix",
 }
 
 interface GalleryItem {
