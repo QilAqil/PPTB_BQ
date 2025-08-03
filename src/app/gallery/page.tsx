@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, Clock, User, ArrowRight } from "lucide-react"
+import { User, ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { PrismaClient } from '@prisma/client'
@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 interface GalleryItem {
   id: string;
   title: string;
-  description?: string;
+  description: string | null;
   imageUrl: string;
   isPublished: boolean;
-  publishedAt?: string;
-  createdAt: string;
+  publishedAt: Date | null;
+  createdAt: Date;
   author: {
     id: string;
-    name: string;
+    name: string | null;
     email: string;
   };
 }
@@ -118,10 +118,10 @@ export default async function GalleryPage() {
                   {item.description || 'No description available.'}
                 </p>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>{item.author.name}</span>
-                  </div>
+                                     <div className="flex items-center gap-2">
+                     <User className="h-4 w-4" />
+                     <span>{item.author.name || 'Unknown Author'}</span>
+                   </div>
                 </div>
               </CardContent>
             </Card>
