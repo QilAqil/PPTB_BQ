@@ -35,7 +35,7 @@ export function Footer() {
             <p className="text-sm text-gray-400 leading-relaxed">
               Membentuk Generasi Qur&apos;ani yang Unggul dalam Tahfidz dan Bahasa. 
               Berkomitmen memberikan pendidikan berkualitas yang mengintegrasikan 
-              tahfidz Al-Qur&apos;an dengan pembelajaran bahasa Arab dan Inggris.
+              tahfidz Al-Qur&apos;an dengan pembelajaran bahasa Inggris.
             </p>
           </div>
 
@@ -47,8 +47,8 @@ export function Footer() {
                 <MapPin className="h-5 w-5 text-teal-400 mt-0.5" />
                 <div>
                   <p className="text-sm text-gray-300">
-                    Jl. Raya Pondok Pesantren No. 123<br />
-                    Kecamatan, Kabupaten, Provinsi
+                    Jl. Bawah, RT.05/RW.11, Munggang, Kalibeber<br />
+                    Mojotengah, Wonosobo, Jawa Tengah
                   </p>
                 </div>
               </div>
@@ -58,7 +58,7 @@ export function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-teal-400" />
-                <span className="text-sm text-gray-300">info@pptb-bq.ac.id</span>
+                <span className="text-sm text-gray-300">popestahfidzbarokatulquran@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Clock className="h-5 w-5 text-teal-400" />
@@ -128,7 +128,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-400">
-              © 2024 PPTB BAROKATUL QUR&apos;AN. Semua hak dilindungi.
+              © 2025 PPTB BAROKATUL QUR&apos;AN. Developed by <a href="https://www.instagram.com/qil.qilaqil" className="text-teal-400 hover:text-white transition-colors">Sa'id Aqil</a>.
             </p>
             <div className="flex space-x-6">
               <a href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
