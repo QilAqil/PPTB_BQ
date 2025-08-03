@@ -51,7 +51,6 @@ async function getGalleryData(): Promise<GalleryItem[]> {
     
     await prisma.$disconnect();
     
-    console.log('Gallery data from Prisma:', gallery.length, 'items');
     return gallery;
   } catch (error) {
     console.error('Error fetching gallery data from Prisma:', error);
@@ -61,9 +60,6 @@ async function getGalleryData(): Promise<GalleryItem[]> {
 
 export default async function GalleryPage() {
   const gallery = await getGalleryData();
-  
-  console.log('Gallery page - fetched data:', gallery.length, 'items');
-  console.log('Gallery items:', gallery);
 
   return (
     <div className="container mx-auto px-4 py-8">
