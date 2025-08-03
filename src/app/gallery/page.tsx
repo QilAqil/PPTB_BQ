@@ -53,12 +53,17 @@ async function getGalleryData(): Promise<GalleryItem[]> {
     
     // Transform the data to match GalleryItem interface
     return gallery.map(item => ({
-      ...item,
+      id: item.id,
+      title: item.title,
       description: item.description || undefined,
+      imageUrl: item.imageUrl,
+      isPublished: item.isPublished,
       publishedAt: item.publishedAt || undefined,
+      createdAt: item.createdAt,
       author: {
-        ...item.author,
-        name: item.author.name || undefined
+        id: item.author.id,
+        name: item.author.name || undefined,
+        email: item.author.email
       }
     }));
   } catch (error) {
