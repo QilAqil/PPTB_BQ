@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Users, 
   FileText, 
-  Image, 
+  ImageIcon, 
   UserPlus,
   BarChart3
 } from "lucide-react"
@@ -62,7 +62,7 @@ export default function AdminPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Gallery</CardTitle>
-                <Image className="h-4 w-4 text-muted-foreground" />
+                <ImageIcon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">0</div>
