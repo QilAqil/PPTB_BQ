@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar, Clock, User, ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { PrismaClient } from '@prisma/client'
 
 export const metadata: Metadata = {
   title: "Gallery - PPTB BAROKATUL QUR'AN",
@@ -28,24 +29,41 @@ interface GalleryItem {
 
 async function getGalleryData(): Promise<GalleryItem[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/gallery?published=true`, {
-      cache: 'no-store'
+    const prisma = new PrismaClient();
+    
+    const gallery = await prisma.gallery.findMany({
+      where: {
+        isPublished: true,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     
-    if (!response.ok) {
-      throw new Error('Failed to fetch gallery data');
-    }
+    await prisma.$disconnect();
     
-    const result = await response.json();
-    return result.data || [];
+    console.log('Gallery data from Prisma:', gallery.length, 'items');
+    return gallery;
   } catch (error) {
-    console.error('Error fetching gallery data:', error);
+    console.error('Error fetching gallery data from Prisma:', error);
     return [];
   }
 }
 
 export default async function GalleryPage() {
   const gallery = await getGalleryData();
+  
+  console.log('Gallery page - fetched data:', gallery.length, 'items');
+  console.log('Gallery items:', gallery);
 
   return (
     <div className="container mx-auto px-4 py-8">
