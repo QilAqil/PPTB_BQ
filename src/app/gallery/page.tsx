@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 interface GalleryItem {
   id: string;
   title: string;
-  description: string | null;
+  description?: string;
   imageUrl: string;
   isPublished: boolean;
-  publishedAt: Date | null;
+  publishedAt?: Date;
   createdAt: Date;
   author: {
     id: string;
-    name: string | null;
+    name?: string;
     email: string;
   };
 }
@@ -51,7 +51,16 @@ async function getGalleryData(): Promise<GalleryItem[]> {
     
     await prisma.$disconnect();
     
-    return gallery;
+    // Transform the data to match GalleryItem interface
+    return gallery.map(item => ({
+      ...item,
+      description: item.description || undefined,
+      publishedAt: item.publishedAt || undefined,
+      author: {
+        ...item.author,
+        name: item.author.name || undefined
+      }
+    }));
   } catch (error) {
     console.error('Error fetching gallery data from Prisma:', error);
     return [];
