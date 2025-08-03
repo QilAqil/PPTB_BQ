@@ -13,7 +13,7 @@ import Link from "next/link";
 export default function RegistrationPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const [showRequirements, setShowRequirements] = useState(true);
   const [hasSeenRequirements, setHasSeenRequirements] = useState(false);
