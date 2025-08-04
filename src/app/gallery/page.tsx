@@ -29,12 +29,19 @@ async function getGalleryData(): Promise<GalleryItem[]> {
   try {
     // Gunakan relative URL untuk menghindari masalah dengan environment variables di Vercel
     const response = await fetch(`/api/gallery?published=true&limit=20`, {
-      cache: 'no-store' // Disable cache to avoid large data issues
+      cache: 'no-store', // Disable cache to avoid large data issues
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    
+    console.log('Gallery fetch response status:', response.status);
     
     if (!response.ok) {
       console.error('Response not ok:', response.status, response.statusText);
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('Error response body:', errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
     
     const result = await response.json();
@@ -43,12 +50,16 @@ async function getGalleryData(): Promise<GalleryItem[]> {
     // API gallery mengembalikan { data: [...], pagination: {...} }
     if (result && result.data && Array.isArray(result.data)) {
       return result.data;
+    } else if (result && result.error) {
+      console.error('Gallery API returned error:', result.error);
+      return [];
     } else {
       console.error('Unexpected gallery response format:', result);
       return [];
     }
   } catch (error) {
     console.error('Error mengambil data galeri:', error);
+    // Return empty array as fallback
     return [];
   }
 }
@@ -73,7 +84,20 @@ export default async function GalleryPage() {
 
       {gallery.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">Belum ada item galeri yang dipublikasikan.</p>
+          <div className="max-w-md mx-auto">
+            <div className="mb-4">
+              <svg className="mx-auto h-12 w-12 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Belum Ada Galeri</h3>
+            <p className="text-muted-foreground mb-4">
+              Belum ada item galeri yang dipublikasikan saat ini. Silakan cek kembali nanti.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Jika Anda admin, pastikan database sudah terkonfigurasi dengan benar di Vercel.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

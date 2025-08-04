@@ -11,6 +11,15 @@ export async function GET(request: NextRequest) {
     
     console.log('News API called with params:', { published, limit })
     
+    // Check if DATABASE_URL is configured
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL not configured')
+      return NextResponse.json(
+        { error: 'Database not configured', details: 'DATABASE_URL environment variable is missing' },
+        { status: 500 }
+      )
+    }
+    
     const where = published === 'true' ? { isPublished: true } : {}
     
     const news = await prisma.news.findMany({
@@ -34,6 +43,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(news)
   } catch (error) {
     console.error('Error fetching news:', error)
+    
+    // Check if it's a database connection error
+    if (error instanceof Error && error.message.includes('connect')) {
+      return NextResponse.json(
+        { error: 'Database connection failed', details: 'Unable to connect to database. Please check DATABASE_URL configuration.' },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Failed to fetch news', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

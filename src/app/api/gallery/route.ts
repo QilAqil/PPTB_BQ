@@ -10,6 +10,15 @@ export async function GET(request: NextRequest) {
 
     console.log('Gallery API called with params:', { published, limit, page });
 
+    // Check if DATABASE_URL is configured
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL not configured')
+      return NextResponse.json(
+        { error: 'Database not configured', details: 'DATABASE_URL environment variable is missing' },
+        { status: 500 }
+      )
+    }
+
     const where: Record<string, unknown> = {};
     
     if (published === 'true') {
@@ -52,6 +61,15 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching gallery:', error);
+    
+    // Check if it's a database connection error
+    if (error instanceof Error && error.message.includes('connect')) {
+      return NextResponse.json(
+        { error: 'Database connection failed', details: 'Unable to connect to database. Please check DATABASE_URL configuration.' },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
