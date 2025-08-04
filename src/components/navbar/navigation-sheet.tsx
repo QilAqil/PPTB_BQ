@@ -111,13 +111,7 @@ export const NavigationSheet = () => {
             </Button>
           </Link>
           
-          {user && user.role === 'ADMIN' && (
-            <Link href="/admin">
-              <Button variant="ghost" className="w-full justify-start">
-                Admin
-              </Button>
-            </Link>
-          )}
+
         </div>
         
         {/* User Dashboard Links */}

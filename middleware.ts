@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('auth-token')?.value
 
   // Protected routes
-  const protectedRoutes = ['/admin', '/users']
+  const protectedRoutes = ['/users']
   const authRoutes = ['/sign-in', '/sign-up']
 
   // Check if current path is protected
@@ -20,9 +20,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/sign-in', request.url))
   }
 
-  // If accessing auth route with token, redirect to admin
+  // If accessing auth route with token, redirect to dashboard
   if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return NextResponse.next()

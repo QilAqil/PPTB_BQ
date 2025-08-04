@@ -18,9 +18,7 @@ export default function AutoRedirect({ user, loading }: AutoRedirectProps) {
   useEffect(() => {
     if (!loading && user) {
       // Redirect based on role
-      if (user.role === 'ADMIN') {
-        router.push('/admin')
-      } else if (user.role === 'USER') {
+      if (user.role === 'USER') {
         router.push('/user')
       } else {
         // Default redirect to home page

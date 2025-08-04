@@ -110,13 +110,7 @@ export const NavMenu = (props: NavigationMenuProps) => {
             <Link href="/contact">Kontak</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
-        {user && user.role === 'ADMIN' && (
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/admin">Admin</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        )}
+
       </NavigationMenuList>
     </NavigationMenu>
   )

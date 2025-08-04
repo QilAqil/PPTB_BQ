@@ -34,9 +34,7 @@ export default function DashboardPage() {
           // Auto redirect based on role
           setTimeout(() => {
             setRedirecting(true);
-            if (data.role === 'ADMIN') {
-              router.push('/admin');
-            } else if (data.role === 'USER') {
+            if (data.role === 'USER') {
               router.push('/user');
             } else {
               router.push('/');
@@ -106,26 +104,13 @@ export default function DashboardPage() {
           {/* User Info */}
           <div className="text-center">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              {user.role === 'ADMIN' ? (
-                <Shield className="h-10 w-10 text-primary" />
-              ) : (
-                <User className="h-10 w-10 text-primary" />
-              )}
+              <User className="h-10 w-10 text-primary" />
             </div>
             <h3 className="font-semibold text-lg mb-1">{user.name || 'N/A'}</h3>
             <p className="text-sm text-muted-foreground mb-2">{user.email}</p>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              {user.role === 'ADMIN' ? (
-                <>
-                  <Shield className="h-4 w-4" />
-                  Administrator
-                </>
-              ) : (
-                <>
-                  <User className="h-4 w-4" />
-                  User
-                </>
-              )}
+              <User className="h-4 w-4" />
+              User
             </div>
           </div>
 
@@ -133,17 +118,10 @@ export default function DashboardPage() {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="font-semibold text-blue-800 mb-2">Dashboard yang Tersedia:</h4>
             <div className="space-y-2 text-sm text-blue-700">
-              {user.role === 'ADMIN' ? (
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
-                  <span>Admin Panel - Manajemen user, berita, galeri, dan registrasi</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>User Dashboard - Riwayat pendaftaran dan form pendaftaran</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>User Dashboard - Riwayat pendaftaran dan form pendaftaran</span>
+              </div>
             </div>
           </div>
 
@@ -153,21 +131,12 @@ export default function DashboardPage() {
               Atau klik tombol di bawah untuk navigasi manual:
             </p>
             <div className="flex gap-3">
-              {user.role === 'ADMIN' ? (
-                <Link href="/admin" className="flex-1">
-                  <Button className="w-full">
-                    <Shield className="h-4 w-4 mr-2" />
-                    Admin Panel
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/user" className="flex-1">
-                  <Button className="w-full">
-                    <User className="h-4 w-4 mr-2" />
-                    User Dashboard
-                  </Button>
-                </Link>
-              )}
+              <Link href="/user" className="flex-1">
+                <Button className="w-full">
+                  <User className="h-4 w-4 mr-2" />
+                  User Dashboard
+                </Button>
+              </Link>
               <Link href="/" className="flex-1">
                 <Button variant="outline" className="w-full">
                   Beranda
