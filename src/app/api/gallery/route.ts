@@ -60,12 +60,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, imageUrl, isPublished = false } = body;
+    const { title, imageUrl, isPublished = false } = body;
 
     // Validate required fields
-    if (!title || !description || !imageUrl) {
+    if (!title || !imageUrl) {
       return NextResponse.json(
-        { error: 'Title, description, and imageUrl are required' },
+        { error: 'Title and imageUrl are required' },
         { status: 400 }
       );
     }
@@ -77,7 +77,6 @@ export async function POST(request: NextRequest) {
     const gallery = await prisma.gallery.create({
       data: {
         title,
-        description,
         imageUrl,
         isPublished,
         publishedAt: isPublished ? new Date() : null,

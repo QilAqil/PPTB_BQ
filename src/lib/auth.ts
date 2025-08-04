@@ -31,7 +31,7 @@ export const generateToken = (payload: JWTPayload): string => {
 export const verifyToken = (token: string): JWTPayload | null => {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -99,15 +99,21 @@ export const validateSession = async (token: string) => {
 
 // Delete session
 export const deleteSession = async (token: string) => {
-  // Check if session exists before deleting
-  const session = await prisma.session.findUnique({
-    where: { token },
-  })
-
-  if (session) {
-    await prisma.session.delete({
+  try {
+    // Check if session exists before deleting
+    const session = await prisma.session.findUnique({
       where: { token },
     })
+
+    if (session) {
+      await prisma.session.delete({
+        where: { token },
+      })
+    }
+    // If session doesn't exist, just return without error
+  } catch (error) {
+    // Log error but don't throw - session might already be deleted
+    console.warn('Session deletion warning:', error)
   }
 }
 
@@ -120,4 +126,46 @@ export const cleanExpiredSessions = async () => {
       },
     },
   })
+}
+
+export async function signIn(email: string, password: string) {
+  try {
+    const response = await fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Login gagal')
+    }
+
+    const data = await response.json()
+    return { success: true, data }
+  } catch {
+    return { success: false, message: 'Email atau password salah' }
+  }
+}
+
+export async function signUp(email: string, password: string, name: string) {
+  try {
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, name }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Registrasi gagal')
+    }
+
+    const data = await response.json()
+    return { success: true, data }
+  } catch {
+    return { success: false, message: 'Gagal membuat akun' }
+  }
 } 

@@ -35,13 +35,21 @@ export function AuthHeader() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
       })
+      
+      if (!response.ok) {
+        throw new Error('Logout gagal')
+      }
+      
       setUser(null)
       window.location.href = '/'
     } catch (error) {
       console.error('Logout failed:', error)
+      // Even if logout fails, clear user state and redirect
+      setUser(null)
+      window.location.href = '/'
     }
   }
 
@@ -50,11 +58,11 @@ export function AuthHeader() {
       {!loading && !user && (
         <>
           <Link href="/sign-in">
-            <Button variant="ghost">Sign In</Button>
+            <Button variant="ghost">Masuk</Button>
           </Link>
           <Link href="/sign-up">
             <Button className="bg-primary text-primary-foreground rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5">
-              Sign Up
+              Daftar
             </Button>
           </Link>
         </>
@@ -66,7 +74,7 @@ export function AuthHeader() {
             {user.name || user.email}
           </span>
           <Button variant="ghost" onClick={handleLogout}>
-            Logout
+            Keluar
           </Button>
         </div>
       )}

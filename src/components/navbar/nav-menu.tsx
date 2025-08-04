@@ -6,6 +6,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 import { NavigationMenuProps } from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
@@ -50,9 +52,53 @@ export const NavMenu = (props: NavigationMenuProps) => {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/gallery">Galeri</Link>
-          </NavigationMenuLink>
+          <NavigationMenuTrigger>Profil</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              <div className="space-y-3">
+                <div className="text-sm font-medium leading-none">Profil Pesantren</div>
+                <div className="grid gap-2">
+                  <NavigationMenuLink asChild>
+                    <Link href="/khodimul-mahad" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">Khodimul Ma&apos;had</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Pengurus dan pengelola pesantren
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <Link href="/sejarah" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">Sejarah</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Sejarah berdirinya pesantren
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="text-sm font-medium leading-none">Konten</div>
+                <div className="grid gap-2">
+                  <NavigationMenuLink asChild>
+                    <Link href="/gallery" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">Galeri</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Dokumentasi kegiatan pesantren
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                  <NavigationMenuLink asChild>
+                    <Link href="/doa" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">Do&apos;a-do&apos;a</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Kumpulan do&apos;a harian
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </div>
+              </div>
+            </div>
+          </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>

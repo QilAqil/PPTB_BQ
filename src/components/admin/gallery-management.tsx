@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Badge } from '../ui/badge'
-import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, User, Image as ImageIcon } from 'lucide-react'
-import Image from 'next/image'
-import { ImageUpload } from '../ui/image-upload'
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Calendar, Loader2, Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from "lucide-react"
+import NextImage from "next/image"
 
 interface GalleryItem {
   id: string
   title: string
-  description?: string
   imageUrl: string
   isPublished: boolean
   publishedAt?: string
@@ -23,110 +24,34 @@ interface GalleryItem {
   }
 }
 
-interface GalleryFormProps {
-  item?: GalleryItem
-  onSave: (data: Partial<GalleryItem>) => void
-  onCancel: () => void
-  loading: boolean
-}
-
-function GalleryForm({ item, onSave, onCancel, loading }: GalleryFormProps) {
-  const [title, setTitle] = useState(item?.title || '')
-  const [description, setDescription] = useState(item?.description || '')
-  const [imageUrl, setImageUrl] = useState(item?.imageUrl || '')
-  const [isPublished, setIsPublished] = useState(item?.isPublished || false)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSave({
-      title,
-      description,
-      imageUrl,
-      isPublished,
-    })
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <Card className="w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-        <CardHeader>
-          <CardTitle>{item ? 'Edit Gallery Item' : 'Add Gallery Item'}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Title</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-2 border rounded-md"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Description (optional)</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-2 border rounded-md h-24"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Image</label>
-              <ImageUpload
-                value={imageUrl}
-                onChange={setImageUrl}
-                endpoint="galleryImageUploader"
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="published"
-                checked={isPublished}
-                onChange={(e) => setIsPublished(e.target.checked)}
-                className="rounded"
-              />
-              <label htmlFor="published" className="text-sm">
-                Publish immediately
-              </label>
-            </div>
-            <div className="flex gap-3 pt-4">
-              <Button type="button" variant="outline" onClick={onCancel} className="flex-1" disabled={loading}>
-                Cancel
-              </Button>
-              <Button type="submit" className="flex-1" disabled={loading}>
-                {loading ? 'Saving...' : (item ? 'Update' : 'Create')}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-export default function GalleryManagement() {
+export function GalleryManagement() {
   const [gallery, setGallery] = useState<GalleryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showForm, setShowForm] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null)
-  const [formLoading, setFormLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    title: "",
+    imageUrl: "",
+    isPublished: false
+  })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+
   const fetchGallery = async () => {
     try {
       setLoading(true)
       setError(null)
       const response = await fetch('/api/gallery')
       if (!response.ok) {
-        throw new Error('Failed to fetch gallery')
+        throw new Error('Gagal mengambil data galeri')
       }
       const result = await response.json()
-      setGallery(result.data || result)
+      const galleryData = result.data || result
+      setGallery(Array.isArray(galleryData) ? galleryData : [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch gallery')
+      setError(err instanceof Error ? err.message : 'Gagal mengambil data galeri')
     } finally {
       setLoading(false)
     }
@@ -136,102 +61,171 @@ export default function GalleryManagement() {
     fetchGallery()
   }, [])
 
-  const handleCreateItem = async (data: Partial<GalleryItem>) => {
-    try {
-      setFormLoading(true)
-      const response = await fetch('/api/gallery', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to create gallery item')
-      }
-      setShowForm(false)
-      fetchGallery()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create gallery item')
-    } finally {
-      setFormLoading(false)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setSelectedFile(file)
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
     }
   }
 
-  const handleUpdateItem = async (data: Partial<GalleryItem>) => {
-    if (!editingItem) return
-    try {
-      setFormLoading(true)
-      const response = await fetch(`/api/gallery/${editingItem.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to update gallery item')
+  const handleRemoveImage = () => {
+    setSelectedFile(null)
+    setPreviewUrl(null)
+    setFormData({ ...formData, imageUrl: "" })
+  }
+
+  const uploadImage = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      img.onload = () => {
+        // Set maximum dimensions
+        const maxWidth = 800
+        const maxHeight = 600
+        
+        let { width, height } = img
+        
+        // Calculate new dimensions
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width
+            width = maxWidth
+          }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height
+            height = maxHeight
+          }
+        }
+        
+        // Set canvas dimensions
+        canvas.width = width
+        canvas.height = height
+        
+        // Draw and compress image
+        ctx?.drawImage(img, 0, 0, width, height)
+        
+        // Convert to base64 with compression
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7)
+        resolve(compressedDataUrl)
       }
-      setShowForm(false)
+      
+      img.onerror = () => {
+        reject(new Error('Gagal memuat gambar'))
+      }
+      
+      img.src = URL.createObjectURL(file)
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setUploading(true)
+    
+    try {
+      let imageUrl = formData.imageUrl
+      
+      // Upload gambar jika ada file yang dipilih
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile)
+      }
+      
+      const url = editingItem ? `/api/gallery/${editingItem.id}` : '/api/gallery'
+      const method = editingItem ? 'PUT' : 'POST'
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          imageUrl
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Gagal menyimpan item galeri')
+      }
+
+      setIsDialogOpen(false)
       setEditingItem(null)
+      setFormData({ title: "", imageUrl: "", isPublished: false })
+      setSelectedFile(null)
+      setPreviewUrl(null)
       fetchGallery()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update gallery item')
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan item galeri')
     } finally {
-      setFormLoading(false)
+      setUploading(false)
     }
   }
 
-  const handleDeleteItem = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this gallery item?')) return
+  const handleDelete = async (id: string) => {
+    if (!confirm('Apakah Anda yakin ingin menghapus item ini?')) return
+    
     try {
       const response = await fetch(`/api/gallery/${id}`, {
         method: 'DELETE',
       })
+
       if (!response.ok) {
-        throw new Error('Failed to delete gallery item')
+        throw new Error('Gagal menghapus item galeri')
       }
+
       fetchGallery()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete gallery item')
+      setError(err instanceof Error ? err.message : 'Gagal menghapus item galeri')
     }
   }
 
-  const handleTogglePublish = async (item: GalleryItem) => {
+  const handleEdit = (item: GalleryItem) => {
+    setEditingItem(item)
+    setFormData({
+      title: item.title,
+      imageUrl: item.imageUrl,
+      isPublished: item.isPublished
+    })
+    setIsDialogOpen(true)
+  }
+
+  const handlePublishToggle = async (id: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`/api/gallery/${item.id}`, {
+      const response = await fetch(`/api/gallery/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...item,
-          isPublished: !item.isPublished,
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isPublished: !currentStatus }),
       })
+
       if (!response.ok) {
-        throw new Error('Failed to update gallery item')
+        throw new Error('Gagal mengubah status publikasi')
       }
+
       fetchGallery()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update gallery item')
+      setError(err instanceof Error ? err.message : 'Gagal mengubah status publikasi')
     }
   }
-
-  const categories = ['all']
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading gallery...</p>
-        </div>
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center">
-          <div className="text-red-600 mb-4">Error: {error}</div>
-          <Button onClick={fetchGallery}>Try Again</Button>
-        </div>
+      <div className="text-center py-12">
+        <p className="text-red-600 mb-4">Error: {error}</p>
+        <Button onClick={fetchGallery}>Coba Lagi</Button>
       </div>
     )
   }
@@ -239,93 +233,181 @@ export default function GalleryManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Gallery Management</h2>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Item
-        </Button>
-      </div>
-
-
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {gallery.map((item) => (
-          <Card key={item.id} className="overflow-hidden">
-            <div className="relative h-48 bg-gray-100">
-              {item.imageUrl ? (
-                <Image
-                  src={item.imageUrl}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
+        <h2 className="text-2xl font-bold">Manajemen Galeri</h2>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button onClick={() => {
+              setEditingItem(null)
+              setFormData({ title: "", imageUrl: "", isPublished: false })
+            }}>
+              <Plus className="h-4 w-4 mr-2" />
+              Tambah Item
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
+                {editingItem ? 'Edit Item Galeri' : 'Tambah Item Galeri Baru'}
+              </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="title">Judul Item *</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="Masukkan judul item galeri"
+                  required
                 />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <ImageIcon className="h-12 w-12 text-gray-400" />
+              </div>
+              
+
+              
+              <div>
+                <Label>Gambar Item *</Label>
+                <div className="space-y-2">
+                  {previewUrl ? (
+                    <div className="relative">
+                                             <NextImage
+                         src={previewUrl}
+                         alt="Preview"
+                         width={300}
+                         height={200}
+                         className="w-full h-48 object-cover rounded-md"
+                       />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2"
+                        onClick={handleRemoveImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                      <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                      <Label htmlFor="image-upload" className="cursor-pointer text-blue-600 hover:text-blue-700">
+                        Klik untuk upload gambar
+                      </Label>
+                      <Input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-              <div className="absolute top-2 right-2 flex gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleTogglePublish(item)}
-                  className="bg-white/90 hover:bg-white"
-                >
-                  {item.isPublished ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="isPublished"
+                  checked={formData.isPublished}
+                  onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
+                />
+                <Label htmlFor="isPublished">Publikasikan</Label>
+              </div>
+              
+              <div className="flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  Batal
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setEditingItem(item)
-                    setShowForm(true)
-                  }}
-                  className="bg-white/90 hover:bg-white"
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDeleteItem(item.id)}
-                  className="bg-white/90 hover:bg-white text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="h-4 w-4" />
+                <Button type="submit" disabled={uploading}>
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Menyimpan...
+                    </>
+                  ) : (
+                    editingItem ? 'Simpan Perubahan' : 'Tambah Item'
+                  )}
                 </Button>
               </div>
-            </div>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-2 line-clamp-1">{item.title}</h3>
-              {item.description && (
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {item.description}
-                </p>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gallery.map((item) => (
+          <Card key={item.id} className="overflow-hidden">
+            <div className="relative">
+              {item.imageUrl ? (
+                                 <NextImage
+                   src={item.imageUrl}
+                   alt={item.title}
+                   width={400}
+                   height={250}
+                   className="w-full h-48 object-cover"
+                 />
+              ) : (
+                <div className="w-full h-48 bg-muted flex items-center justify-center">
+                  <span className="text-muted-foreground">Tidak Ada Gambar</span>
+                </div>
               )}
-                             <div className="flex items-center justify-between text-sm text-gray-500">
-                 <div className="flex items-center gap-1">
-                   <User className="h-4 w-4" />
-                   {item.author.name}
-                 </div>
-                 <Badge variant={item.isPublished ? 'default' : 'secondary'}>
-                   {item.isPublished ? 'Published' : 'Draft'}
-                 </Badge>
-               </div>
+              <div className="absolute top-2 right-2">
+                <Badge variant={item.isPublished ? "default" : "secondary"}>
+                  {item.isPublished ? "Dipublikasikan" : "Draft"}
+                </Badge>
+              </div>
+            </div>
+            
+            <CardHeader>
+              <CardTitle className="text-lg">{item.title}</CardTitle>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="h-4 w-4" />
+                <span>
+                  {item.publishedAt 
+                    ? new Date(item.publishedAt).toLocaleDateString()
+                    : new Date(item.createdAt).toLocaleDateString()
+                  }
+                </span>
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">
+                  Oleh: {item.author.name}
+                </span>
+                
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handlePublishToggle(item.id, item.isPublished)}
+                  >
+                    {item.isPublished ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                  
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEdit(item)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
-
-      {showForm && (
-        <GalleryForm
-          item={editingItem || undefined}
-          onSave={editingItem ? handleUpdateItem : handleCreateItem}
-          onCancel={() => {
-            setShowForm(false)
-            setEditingItem(null)
-          }}
-          loading={formLoading}
-        />
-      )}
     </div>
   )
 } 

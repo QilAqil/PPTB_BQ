@@ -5,23 +5,22 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Users, 
-  UserCheck, 
-  UserX, 
-  Plus, 
   Search, 
-  Filter,
-  Eye,
-  Edit,
-  Trash2,
-  Loader2,
-  AlertCircle,
+  Eye, 
+  Loader2, 
+  Calendar,
+  User,
+  Plus,
   Shield,
   Mail,
-  Calendar
-} from 'lucide-react';
+  UserCheck,
+  UserX,
+  Edit,
+  Trash2
+} from "lucide-react"
 import CreateUserForm from './create-user-form';
 
 interface User {
@@ -49,6 +48,7 @@ export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showUserDetail, setShowUserDetail] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -78,20 +78,21 @@ export default function UserManagement() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await fetch('/api/users');
       if (response.ok) {
         const result = await response.json();
         setUsers(result.data || result || []);
       } else if (response.status === 403) {
-        console.error('Access denied: Admin privileges required');
-        // Show access denied message
+        setError('Anda tidak memiliki hak akses admin untuk melihat halaman ini.');
         setUsers([]);
       } else {
-        console.error('Failed to fetch users');
+        setError('Gagal mengambil data pengguna');
         setUsers([]);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
+      setError('Terjadi kesalahan saat mengambil data pengguna');
       setUsers([]);
     } finally {
       setLoading(false);
@@ -101,11 +102,12 @@ export default function UserManagement() {
   const handleUserCreated = () => {
     fetchUsers();
     fetchStats();
-    setShowCreateForm(false);
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus user ini?')) return;
+    if (!confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+      return;
+    }
 
     try {
       const response = await fetch(`/api/users/${userId}`, {
@@ -113,22 +115,16 @@ export default function UserManagement() {
       });
 
       if (response.ok) {
-        fetchUsers();
-        fetchStats();
+        setUsers(users.filter(user => user.id !== userId));
+        fetchStats(); // Refresh stats
       } else {
-        alert('Gagal menghapus user');
+        alert('Gagal menghapus pengguna');
       }
     } catch (error) {
       console.error('Error deleting user:', error);
-      alert('Terjadi kesalahan saat menghapus user');
+      alert('Terjadi kesalahan saat menghapus pengguna');
     }
   };
-
-  const filteredUsers = users.filter(user =>
-    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('id-ID', {
@@ -151,16 +147,15 @@ export default function UserManagement() {
     );
   }
 
-  // Check if user has access (if no users loaded and not loading, likely no access)
-  if (users.length === 0 && !loading && !statsLoading) {
+  // Show error message if there's an error
+  if (error) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center max-w-md">
           <Shield className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-4">Akses Ditolak</h2>
           <p className="text-muted-foreground mb-6">
-            Anda tidak memiliki hak akses admin untuk melihat halaman ini. 
-            Silakan login dengan akun yang memiliki role ADMIN.
+            {error}
           </p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <h4 className="font-semibold text-blue-800 mb-2">Akun Admin yang Tersedia:</h4>
@@ -187,13 +182,13 @@ export default function UserManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Users</p>
-                                 <div className="text-2xl font-bold">
-                   {statsLoading ? (
-                     <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
-                   ) : (
-                     stats?.totalUsers || 0
-                   )}
-                 </div>
+                <div className="text-2xl font-bold">
+                  {statsLoading ? (
+                    <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+                  ) : (
+                    stats?.totalUsers || 0
+                  )}
+                </div>
               </div>
               <Users className="h-8 w-8 text-blue-500" />
             </div>
@@ -205,13 +200,13 @@ export default function UserManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Active Users</p>
-                                 <div className="text-2xl font-bold text-green-600">
-                   {statsLoading ? (
-                     <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
-                   ) : (
-                     stats?.activeUsers || 0
-                   )}
-                 </div>
+                <div className="text-2xl font-bold text-green-600">
+                  {statsLoading ? (
+                    <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+                  ) : (
+                    stats?.activeUsers || 0
+                  )}
+                </div>
               </div>
               <UserCheck className="h-8 w-8 text-green-500" />
             </div>
@@ -223,13 +218,13 @@ export default function UserManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Admins</p>
-                                 <div className="text-2xl font-bold text-purple-600">
-                   {statsLoading ? (
-                     <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
-                   ) : (
-                     stats?.totalAdmins || 0
-                   )}
-                 </div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {statsLoading ? (
+                    <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+                  ) : (
+                    stats?.totalAdmins || 0
+                  )}
+                </div>
               </div>
               <Shield className="h-8 w-8 text-purple-500" />
             </div>
@@ -238,196 +233,96 @@ export default function UserManagement() {
       </div>
 
       {/* Actions and Search */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <div className="flex gap-2">
+          <Button onClick={() => setShowCreateForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Tambah User
+          </Button>
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Cari pengguna..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+      </div>
+
+      {/* Users List */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <CardTitle>Daftar Pengguna</CardTitle>
-              <CardDescription>
-                Kelola semua pengguna dalam sistem
-              </CardDescription>
-            </div>
-            <Button onClick={() => setShowCreateForm(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Tambah User
-            </Button>
-          </div>
+          <CardTitle>Daftar Pengguna ({users.length})</CardTitle>
+          <CardDescription>
+            Kelola pengguna dan admin sistem
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari user berdasarkan nama, email, atau role..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+          {users.length === 0 ? (
+            <div className="text-center py-8">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-muted-foreground">Belum ada pengguna terdaftar</p>
             </div>
-          </div>
-
-          {/* Users Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium">User</th>
-                  <th className="text-left py-3 px-4 font-medium">Role</th>
-                  <th className="text-left py-3 px-4 font-medium">Status</th>
-                  <th className="text-left py-3 px-4 font-medium">Joined</th>
-                  <th className="text-left py-3 px-4 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">
+          ) : (
+            <div className="space-y-4">
+              {users
+                .filter(user => 
+                  user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  user.email.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((user) => (
+                  <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                        <User className="h-5 w-5 text-gray-600" />
+                      </div>
                       <div>
-                        <p className="font-medium">{user.name || 'N/A'}</p>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          {user.email}
-                        </p>
+                        <h3 className="font-semibold">{user.name || 'Nama tidak tersedia'}</h3>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                        <div className="flex gap-2 mt-1">
+                          <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>
+                            {user.role}
+                          </Badge>
+                          <Badge variant={user.isActive ? 'default' : 'destructive'}>
+                            {user.isActive ? 'Aktif' : 'Nonaktif'}
+                          </Badge>
+                        </div>
                       </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Badge 
-                        variant={user.role === 'ADMIN' ? 'default' : 'secondary'}
-                        className={user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : ''}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        Bergabung: {formatDate(user.createdAt)}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteUser(user.id)}
                       >
-                        {user.role}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        {user.isActive ? (
-                          <UserCheck className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <UserX className="h-4 w-4 text-red-500" />
-                        )}
-                        <Badge variant={user.isActive ? 'default' : 'destructive'}>
-                          {user.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Calendar className="h-3 w-3" />
-                        {formatDate(user.createdAt)}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedUser(user);
-                            setShowUserDetail(true);
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            // Handle edit user
-                            alert('Edit user functionality coming soon');
-                          }}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-
-            {filteredUsers.length === 0 && (
-              <div className="text-center py-8">
-                <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  {searchTerm ? 'Tidak ada user yang sesuai dengan pencarian' : 'Belum ada user terdaftar'}
-                </p>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Create User Form Modal */}
-      {showCreateForm && (
-        <CreateUserForm
-          onUserCreated={handleUserCreated}
-          onClose={() => setShowCreateForm(false)}
-        />
-      )}
-
-      {/* User Detail Modal */}
-      <Dialog open={showUserDetail} onOpenChange={setShowUserDetail}>
-        <DialogContent className="max-w-md">
+      {/* Create User Dialog */}
+      <Dialog open={showCreateForm} onOpenChange={setShowCreateForm}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Detail User</DialogTitle>
+            <DialogTitle>Tambah User Baru</DialogTitle>
             <DialogDescription>
-              Informasi lengkap tentang user
+              Buat akun pengguna baru untuk sistem
             </DialogDescription>
           </DialogHeader>
-          {selectedUser && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Nama</label>
-                <p className="text-sm text-muted-foreground">{selectedUser.name || 'N/A'}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <p className="text-sm text-muted-foreground">{selectedUser.email}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Role</label>
-                <Badge variant={selectedUser.role === 'ADMIN' ? 'default' : 'secondary'}>
-                  {selectedUser.role}
-                </Badge>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <div className="flex items-center gap-2">
-                  {selectedUser.isActive ? (
-                    <UserCheck className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <UserX className="h-4 w-4 text-red-500" />
-                  )}
-                  <Badge variant={selectedUser.isActive ? 'default' : 'destructive'}>
-                    {selectedUser.isActive ? 'Active' : 'Inactive'}
-                  </Badge>
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Email Verified</label>
-                <Badge variant={selectedUser.isVerified ? 'default' : 'secondary'}>
-                  {selectedUser.isVerified ? 'Verified' : 'Not Verified'}
-                </Badge>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Tanggal Bergabung</label>
-                <p className="text-sm text-muted-foreground">{formatDate(selectedUser.createdAt)}</p>
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowUserDetail(false)}>
-              Tutup
-            </Button>
-          </DialogFooter>
+          <CreateUserForm 
+            onUserCreated={handleUserCreated}
+            onClose={() => setShowCreateForm(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>

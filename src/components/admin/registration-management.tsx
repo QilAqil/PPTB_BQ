@@ -2,29 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { 
-  Search, 
-  Filter, 
-  Eye, 
-  CheckCircle, 
-  XCircle, 
-  Loader2, 
-  Calendar,
-  Phone,
-  MapPin,
-  User,
+  Users, 
+  Calendar, 
+  Phone, 
+  MapPin, 
+  User, 
+  FileText, 
   GraduationCap,
-  Heart,
+  Clock,
   AlertCircle,
-  CreditCard
+  AlertTriangle
 } from "lucide-react";
-import RegistrationDialog from "./registration-dialog";
 
 interface Registration {
   id: string;
@@ -41,152 +34,80 @@ interface Registration {
   educationLevel: string;
   schoolName: string;
   schoolAddress: string;
-  graduationYear?: number;
+  graduationYear: string;
   motivation: string;
-  healthCondition?: string;
-  specialNeeds?: string;
+  healthCondition: string;
+  specialNeeds: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  notes?: string;
-  processedBy?: string;
-  processedAt?: string;
+  notes: string | null;
   createdAt: string;
-  processedByUser?: {
-    name: string;
-    email: string;
-  };
+  updatedAt: string;
 }
 
-interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-export default function RegistrationManagement() {
+export function RegistrationManagement() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    page: 1,
-    limit: 10,
-    total: 0,
-    totalPages: 0
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("ALL");
   const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null);
-  const [processing, setProcessing] = useState(false);
-  const [notes, setNotes] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [processingRegistrationId, setProcessingRegistrationId] = useState<string | null>(null);
-
-  const resetDialog = () => {
-    setSelectedRegistration(null);
-    setNotes("");
-    setDialogOpen(false);
-    setProcessing(false);
-    setProcessingRegistrationId(null);
-  };
 
   useEffect(() => {
     fetchRegistrations();
-  }, [pagination.page, search, statusFilter]);
+  }, []);
 
   const fetchRegistrations = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: pagination.page.toString(),
-        limit: pagination.limit.toString(),
-        search,
-        status: statusFilter
-      });
-
-      const response = await fetch(`/api/registration?${params}`);
+      setError(null);
+      const response = await fetch('/api/registration');
+      
       if (!response.ok) {
         throw new Error('Gagal mengambil data pendaftaran');
       }
-
+      
       const result = await response.json();
-      setRegistrations(result.data || result || []);
-      setPagination(result.pagination || {
-        page: 1,
-        limit: 10,
-        total: 0,
-        totalPages: 0
-      });
+      // API mengembalikan { data: [...] }, jadi kita ambil data.data
+      const data = result.data || result;
+      // Memastikan data adalah array
+      setRegistrations(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
+      setRegistrations([]); // Set empty array jika error
     } finally {
       setLoading(false);
     }
   };
 
-  const handleStatusUpdate = async (registrationId: string, status: 'APPROVED' | 'REJECTED', notes?: string) => {
+  const handleStatusChange = async (registrationId: string, newStatus: 'APPROVED' | 'REJECTED') => {
     try {
-      setProcessing(true);
-      setProcessingRegistrationId(registrationId);
-      setError(null); // Clear previous errors
-      
-      console.log('Updating registration:', registrationId, 'with status:', status, 'notes:', notes);
-      
       const response = await fetch(`/api/registration/${registrationId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          status,
-          notes: notes || ""
-        }),
+        body: JSON.stringify({ status: newStatus }),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
       if (!response.ok) {
-        let errorMessage = 'Gagal mengupdate status pendaftaran';
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (parseError) {
-          const errorText = await response.text();
-          console.error('Error response text:', errorText);
-          errorMessage = `HTTP ${response.status}: ${errorText}`;
-        }
-        throw new Error(errorMessage);
+        throw new Error('Gagal mengubah status pendaftaran');
       }
 
-      const result = await response.json();
-      console.log('Success response:', result);
-
-      // Refresh data
-      await fetchRegistrations();
-      resetDialog();
-      setSuccessMessage(`Pendaftaran berhasil ${status === 'APPROVED' ? 'disetujui' : 'ditolak'}`);
-      setTimeout(() => setSuccessMessage(null), 3000);
+      // Update local state
+      setRegistrations(prev => 
+        prev.map(reg => 
+          reg.id === registrationId 
+            ? { ...reg, status: newStatus }
+            : reg
+        )
+      );
     } catch (err) {
-      console.error('Error in handleStatusUpdate:', err);
       setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
-    } finally {
-      setProcessing(false);
-      setProcessingRegistrationId(null);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'PENDING':
-        return <Badge variant="secondary">Menunggu</Badge>;
-      case 'APPROVED':
-        return <Badge className="bg-green-500">Disetujui</Badge>;
-      case 'REJECTED':
-        return <Badge variant="destructive">Ditolak</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+  const handleViewDetails = (registration: Registration) => {
+    setSelectedRegistration(registration);
+    setDialogOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -199,271 +120,144 @@ export default function RegistrationManagement() {
     });
   };
 
-  const calculateAge = (birthDate: string) => {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return <Badge variant="secondary">Menunggu</Badge>;
+      case 'APPROVED':
+        return <Badge variant="default">Diterima</Badge>;
+      case 'REJECTED':
+        return <Badge variant="destructive">Ditolak</Badge>;
+      default:
+        return <Badge variant="outline">Tidak Diketahui</Badge>;
     }
-    
-    return age;
   };
 
-  if (loading && registrations.length === 0) {
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return <Clock className="h-4 w-4 text-yellow-500" />;
+      case 'APPROVED':
+        return <AlertCircle className="h-4 w-4 text-green-500" />;
+      case 'REJECTED':
+        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+      default:
+        return <Clock className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Memuat data pendaftaran...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-4" />
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={fetchRegistrations}>Coba Lagi</Button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Success Message */}
-      {successMessage && (
-        <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <CheckCircle className="h-5 w-5 text-green-500" />
-          <p className="text-green-700">{successMessage}</p>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {error && (
-        <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <AlertCircle className="h-5 w-5 text-red-500" />
-          <div className="flex-1">
-            <p className="text-red-700 font-medium">Error:</p>
-            <p className="text-red-600 text-sm">{error}</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setError(null)}
-            className="ml-auto"
-          >
-            ✕
-          </Button>
-        </div>
-      )}
-
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Manajemen Pendaftaran</h2>
           <p className="text-muted-foreground">
             Kelola pendaftaran santri baru
           </p>
         </div>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline">
+            Total: {Array.isArray(registrations) ? registrations.length : 0}
+          </Badge>
+        </div>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Filter & Pencarian
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama, NIK, nomor telepon..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-                         <select 
-                           value={statusFilter} 
-                           onChange={(e) => setStatusFilter(e.target.value)}
-                           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                         >
-                           <option value="ALL">Semua Status</option>
-                           <option value="PENDING">Menunggu</option>
-                           <option value="APPROVED">Disetujui</option>
-                           <option value="REJECTED">Ditolak</option>
-                         </select>
-            <Button onClick={fetchRegistrations} variant="outline">
-              Refresh
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-
-
-      {/* Registrations List */}
-      <div className="grid gap-4">
-        {registrations.map((registration) => (
-          <Card key={registration.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-lg font-semibold">{registration.fullName}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        NIK: {registration.nik}
-                      </p>
-                    </div>
-                    {getStatusBadge(registration.status)}
+      <div className="grid gap-6">
+        {Array.isArray(registrations) && registrations.map((registration) => (
+          <Card key={registration.id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary" />
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>{formatDate(registration.birthDate)} ({calculateAge(registration.birthDate)} tahun)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span>{registration.phoneNumber}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span>{registration.parentName}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                      <span>{registration.educationLevel} - {registration.schoolName}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span className="truncate">{registration.address}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-4 w-4 text-muted-foreground" />
-                      <span>{registration.gender}</span>
-                    </div>
+                  <div>
+                    <CardTitle className="text-lg">{registration.fullName}</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      NIK: {registration.nik}
+                    </p>
                   </div>
-                  
-                  {registration.notes && (
-                    <div className="mt-3 p-3 bg-muted rounded-lg">
-                      <p className="text-sm">
-                        <strong>Catatan:</strong> {registration.notes}
-                      </p>
-                    </div>
-                  )}
                 </div>
-                
-                <div className="flex flex-col gap-2">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Eye className="h-4 w-4 mr-2" />
-                        Detail
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>Detail Pendaftaran</DialogTitle>
-                        <DialogDescription>
-                          Informasi lengkap pendaftar
-                        </DialogDescription>
-                      </DialogHeader>
-                      
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium">Nama Lengkap</label>
-                            <p className="text-sm">{registration.fullName}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">NIK</label>
-                            <p className="text-sm">{registration.nik}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Tempat Lahir</label>
-                            <p className="text-sm">{registration.birthPlace}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Tanggal Lahir</label>
-                            <p className="text-sm">{formatDate(registration.birthDate)}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Jenis Kelamin</label>
-                            <p className="text-sm">{registration.gender}</p>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Alamat</label>
-                          <p className="text-sm">{registration.address}</p>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Nomor Telepon</label>
-                          <p className="text-sm">{registration.phoneNumber}</p>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium">Nama Orang Tua</label>
-                            <p className="text-sm">{registration.parentName}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Telepon Orang Tua</label>
-                            <p className="text-sm">{registration.parentPhone}</p>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Alamat Orang Tua</label>
-                          <p className="text-sm">{registration.parentAddress}</p>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium">Tingkat Pendidikan</label>
-                            <p className="text-sm">{registration.educationLevel}</p>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Tahun Lulus</label>
-                            <p className="text-sm">{registration.graduationYear || '-'}</p>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Nama Sekolah</label>
-                          <p className="text-sm">{registration.schoolName}</p>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Alamat Sekolah</label>
-                          <p className="text-sm">{registration.schoolAddress}</p>
-                        </div>
-                        
-                        <div>
-                          <label className="text-sm font-medium">Motivasi</label>
-                          <p className="text-sm">{registration.motivation}</p>
-                        </div>
-                        
-                        {registration.healthCondition && (
-                          <div>
-                            <label className="text-sm font-medium">Kondisi Kesehatan</label>
-                            <p className="text-sm">{registration.healthCondition}</p>
-                          </div>
-                        )}
-                        
-                        {registration.specialNeeds && (
-                          <div>
-                            <label className="text-sm font-medium">Kebutuhan Khusus</label>
-                            <p className="text-sm">{registration.specialNeeds}</p>
-                          </div>
-                        )}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(registration.status)}
+                  {getStatusBadge(registration.status)}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{registration.birthDate}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{registration.phoneNumber}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{registration.birthPlace}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">{registration.educationLevel}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Didaftar pada: {formatDate(registration.createdAt)}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(registration)}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Lihat Detail
+                  </Button>
                   {registration.status === 'PENDING' && (
-                    <RegistrationDialog 
-                      registration={registration}
-                      onStatusUpdate={handleStatusUpdate}
-                      processing={processing && processingRegistrationId === registration.id}
-                    />
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleStatusChange(registration.id, 'APPROVED')}
+                      >
+                        <AlertCircle className="h-4 w-4 mr-2" />
+                        Terima
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleStatusChange(registration.id, 'REJECTED')}
+                      >
+                        <AlertTriangle className="h-4 w-4 mr-2" />
+                        Tolak
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -472,38 +266,139 @@ export default function RegistrationManagement() {
         ))}
       </div>
 
-      {/* Pagination */}
-      {pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} pendaftaran
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-              disabled={pagination.page === 1}
-            >
-              Sebelumnya
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-              disabled={pagination.page === pagination.totalPages}
-            >
-              Selanjutnya
-            </Button>
-          </div>
-        </div>
+      {(!Array.isArray(registrations) || registrations.length === 0) && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Users className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Belum Ada Pendaftaran</h3>
+            <p className="text-muted-foreground text-center">
+              Belum ada data pendaftaran santri baru yang tersedia.
+            </p>
+          </CardContent>
+        </Card>
       )}
 
-      {registrations.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Tidak ada pendaftaran yang ditemukan.</p>
-        </div>
-      )}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Detail Pendaftaran</DialogTitle>
+          </DialogHeader>
+          {selectedRegistration && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium">Nama Lengkap</Label>
+                  <p className="text-sm">{selectedRegistration.fullName}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">NIK</Label>
+                  <p className="text-sm">{selectedRegistration.nik}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Tempat Lahir</Label>
+                  <p className="text-sm">{selectedRegistration.birthPlace}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Tanggal Lahir</Label>
+                  <p className="text-sm">{selectedRegistration.birthDate}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Jenis Kelamin</Label>
+                  <p className="text-sm">{selectedRegistration.gender}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Nomor Telepon</Label>
+                  <p className="text-sm">{selectedRegistration.phoneNumber}</p>
+                </div>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Alamat</Label>
+                <p className="text-sm">{selectedRegistration.address}</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium">Nama Orang Tua</Label>
+                  <p className="text-sm">{selectedRegistration.parentName}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Telepon Orang Tua</Label>
+                  <p className="text-sm">{selectedRegistration.parentPhone}</p>
+                </div>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Alamat Orang Tua</Label>
+                <p className="text-sm">{selectedRegistration.parentAddress}</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium">Tingkat Pendidikan</Label>
+                  <p className="text-sm">{selectedRegistration.educationLevel}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Nama Sekolah</Label>
+                  <p className="text-sm">{selectedRegistration.schoolName}</p>
+                </div>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Alamat Sekolah</Label>
+                <p className="text-sm">{selectedRegistration.schoolAddress}</p>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Tahun Lulus</Label>
+                <p className="text-sm">{selectedRegistration.graduationYear}</p>
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Motivasi</Label>
+                <p className="text-sm">{selectedRegistration.motivation}</p>
+              </div>
+              
+              {selectedRegistration.healthCondition && (
+                <div>
+                  <Label className="text-sm font-medium">Kondisi Kesehatan</Label>
+                  <p className="text-sm">{selectedRegistration.healthCondition}</p>
+                </div>
+              )}
+              
+              {selectedRegistration.specialNeeds && (
+                <div>
+                  <Label className="text-sm font-medium">Kebutuhan Khusus</Label>
+                  <p className="text-sm">{selectedRegistration.specialNeeds}</p>
+                </div>
+              )}
+              
+              <div className="flex items-center justify-between pt-4 border-t">
+                <div className="text-sm text-muted-foreground">
+                  Status: {getStatusBadge(selectedRegistration.status)}
+                </div>
+                <div className="flex items-center gap-2">
+                  {selectedRegistration.status === 'PENDING' && (
+                    <>
+                      <Button
+                        onClick={() => handleStatusChange(selectedRegistration.id, 'APPROVED')}
+                      >
+                        Terima
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => handleStatusChange(selectedRegistration.id, 'REJECTED')}
+                      >
+                        Tolak
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 

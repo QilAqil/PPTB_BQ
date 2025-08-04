@@ -5,69 +5,41 @@ import { Button } from "@/components/ui/button"
 import { User, ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { PrismaClient } from '@prisma/client'
 
 export const metadata: Metadata = {
-  title: "Gallery - PPTB BAROKATUL QUR'AN",
-  description: "Explore our gallery of activities and events at PPTB BAROKATUL QUR'AN - Final Fix",
+  title: "Galeri - PPTB BAROKATUL QUR'AN",
+  description: "Jelajahi galeri aktivitas dan acara kami di PPTB BAROKATUL QUR'AN",
 }
 
 interface GalleryItem {
   id: string;
   title: string;
-  description?: string;
   imageUrl: string;
   isPublished: boolean;
-  publishedAt?: Date;
-  createdAt: Date;
+  publishedAt?: string;
+  createdAt: string;
   author: {
     id: string;
-    name?: string;
+    name: string;
     email: string;
   };
 }
 
 async function getGalleryData(): Promise<GalleryItem[]> {
   try {
-    const prisma = new PrismaClient();
-    
-    const gallery = await prisma.gallery.findMany({
-      where: {
-        isPublished: true,
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/gallery?published=true&limit=20`, {
+      cache: 'no-store' // Disable cache to avoid large data issues
     });
     
-    await prisma.$disconnect();
+    if (!response.ok) {
+      throw new Error('Gagal mengambil data galeri');
+    }
     
-    // Transform the data to match GalleryItem interface
-    return gallery.map(item => ({
-      id: item.id,
-      title: item.title,
-      description: item.description || undefined,
-      imageUrl: item.imageUrl,
-      isPublished: item.isPublished,
-      publishedAt: item.publishedAt || undefined,
-      createdAt: item.createdAt,
-      author: {
-        id: item.author.id,
-        name: item.author.name || undefined,
-        email: item.author.email
-      }
-    }));
+    const result = await response.json();
+    // API gallery mengembalikan { data: [...], pagination: {...} }
+    return result.data || [];
   } catch (error) {
-    console.error('Error fetching gallery data from Prisma:', error);
+    console.error('Error mengambil data galeri:', error);
     return [];
   }
 }
@@ -79,20 +51,20 @@ export default async function GalleryPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
         <Badge variant="secondary" className="mb-4">
-          Our Portfolio
+          Portofolio Kami
         </Badge>
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Explore Our Creative Gallery
+          Jelajahi Galeri Kreatif Kami
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Discover our latest projects and creative solutions. Each piece represents
-          our commitment to excellence and innovation in web development.
+          Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+          komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
         </p>
       </div>
 
       {gallery.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No published gallery items available yet.</p>
+          <p className="text-muted-foreground">Belum ada item galeri yang dipublikasikan.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -109,11 +81,11 @@ export default async function GalleryPage() {
                   />
                 ) : (
                   <div className="w-full h-48 bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground">No Image</span>
+                    <span className="text-muted-foreground">Tidak Ada Gambar</span>
                   </div>
                 )}
                 <div className="absolute top-4 left-4">
-                  <Badge variant="secondary">Gallery</Badge>
+                  <Badge variant="secondary">Galeri</Badge>
                 </div>
               </div>
               <CardContent className="p-4">
@@ -128,14 +100,11 @@ export default async function GalleryPage() {
                 <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {item.description || 'No description available.'}
-                </p>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                                     <div className="flex items-center gap-2">
-                     <User className="h-4 w-4" />
-                     <span>{item.author.name || 'Unknown Author'}</span>
-                   </div>
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span>{item.author.name}</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -147,7 +116,7 @@ export default async function GalleryPage() {
         <Link href="/">
           <Button variant="outline" size="lg">
             <ArrowRight className="h-4 w-4 mr-2" />
-            Back to Home
+            Kembali ke Beranda
           </Button>
         </Link>
       </div>

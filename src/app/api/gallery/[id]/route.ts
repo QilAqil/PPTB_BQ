@@ -92,7 +92,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const { title, description, imageUrl, isPublished } = body
+    const { title, imageUrl, isPublished } = body
 
     const { id } = await params
     // Check if gallery item exists
@@ -112,7 +112,6 @@ export async function PUT(
       where: { id },
       data: {
         title,
-        description,
         imageUrl,
         isPublished,
         publishedAt: isPublished && !existingItem.isPublished ? new Date() : existingItem.publishedAt,

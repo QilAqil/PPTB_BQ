@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     }
 
     const response = NextResponse.json({
-      message: 'Logout successful',
+      message: 'Logout berhasil',
     })
 
     // Clear cookie
@@ -24,9 +24,20 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Logout error:', error)
-    return NextResponse.json(
-      { error: 'Failed to logout' },
+    // Even if there's an error, we should still clear the cookie
+    const response = NextResponse.json(
+      { error: 'Gagal logout, tetapi session telah dibersihkan' },
       { status: 500 }
     )
+    
+    // Clear cookie even on error
+    response.cookies.set('auth-token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0,
+    })
+    
+    return response
   }
 } 
