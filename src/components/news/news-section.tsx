@@ -33,16 +33,24 @@ export default function NewsSection() {
       try {
         setLoading(true);
         setError(null);
+        console.log('Fetching news from API...');
         // Add cache-busting parameter to ensure fresh data
         const response = await fetch(`/api/news?published=true&limit=4&t=${Date.now()}`);
+        console.log('News API response status:', response.status);
+        
         if (!response.ok) {
           throw new Error('Gagal mengambil berita');
         }
         const result = await response.json();
+        console.log('News API result:', result);
+        
         // Handle new API response format with data and pagination
         const newsData = result.data || result;
+        console.log('Processed news data:', newsData);
+        
         setNews(Array.isArray(newsData) ? newsData : []);
       } catch (err) {
+        console.error('Error fetching news:', err);
         setError(err instanceof Error ? err.message : 'Gagal mengambil berita');
       } finally {
         setLoading(false);

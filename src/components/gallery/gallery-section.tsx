@@ -33,16 +33,24 @@ export default function GallerySection() {
       try {
         setLoading(true);
         setError(null);
+        console.log('Fetching gallery from API...');
         // Add cache-busting parameter to ensure fresh data
         const response = await fetch(`/api/gallery?published=true&limit=6&t=${Date.now()}`);
+        console.log('Gallery API response status:', response.status);
+        
         if (!response.ok) {
           throw new Error('Gagal mengambil galeri');
         }
         const result = await response.json();
+        console.log('Gallery API result:', result);
+        
         // Handle new API response format with data and pagination
         const galleryData = result.data || result;
+        console.log('Processed gallery data:', galleryData);
+        
         setGallery(Array.isArray(galleryData) ? galleryData : []);
       } catch (err) {
+        console.error('Error fetching gallery:', err);
         setError(err instanceof Error ? err.message : 'Gagal mengambil galeri');
       } finally {
         setLoading(false);

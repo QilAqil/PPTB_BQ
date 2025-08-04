@@ -1,15 +1,12 @@
-import { Metadata } from "next"
+'use client'
+
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, User } from "lucide-react"
+import { Calendar, User, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-
-export const metadata: Metadata = {
-  title: "Berita - PPTB BAROKATUL QUR'AN",
-  description: "Berita terbaru dan informasi seputar kegiatan PPTB BAROKATUL QUR'AN",
-}
 
 interface NewsItem {
   id: string;
@@ -26,54 +23,85 @@ interface NewsItem {
   };
 }
 
-async function getNewsData(): Promise<NewsItem[]> {
-  try {
-    // Check if we're in development or production
-    const isDev = process.env.NODE_ENV === 'development';
-    
-    if (isDev) {
-      // In development, try to fetch from API
-      const response = await fetch(`/api/news?published=true&limit=20`, {
-        cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      console.log('Fetch response status:', response.status);
-      
-      if (!response.ok) {
-        console.error('Response not ok:', response.status, response.statusText);
-        const errorText = await response.text();
-        console.error('Error response body:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-      }
-      
-      const result = await response.json();
-      console.log('API Response:', result);
-      
-      if (Array.isArray(result)) {
-        return result;
-      } else if (result && result.error) {
-        console.error('API returned error:', result.error);
-        return [];
-      } else {
-        console.error('Unexpected response format:', result);
-        return [];
-      }
-    } else {
-      // In production (Vercel), return empty array if no database
-      console.log('Production environment detected, checking for database...');
-      return [];
-    }
-  } catch (error) {
-    console.error('Error mengambil data berita:', error);
-    return [];
-  }
-}
+export default function NewsPage() {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function NewsPage() {
-  const news = await getNewsData();
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching news from API...');
+        // Add cache-busting parameter to ensure fresh data
+        const response = await fetch(`/api/news?published=true&limit=20&t=${Date.now()}`);
+        console.log('News API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error('Gagal mengambil berita');
+        }
+        const result = await response.json();
+        console.log('News API result:', result);
+        
+        // Handle new API response format with data and pagination
+        const newsData = result.data || result;
+        console.log('Processed news data:', newsData);
+        
+        setNews(Array.isArray(newsData) ? newsData : []);
+      } catch (err) {
+        console.error('Error fetching news:', err);
+        setError(err instanceof Error ? err.message : 'Gagal mengambil berita');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4">
+            Berita Terbaru
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Berita dan Informasi Terbaru
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Dapatkan informasi terbaru tentang kegiatan, acara, dan perkembangan di Pondok Pesantren kami.
+          </p>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4">
+            Berita Terbaru
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Berita dan Informasi Terbaru
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Dapatkan informasi terbaru tentang kegiatan, acara, dan perkembangan di Pondok Pesantren kami.
+          </p>
+        </div>
+        <div className="text-center py-12">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -89,7 +117,7 @@ export default async function NewsPage() {
         </p>
       </div>
 
-      {news.length === 0 ? (
+      {!Array.isArray(news) || news.length === 0 ? (
         <div className="text-center py-12">
           <div className="max-w-md mx-auto">
             <div className="mb-4">

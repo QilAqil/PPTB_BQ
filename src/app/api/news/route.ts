@@ -13,14 +13,17 @@ export async function GET(request: NextRequest) {
     
     // Check if DATABASE_URL is configured
     if (!process.env.DATABASE_URL) {
-      console.error('DATABASE_URL not configured')
-      return NextResponse.json(
-        { error: 'Database not configured', details: 'DATABASE_URL environment variable is missing' },
-        { status: 500 }
-      )
+      console.log('DATABASE_URL not configured')
+      return NextResponse.json([]) // Return empty array instead of error
     }
     
     const where = published === 'true' ? { isPublished: true } : {}
+    console.log('Query where clause:', where)
+    
+    // Also check total news count (including unpublished)
+    const totalNews = await prisma.news.count()
+    const publishedNews = await prisma.news.count({ where: { isPublished: true } })
+    console.log(`Total news in database: ${totalNews}, Published: ${publishedNews}`)
     
     const news = await prisma.news.findMany({
       where,
@@ -40,22 +43,13 @@ export async function GET(request: NextRequest) {
     })
 
     console.log(`Found ${news.length} news items`)
+    console.log('News items:', news.map(n => ({ id: n.id, title: n.title, isPublished: n.isPublished })))
+    
     return NextResponse.json(news)
   } catch (error) {
     console.error('Error fetching news:', error)
-    
-    // Check if it's a database connection error
-    if (error instanceof Error && error.message.includes('connect')) {
-      return NextResponse.json(
-        { error: 'Database connection failed', details: 'Unable to connect to database. Please check DATABASE_URL configuration.' },
-        { status: 500 }
-      )
-    }
-    
-    return NextResponse.json(
-      { error: 'Failed to fetch news', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    )
+    // Return empty array instead of error response
+    return NextResponse.json([])
   }
 }
 

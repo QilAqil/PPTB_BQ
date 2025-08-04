@@ -1,15 +1,12 @@
-import { Metadata } from "next"
+'use client'
+
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { User, ArrowRight } from "lucide-react"
+import { User, ArrowRight, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-
-export const metadata: Metadata = {
-  title: "Galeri - PPTB BAROKATUL QUR'AN",
-  description: "Jelajahi galeri aktivitas dan acara kami di PPTB BAROKATUL QUR'AN",
-}
 
 interface GalleryItem {
   id: string;
@@ -25,54 +22,87 @@ interface GalleryItem {
   };
 }
 
-async function getGalleryData(): Promise<GalleryItem[]> {
-  try {
-    // Check if we're in development or production
-    const isDev = process.env.NODE_ENV === 'development';
-    
-    if (isDev) {
-      // In development, try to fetch from API
-      const response = await fetch(`/api/gallery?published=true&limit=20`, {
-        cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      console.log('Gallery fetch response status:', response.status);
-      
-      if (!response.ok) {
-        console.error('Response not ok:', response.status, response.statusText);
-        const errorText = await response.text();
-        console.error('Error response body:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-      }
-      
-      const result = await response.json();
-      console.log('Gallery API Response:', result);
-      
-      if (result && result.data && Array.isArray(result.data)) {
-        return result.data;
-      } else if (result && result.error) {
-        console.error('Gallery API returned error:', result.error);
-        return [];
-      } else {
-        console.error('Unexpected gallery response format:', result);
-        return [];
-      }
-    } else {
-      // In production (Vercel), return empty array if no database
-      console.log('Production environment detected, checking for database...');
-      return [];
-    }
-  } catch (error) {
-    console.error('Error mengambil data galeri:', error);
-    return [];
-  }
-}
+export default function GalleryPage() {
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function GalleryPage() {
-  const gallery = await getGalleryData();
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching gallery from API...');
+        // Add cache-busting parameter to ensure fresh data
+        const response = await fetch(`/api/gallery?published=true&limit=20&t=${Date.now()}`);
+        console.log('Gallery API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error('Gagal mengambil galeri');
+        }
+        const result = await response.json();
+        console.log('Gallery API result:', result);
+        
+        // Handle new API response format with data and pagination
+        const galleryData = result.data || result;
+        console.log('Processed gallery data:', galleryData);
+        
+        setGallery(Array.isArray(galleryData) ? galleryData : []);
+      } catch (err) {
+        console.error('Error fetching gallery:', err);
+        setError(err instanceof Error ? err.message : 'Gagal mengambil galeri');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGallery();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4">
+            Portofolio Kami
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Jelajahi Galeri Kreatif Kami
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+            komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
+          </p>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+          <Badge variant="secondary" className="mb-4">
+            Portofolio Kami
+          </Badge>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Jelajahi Galeri Kreatif Kami
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+            komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
+          </p>
+        </div>
+        <div className="text-center py-12">
+          <p className="text-red-600 mb-4">Error: {error}</p>
+          <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -89,7 +119,7 @@ export default async function GalleryPage() {
         </p>
       </div>
 
-      {gallery.length === 0 ? (
+      {!Array.isArray(gallery) || gallery.length === 0 ? (
         <div className="text-center py-12">
           <div className="max-w-md mx-auto">
             <div className="mb-4">
