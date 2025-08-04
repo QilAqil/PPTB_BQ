@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit');
     const page = searchParams.get('page');
 
+    console.log('Gallery API called with params:', { published, limit, page });
+
     const where: Record<string, unknown> = {};
     
     if (published === 'true') {
@@ -37,6 +39,8 @@ export async function GET(request: NextRequest) {
 
     const total = await prisma.gallery.count({ where });
 
+    console.log(`Found ${gallery.length} gallery items, total: ${total}`);
+
     return NextResponse.json({
       data: gallery,
       pagination: {
@@ -49,7 +53,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching gallery:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
     const published = searchParams.get('published')
     const limit = searchParams.get('limit')
     
+    console.log('News API called with params:', { published, limit })
+    
     const where = published === 'true' ? { isPublished: true } : {}
     
     const news = await prisma.news.findMany({
@@ -28,11 +30,12 @@ export async function GET(request: NextRequest) {
       ...(limit && { take: parseInt(limit) }),
     })
 
+    console.log(`Found ${news.length} news items`)
     return NextResponse.json(news)
   } catch (error) {
     console.error('Error fetching news:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch news' },
+      { error: 'Failed to fetch news', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

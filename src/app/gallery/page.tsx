@@ -33,12 +33,20 @@ async function getGalleryData(): Promise<GalleryItem[]> {
     });
     
     if (!response.ok) {
-      throw new Error('Gagal mengambil data galeri');
+      console.error('Response not ok:', response.status, response.statusText);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const result = await response.json();
+    console.log('Gallery API Response:', result);
+    
     // API gallery mengembalikan { data: [...], pagination: {...} }
-    return result.data || [];
+    if (result && result.data && Array.isArray(result.data)) {
+      return result.data;
+    } else {
+      console.error('Unexpected gallery response format:', result);
+      return [];
+    }
   } catch (error) {
     console.error('Error mengambil data galeri:', error);
     return [];

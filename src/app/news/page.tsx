@@ -34,12 +34,20 @@ async function getNewsData(): Promise<NewsItem[]> {
     });
     
     if (!response.ok) {
-      throw new Error('Gagal mengambil data berita');
+      console.error('Response not ok:', response.status, response.statusText);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     
     const result = await response.json();
+    console.log('API Response:', result);
+    
     // API mengembalikan array langsung, bukan { data: [...] }
-    return Array.isArray(result) ? result : [];
+    if (Array.isArray(result)) {
+      return result;
+    } else {
+      console.error('Unexpected response format:', result);
+      return [];
+    }
   } catch (error) {
     console.error('Error mengambil data berita:', error);
     return [];
