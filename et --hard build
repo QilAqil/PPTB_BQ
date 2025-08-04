@@ -1,0 +1,88 @@
+[1mdiff --git a/DEPLOYMENT_GUIDE.md b/DEPLOYMENT_GUIDE.md[m
+[1mdeleted file mode 100644[m
+[1mindex 4275fc3..0000000[m
+[1m--- a/DEPLOYMENT_GUIDE.md[m
+[1m+++ /dev/null[m
+[36m@@ -1,69 +0,0 @@[m
+[31m-# Panduan Deployment PPTB BAROKATUL QUR'AN[m
+[31m-[m
+[31m-## Environment Variables yang Diperlukan[m
+[31m-[m
+[31m-Untuk deployment di Vercel, pastikan environment variables berikut sudah diset:[m
+[31m-[m
+[31m-### Database[m
+[31m-- `DATABASE_URL` - URL PostgreSQL dari Neon Tech[m
+[31m-[m
+[31m-### UploadThing[m
+[31m-- `UPLOADTHING_SECRET` - Secret key dari UploadThing[m
+[31m-- `UPLOADTHING_APP_ID` - App ID dari UploadThing[m
+[31m-[m
+[31m-### JWT[m
+[31m-- `JWT_SECRET` - Secret key untuk JWT authentication[m
+[31m-[m
+[31m-### App URL[m
+[31m-- `NEXT_PUBLIC_APP_URL` - URL aplikasi di Vercel[m
+[31m-[m
+[31m-## Cara Set Environment Variables di Vercel:[m
+[31m-[m
+[31m-1. Buka Vercel Dashboard[m
+[31m-2. Pilih project PPTB_BQ[m
+[31m-3. Klik tab "Settings"[m
+[31m-4. Scroll ke bagian "Environment Variables"[m
+[31m-5. Tambahkan setiap variable yang diperlukan[m
+[31m-6. Klik "Save"[m
+[31m-7. Redeploy aplikasi[m
+[31m-[m
+[31m-## Status Perbaikan Gallery & Build[m
+[31m-[m
+[31m-✅ **MASALAH SUDAH DIPERBAIKI**[m
+[31m-[m
+[31m-### Gallery Page:[m
+[31m-- Data gallery berhasil di-fetch dari database[m
+[31m-- Gambar ditampilkan dengan benar[m
+[31m-- Layout responsive dan modern[m
+[31m-- Tidak ada lagi pesan "No published gallery items available yet"[m
+[31m-[m
+[31m-### Build Errors:[m
+[31m-- ✅ TypeScript errors sudah diperbaiki[m
+[31m-- ✅ Interface types sudah disesuaikan dengan Prisma schema[m
+[31m-- ✅ Unused imports sudah dibersihkan[m
+[31m-- ✅ Null value handling sudah ditambahkan[m
+[31m-- ✅ Code sudah production-ready[m
+[31m-- ✅ Force deployment dengan commit 4f696d6[m
+[31m-[m
+[31m-## Perubahan yang Dilakukan:[m
+[31m-[m
+[31m-### Gallery Page:[m
+[31m-1. **Menggunakan Prisma langsung** di halaman gallery untuk server-side rendering[m
+[31m-2. **Menambahkan debugging** untuk memastikan data ter-fetch dengan benar[m
+[31m-3. **Memperbaiki environment variables** untuk production deployment[m
+[31m-4. **Menjalankan seed script** untuk memastikan ada data gallery di database[m
+[31m-[m
+[31m-### Build Fixes:[m
+[31m-1. **Memperbaiki TypeScript interface** untuk menyesuaikan dengan Prisma schema[m
+[31m-2. **Menangani null values** dengan fallback yang tepat[m
+[31m-3. **Membersihkan unused imports** di berbagai file[m
+[31m-4. **Memperbaiki component naming conflicts** (Image vs ImageIcon)[m
+[31m-5. **Force deployment** untuk memastikan Vercel menggunakan commit terbaru[m
+[31m-[m
+[31m-## Testing:[m
+[31m-[m
+[31m-Halaman gallery sekarang menampilkan:[m
+[31m-- 20+ item gallery yang sudah dipublish[m
+[31m-- Gambar dari UploadThing dan Unsplash[m
+[31m-- Informasi lengkap (judul, deskripsi, tanggal, author)[m
+[31m-- Layout grid yang responsive [m
+\ No newline at end of file[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 0ac0152..c213325 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -2,7 +2,6 @@[m
+   "name": "pptb-bq",[m
+   "version": "0.1.0",[m
+   "private": true,[m
+[31m-  "description": "Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN - Next.js Application",[m
+   "scripts": {[m
+     "dev": "next dev",[m
+     "build": "prisma generate && next build",[m

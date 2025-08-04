@@ -27,7 +27,8 @@ interface GalleryItem {
 
 async function getGalleryData(): Promise<GalleryItem[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/gallery?published=true&limit=20`, {
+    // Gunakan relative URL untuk menghindari masalah dengan environment variables di Vercel
+    const response = await fetch(`/api/gallery?published=true&limit=20`, {
       cache: 'no-store' // Disable cache to avoid large data issues
     });
     

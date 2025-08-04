@@ -28,7 +28,8 @@ interface NewsItem {
 
 async function getNewsData(): Promise<NewsItem[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/news?published=true&limit=20`, {
+    // Gunakan relative URL untuk menghindari masalah dengan environment variables di Vercel
+    const response = await fetch(`/api/news?published=true&limit=20`, {
       cache: 'no-store' // Disable cache to avoid large data issues
     });
     
