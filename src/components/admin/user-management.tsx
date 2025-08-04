@@ -5,20 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Users, 
   Search, 
-  Eye, 
   Loader2, 
-  Calendar,
   User,
   Plus,
   Shield,
-  Mail,
   UserCheck,
-  UserX,
-  Edit,
   Trash2
 } from "lucide-react"
 import CreateUserForm from './create-user-form';
@@ -46,8 +41,8 @@ export default function UserManagement() {
   const [statsLoading, setStatsLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [showUserDetail, setShowUserDetail] = useState(false);
+  // const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  // const [showUserDetail, setShowUserDetail] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

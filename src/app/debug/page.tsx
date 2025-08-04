@@ -19,8 +19,24 @@ interface DebugData {
       unpublished: number
     }
   }
-  news: any[]
-  gallery: any[]
+  news: Array<{
+    id: string
+    title: string
+    isPublished: boolean
+    createdAt: string
+    author?: {
+      name: string
+    }
+  }>
+  gallery: Array<{
+    id: string
+    title: string
+    isPublished: boolean
+    createdAt: string
+    author?: {
+      name: string
+    }
+  }>
 }
 
 export default function DebugPage() {
