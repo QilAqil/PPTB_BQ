@@ -1,18 +1,16 @@
-"use client";
+'use client'
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { X, ChevronLeft, ChevronRight, Download, Share2, Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 interface GalleryItem {
   id: string;
   title: string;
-  description?: string;
   imageUrl: string;
   isPublished: boolean;
   publishedAt?: string;
@@ -36,16 +34,16 @@ export default function GallerySection() {
         setLoading(true);
         setError(null);
         // Add cache-busting parameter to ensure fresh data
-        const response = await fetch(`/api/gallery?published=true&limit=8&t=${Date.now()}`);
+        const response = await fetch(`/api/gallery?published=true&limit=6&t=${Date.now()}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch gallery');
+          throw new Error('Gagal mengambil galeri');
         }
         const result = await response.json();
         // Handle new API response format with data and pagination
         const galleryData = result.data || result;
         setGallery(Array.isArray(galleryData) ? galleryData : []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch gallery');
+        setError(err instanceof Error ? err.message : 'Gagal mengambil galeri');
       } finally {
         setLoading(false);
       }
@@ -77,14 +75,14 @@ export default function GallerySection() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4">
-              Our Portfolio
+              Portofolio Kami
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore Our Creative Gallery
+              Jelajahi Galeri Kreatif Kami
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Discover our latest projects and creative solutions. Each piece represents
-              our commitment to excellence and innovation in web development.
+              Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+              komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
             </p>
           </div>
           <div className="flex items-center justify-center py-12">
@@ -101,19 +99,19 @@ export default function GallerySection() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <Badge variant="secondary" className="mb-4">
-              Our Portfolio
+              Portofolio Kami
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Explore Our Creative Gallery
+              Jelajahi Galeri Kreatif Kami
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Discover our latest projects and creative solutions. Each piece represents
-              our commitment to excellence and innovation in web development.
+              Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+              komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
             </p>
           </div>
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">Error: {error}</p>
-            <Button onClick={() => window.location.reload()}>Try Again</Button>
+            <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
           </div>
         </div>
       </section>
@@ -125,123 +123,125 @@ export default function GallerySection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <Badge variant="secondary" className="mb-4">
-            Our Portfolio
+            Portofolio Kami
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Explore Our Creative Gallery
+            Jelajahi Galeri Kreatif Kami
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Discover our latest projects and creative solutions. Each piece represents
-            our commitment to excellence and innovation in web development.
+            Temukan proyek terbaru dan solusi kreatif kami. Setiap karya mencerminkan
+            komitmen kami untuk keunggulan dan inovasi dalam pengembangan web.
           </p>
         </div>
 
         {!Array.isArray(gallery) || gallery.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No published gallery items available yet.</p>
+            <p className="text-muted-foreground">Belum ada item galeri yang dipublikasikan.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {gallery.map((item, index) => (
-                <Dialog key={item.id}>
-                  <DialogTrigger asChild>
-                    <Card className="group cursor-pointer hover:shadow-lg transition-all duration-300 overflow-hidden">
-                      <div className="relative overflow-hidden">
-                        {item.imageUrl ? (
-                          <Image
-                            src={item.imageUrl}
-                            alt={item.title}
-                            width={400}
-                            height={250}
-                            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-48 bg-muted flex items-center justify-center">
-                            <span className="text-muted-foreground">No Image</span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-colors duration-300 flex items-center justify-center">
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center">
-                            <h3 className="font-semibold mb-2">{item.title}</h3>
-                          </div>
-                        </div>
+            {/* Gallery Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {gallery.slice(0, 6).map((item, index) => (
+                <Card key={item.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer" onClick={() => setSelectedImage(index)}>
+                  <div className="relative overflow-hidden">
+                    {item.imageUrl ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        width={400}
+                        height={250}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-48 bg-muted flex items-center justify-center">
+                        <span className="text-muted-foreground">Tidak Ada Gambar</span>
                       </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
-                          {item.title}
-                        </h3>
-                      </CardContent>
-                    </Card>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                    <DialogTitle className="sr-only">{item.title || 'Gallery Item'}</DialogTitle>
-                    <div className="relative">
-                      <div className="absolute top-4 right-4 z-10 flex gap-2">
-                        <Button size="icon" variant="secondary" className="bg-white/20 text-white border-white/30">
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button size="icon" variant="secondary" className="bg-white/20 text-white border-white/30">
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      
-                      <div className="relative">
-                        {item.imageUrl ? (
-                          <Image
-                            src={item.imageUrl}
-                            alt={item.title}
-                            width={800}
-                            height={400}
-                            className="w-full h-96 object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-96 bg-muted flex items-center justify-center">
-                            <span className="text-muted-foreground">No Image</span>
-                          </div>
-                        )}
-                        
-                        {/* Navigation arrows */}
-                        <Button
-                          size="icon"
-                          variant="secondary"
-                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/30 hover:bg-white/30"
-                          onClick={prevImage}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="secondary"
-                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 text-white border-white/30 hover:bg-white/30"
-                          onClick={nextImage}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      
-                      <div className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-2xl font-bold">{item.title}</h3>
-                        </div>
-                        <p className="text-muted-foreground mb-4">
-                          {item.description || 'No description available.'}
-                        </p>
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <Badge variant="secondary">Galeri</Badge>
+                    </div>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-sm text-muted-foreground">
+                        {item.publishedAt 
+                          ? new Date(item.publishedAt).toLocaleDateString()
+                          : new Date(item.createdAt).toLocaleDateString()
+                        }
+                      </span>
+                    </div>
+                    <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
+                      {item.title}
+                    </h3>
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <span>{item.author.name}</span>
                       </div>
                     </div>
-                  </DialogContent>
-                </Dialog>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
+            {/* View All Button */}
             <div className="text-center">
               <Link href="/gallery">
-                <Button size="lg" variant="outline" className="mr-4">
-                  View All Gallery
+                <Button variant="outline" size="lg">
+                  Lihat Semua Galeri
                 </Button>
               </Link>
             </div>
           </>
+        )}
+
+        {/* Modal for Full Image View */}
+        {selectedImage !== null && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+            <div className="relative max-w-4xl max-h-full">
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              <div className="relative">
+                {gallery[selectedImage]?.imageUrl ? (
+                  <Image
+                    src={gallery[selectedImage].imageUrl}
+                    alt={gallery[selectedImage].title}
+                    width={800}
+                    height={600}
+                    className="w-full h-auto max-h-[80vh] object-contain"
+                  />
+                ) : (
+                  <div className="w-full h-96 bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground">Tidak Ada Gambar</span>
+                  </div>
+                )}
+                
+                <div className="absolute inset-0 flex items-center justify-between p-4">
+                  <button
+                    onClick={prevImage}
+                    className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 mt-4 rounded-lg">
+                <h3 className="text-xl font-semibold mb-2">{gallery[selectedImage]?.title}</h3>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </section>

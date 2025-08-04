@@ -1,17 +1,20 @@
-"use client";
+import { Metadata } from "next"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Calendar, User } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, User, ArrowRight, Loader2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+export const metadata: Metadata = {
+  title: "Berita - PPTB BAROKATUL QUR'AN",
+  description: "Berita terbaru dan informasi seputar kegiatan PPTB BAROKATUL QUR'AN",
+}
 
-interface News {
+interface NewsItem {
   id: string;
   title: string;
-  content: string;
+  content?: string;
   imageUrl?: string;
   isPublished: boolean;
   publishedAt?: string;
@@ -23,157 +26,100 @@ interface News {
   };
 }
 
-export default function NewsPage() {
-  const [news, setNews] = useState<News[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        // Add cache-busting parameter to ensure fresh data
-        const response = await fetch(`/api/news?published=true&t=${Date.now()}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch news');
-        }
-        const data = await response.json();
-        setNews(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch news');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
-
-    // Auto-refresh every 30 seconds to get latest news
-    const interval = setInterval(fetchNews, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Helper function to calculate read time
-  const calculateReadTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const words = content.split(' ').length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
-  // Helper function to truncate content
-  const truncateContent = (content: string, maxLength: number = 200) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + '...';
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        </div>
-      </div>
-    );
+async function getNewsData(): Promise<NewsItem[]> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/news?published=true&limit=20`, {
+      cache: 'no-store' // Disable cache to avoid large data issues
+    });
+    
+    if (!response.ok) {
+      throw new Error('Gagal mengambil data berita');
+    }
+    
+    const result = await response.json();
+    // API mengembalikan array langsung, bukan { data: [...] }
+    return Array.isArray(result) ? result : [];
+  } catch (error) {
+    console.error('Error mengambil data berita:', error);
+    return [];
   }
+}
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <p className="text-red-600 mb-4">Error: {error}</p>
-            <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+export default async function NewsPage() {
+  const news = await getNewsData();
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Semua Berita</h1>
-          <p className="text-muted-foreground">
-            Dapatkan informasi terbaru tentang berita, wawasan, dan pengumuman kami.
-          </p>
-        </div>
-
-        {/* News Grid */}
-        {news.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {news.map((newsItem) => (
-              <Card key={newsItem.id} className="group hover:shadow-lg transition-all duration-300">
-                <div className="relative overflow-hidden rounded-t-lg">
-                  {newsItem.imageUrl ? (
-                    <Image
-                      src={newsItem.imageUrl}
-                      alt={newsItem.title}
-                      width={400}
-                      height={250}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground">Tidak Ada Gambar</span>
-                    </div>
-                  )}
-                  <Badge className="absolute top-3 left-3">
-                    Berita
-                  </Badge>
-                </div>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">
-                    {newsItem.title}
-                  </CardTitle>
-                  <CardDescription className="line-clamp-3">
-                    {truncateContent(newsItem.content)}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4" />
-                      <span>{newsItem.author.name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      <span>{calculateReadTime(newsItem.content)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
-                      <span>
-                        {newsItem.publishedAt 
-                          ? new Date(newsItem.publishedAt).toLocaleDateString('id-ID')
-                          : new Date(newsItem.createdAt).toLocaleDateString('id-ID')
-                        }
-                      </span>
-                    </div>
-                    <Link href={`/news/${newsItem.id}`}>
-                      <Button variant="ghost" size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground">
-                        Baca Selengkapnya
-                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+    <div className="container mx-auto px-4 py-8">
+      <div className="text-center mb-12">
+        <Badge variant="secondary" className="mb-4">
+          Berita Terbaru
+        </Badge>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Berita dan Informasi Terbaru
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          Dapatkan informasi terbaru tentang kegiatan, acara, dan perkembangan di Pondok Pesantren kami.
+        </p>
       </div>
+
+      {news.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Belum ada berita yang dipublikasikan.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {news.map((item) => (
+            <Card key={item.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+              <div className="relative overflow-hidden">
+                {item.imageUrl ? (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.title}
+                    width={400}
+                    height={250}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground">Tidak Ada Gambar</span>
+                  </div>
+                )}
+                <div className="absolute top-4 left-4">
+                  <Badge variant="secondary">Berita</Badge>
+                </div>
+              </div>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    {item.publishedAt 
+                      ? new Date(item.publishedAt).toLocaleDateString()
+                      : new Date(item.createdAt).toLocaleDateString()
+                    }
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                  {item.content || 'Tidak ada konten tersedia.'}
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="h-4 w-4" />
+                    <span>{item.author.name}</span>
+                  </div>
+                  <Link href={`/news/${item.id}`}>
+                    <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+                      Baca Selengkapnya
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
-  );
+  )
 } 

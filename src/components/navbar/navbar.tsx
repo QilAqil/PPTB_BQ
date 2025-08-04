@@ -40,14 +40,23 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
       })
+      
+      if (!response.ok) {
+        throw new Error('Logout gagal')
+      }
+      
       setUser(null)
       setShowLogoutConfirm(false)
       window.location.href = '/'
     } catch (error) {
       console.error('Logout failed:', error)
+      // Even if logout fails, clear user state and redirect
+      setUser(null)
+      setShowLogoutConfirm(false)
+      window.location.href = '/'
     }
   }
 

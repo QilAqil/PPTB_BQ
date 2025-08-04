@@ -1,7 +1,18 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
+import { Phone } from "lucide-react"
 
 export function Hero() {
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "6285220558881"
+    const message = "Halo, saya ingin bertanya tentang pendaftaran santri baru di PPTB BAROKATUL QUR'AN"
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+  }
+
   return (
     <section className="relative bg-gradient-to-r from-teal-600 via-teal-700 to-purple-800 text-white overflow-hidden min-h-screen flex items-center">
       {/* Background Pattern */}
@@ -25,48 +36,55 @@ export function Hero() {
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
               <Link href="/registration">
                 <Button
                   size="lg"
-                  className="rounded-full text-lg px-8 py-6 shadow-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold"
+                  className="rounded-full text-lg px-8 py-6 shadow-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 hover:scale-105"
                 >
-                  Admisi / Pendaftaran
+                  Pendaftaran
                 </Button>
               </Link>
+              
+              {/* Hotline Section - More precise styling */}
+              <button
+                onClick={handleWhatsAppClick}
+                className="bg-teal-600/90 backdrop-blur-sm rounded-lg px-6 py-4 text-white shadow-lg border border-white/20 hover:bg-teal-500/90 transition-all duration-300 hover:scale-105 cursor-pointer group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full group-hover:bg-green-400 transition-colors duration-300">
+                    <Phone className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-sm">Telepon</p>
+                    <p className="font-mono text-sm opacity-90">0852-2055-8881</p>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
-          {/* Right Column - Illustration */}
+          {/* Right Column - Logo */}
           <div className="relative flex justify-center lg:justify-end">
             <div className="relative">
               {/* Circular Background */}
               <div className="w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-teal-400/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                 <div className="w-72 h-72 lg:w-88 lg:h-88 rounded-full bg-gradient-to-br from-teal-300/30 to-blue-400/30 backdrop-blur-sm border border-white/30 flex items-center justify-center">
                   <div className="w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-teal-200/40 to-blue-300/40 backdrop-blur-sm border border-white/40 flex items-center justify-center">
-                    {/* Students Illustration Placeholder */}
-                    <div className="text-center text-white/80">
-                      <div className="text-6xl mb-4">📚</div>
-                      <p className="text-lg font-semibold">Santri Unggulan</p>
-                      <p className="text-sm">Tahfidz & Bahasa</p>
+                    {/* Logo */}
+                    <div className="relative w-48 h-48 lg:w-56 lg:h-56 flex items-center justify-center">
+                      <Image
+                        src="/logo.png"
+                        alt="PPTB BQ Logo"
+                        width={224}
+                        height={224}
+                        className="w-full h-full object-contain"
+                        priority
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Hotline Section */}
-      <div className="absolute bottom-4 right-4 lg:bottom-8 lg:right-8">
-        <div className="bg-teal-600 rounded-lg p-4 text-white shadow-lg">
-          <div className="text-center">
-            <h3 className="font-semibold text-sm">PPTB BQ Hotline</h3>
-            <p className="text-xs opacity-90">Saluran Siaga Pelayanan</p>
-            <div className="flex items-center justify-center gap-2 mt-2">
-              <span className="text-lg">📞</span>
-              <span className="font-mono text-sm">0852-2055-8881</span>
             </div>
           </div>
         </div>

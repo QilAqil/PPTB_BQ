@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Target, Eye, BookOpen, Users, Award, Heart } from "lucide-react"
+import { Target, Eye, BookOpen, Users, Award, Heart, Flag } from "lucide-react"
 
 export function VisionMission() {
   return (
@@ -9,7 +9,7 @@ export function VisionMission() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Visi & Misi
+            Visi, Misi & Tujuan
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Pondok Pesantren Tahfidz & Bahasa &quot;BAROKATUL QUR&apos;AN&quot; 
@@ -17,7 +17,7 @@ export function VisionMission() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Vision */}
           <Card className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-blue-50">
             <CardHeader className="text-center">
@@ -32,10 +32,9 @@ export function VisionMission() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-lg text-gray-700 leading-relaxed">
-                Menjadi Pondok Pesantren Tahfidz dan Bahasa yang <strong>Unggul</strong>, 
-                <strong> Profesional</strong>, <strong>Transformatif</strong>, 
-                <strong> Humanis</strong> dan <strong>Qur&apos;ani</strong> di Indonesia 
-                pada tahun 2031
+                Mendorong terwujudnya generasi bangsa yang <strong>berakhlakul karimah</strong>, 
+                <strong> mandiri</strong>, <strong>berpengetahuan luas</strong> yang berlandaskan 
+                <strong> iman dan takwa</strong> sesuai Al-Qur&apos;an
               </p>
             </CardContent>
           </Card>
@@ -56,21 +55,34 @@ export function VisionMission() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <BookOpen className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span>Menyelenggarakan pendidikan tahfidz Al-Qur&apos;an yang berkualitas dan terstruktur</span>
+                  <span>Mengembangkan potensi santri yang berakhlakul karimah, mandiri dan berpengetahuan luas yang berlandaskan iman dan takwa.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Users className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span>Mengembangkan kemampuan bahasa Arab dan Inggris santri secara komprehensif</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Award className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span>Membentuk karakter Islami yang kuat dan berakhlak mulia</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Heart className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span>Menyiapkan santri menjadi generasi yang siap menghadapi tantangan global</span>
+                  <span>Memberdayakan santri dalam mewujudkan kesalehan individu dan kepekaan sosial melalui pemahaman ajaran Islam berdasarkan Al-Qur&apos;an dan Hadits Nabi Muhammad SAW</span>
                 </li>
               </ul>
+            </CardContent>
+          </Card>
+
+          {/* Tujuan */}
+          <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-green-100 rounded-full">
+                  <Flag className="h-8 w-8 text-green-600" />
+                </div>
+              </div>
+              <CardTitle className="text-2xl font-bold text-green-800">
+                Tujuan
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Tujuan Pesantren adalah mencetak manusia yang <strong>beriman</strong>, 
+                <strong> bertaqwa</strong>, <strong>berilmu</strong>, <strong>beramal</strong>, 
+                dan <strong>berakhlakul karimah</strong> sesuai Al-Qur&apos;an
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -84,9 +96,9 @@ export function VisionMission() {
                   <Award className="h-6 w-6 text-teal-600" />
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-teal-800">Unggul</h3>
+              <h3 className="font-semibold text-lg mb-2 text-teal-800">Berakhlakul Karimah</h3>
               <p className="text-sm text-gray-600">
-                Mencapai prestasi terbaik dalam tahfidz dan penguasaan bahasa
+                Membentuk karakter dan akhlak yang mulia sesuai ajaran Islam
               </p>
             </CardContent>
           </Card>
@@ -98,9 +110,9 @@ export function VisionMission() {
                   <Users className="h-6 w-6 text-blue-600" />
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-blue-800">Profesional</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Mandiri</h3>
               <p className="text-sm text-gray-600">
-                Mengelola pendidikan dengan standar profesional yang tinggi
+                Mengembangkan kemandirian dan kemampuan mengelola diri sendiri
               </p>
             </CardContent>
           </Card>
@@ -109,12 +121,12 @@ export function VisionMission() {
             <CardContent className="pt-6">
               <div className="flex justify-center mb-4">
                 <div className="p-3 bg-purple-100 rounded-full">
-                  <Target className="h-6 w-6 text-purple-600" />
+                  <BookOpen className="h-6 w-6 text-purple-600" />
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-purple-800">Transformatif</h3>
+              <h3 className="font-semibold text-lg mb-2 text-purple-800">Berpengetahuan Luas</h3>
               <p className="text-sm text-gray-600">
-                Mengubah dan mengembangkan potensi santri secara menyeluruh
+                Mengembangkan wawasan dan pengetahuan yang komprehensif
               </p>
             </CardContent>
           </Card>
@@ -126,9 +138,9 @@ export function VisionMission() {
                   <Heart className="h-6 w-6 text-green-600" />
                 </div>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-green-800">Humanis</h3>
+              <h3 className="font-semibold text-lg mb-2 text-green-800">Iman & Takwa</h3>
               <p className="text-sm text-gray-600">
-                Menghargai nilai-nilai kemanusiaan dan keberagaman
+                Menanamkan keimanan dan ketakwaan sebagai fondasi kehidupan
               </p>
             </CardContent>
           </Card>

@@ -78,7 +78,6 @@ model News {
 model Gallery {
   id          String   @id @default(cuid())
   title       String
-  description String?
   imageUrl    String
   authorId    String
   isPublished Boolean  @default(false)
