@@ -244,9 +244,9 @@ export function NewsManagement() {
               setEditingItem(null)
               setFormData({ title: "", content: "", imageUrl: "", isPublished: false })
             }}>
-              <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2" />
               Tambah Berita
-            </Button>
+        </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -276,8 +276,8 @@ export function NewsManagement() {
                     placeholder="Masukkan konten berita"
                     rows={6}
                   />
-                </div>
-                
+      </div>
+
                 <div>
                   <Label>Gambar Berita</Label>
                   <div className="space-y-2">
@@ -299,7 +299,7 @@ export function NewsManagement() {
                         >
                           <X className="h-4 w-4" />
                         </Button>
-                      </div>
+                    </div>
                     ) : (
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
@@ -313,7 +313,7 @@ export function NewsManagement() {
                           onChange={handleFileChange}
                           className="hidden"
                         />
-                      </div>
+                    </div>
                     )}
                   </div>
                 </div>

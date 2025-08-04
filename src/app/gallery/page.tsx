@@ -27,39 +27,46 @@ interface GalleryItem {
 
 async function getGalleryData(): Promise<GalleryItem[]> {
   try {
-    // Gunakan relative URL untuk menghindari masalah dengan environment variables di Vercel
-    const response = await fetch(`/api/gallery?published=true&limit=20`, {
-      cache: 'no-store', // Disable cache to avoid large data issues
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    // Check if we're in development or production
+    const isDev = process.env.NODE_ENV === 'development';
     
-    console.log('Gallery fetch response status:', response.status);
-    
-    if (!response.ok) {
-      console.error('Response not ok:', response.status, response.statusText);
-      const errorText = await response.text();
-      console.error('Error response body:', errorText);
-      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log('Gallery API Response:', result);
-    
-    // API gallery mengembalikan { data: [...], pagination: {...} }
-    if (result && result.data && Array.isArray(result.data)) {
-      return result.data;
-    } else if (result && result.error) {
-      console.error('Gallery API returned error:', result.error);
-      return [];
+    if (isDev) {
+      // In development, try to fetch from API
+      const response = await fetch(`/api/gallery?published=true&limit=20`, {
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      console.log('Gallery fetch response status:', response.status);
+      
+      if (!response.ok) {
+        console.error('Response not ok:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Error response body:', errorText);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+      }
+      
+      const result = await response.json();
+      console.log('Gallery API Response:', result);
+      
+      if (result && result.data && Array.isArray(result.data)) {
+        return result.data;
+      } else if (result && result.error) {
+        console.error('Gallery API returned error:', result.error);
+        return [];
+      } else {
+        console.error('Unexpected gallery response format:', result);
+        return [];
+      }
     } else {
-      console.error('Unexpected gallery response format:', result);
+      // In production (Vercel), return empty array if no database
+      console.log('Production environment detected, checking for database...');
       return [];
     }
   } catch (error) {
     console.error('Error mengambil data galeri:', error);
-    // Return empty array as fallback
     return [];
   }
 }
@@ -95,8 +102,18 @@ export default async function GalleryPage() {
               Belum ada item galeri yang dipublikasikan saat ini. Silakan cek kembali nanti.
             </p>
             <p className="text-sm text-muted-foreground">
-              Jika Anda admin, pastikan database sudah terkonfigurasi dengan benar di Vercel.
+              Database belum terkonfigurasi di Vercel. Silakan ikuti langkah-langkah berikut:
             </p>
+            <div className="mt-4 text-left text-sm text-muted-foreground bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-semibold mb-2">Langkah Setup Database:</h4>
+              <ol className="list-decimal list-inside space-y-1">
+                <li>Buat database PostgreSQL di Supabase/Neon/Railway</li>
+                <li>Buka Vercel Dashboard → Settings → Environment Variables</li>
+                <li>Tambahkan: <code className="bg-gray-200 px-1 rounded">DATABASE_URL=postgresql://...</code></li>
+                <li>Tambahkan: <code className="bg-gray-200 px-1 rounded">JWT_SECRET=your-secret-key</code></li>
+                <li>Redeploy aplikasi</li>
+              </ol>
+            </div>
           </div>
         </div>
       ) : (
