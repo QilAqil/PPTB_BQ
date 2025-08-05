@@ -55,9 +55,9 @@ export const NavigationSheet = () => {
                     Khodimul Ma&apos;had
                   </Button>
                 </Link>
-                <Link href="/sejarah">
+                <Link href="/ad-art">
                   <Button variant="ghost" className="w-full justify-start text-sm">
-                    Sejarah
+                    AD-ART
                   </Button>
                 </Link>
                 <Link href="/gallery">

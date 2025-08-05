@@ -20,27 +20,27 @@ export function Hero() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.1%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
       </div>
 
-      <div className="relative container mx-auto px-4 py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative container mx-auto px-4 py-8 sm:py-12 md:py-16 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Column - Text Content */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+          <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
+            <div className="space-y-4 lg:space-y-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 Pondok Pesantren Tahfidz & Bahasa
                 <br />
                 <span className="text-teal-200">BAROKATUL QUR&apos;AN</span>
               </h1>
-              <p className="text-xl md:text-2xl text-teal-100 leading-relaxed italic">
+              <p className="text-lg sm:text-xl md:text-2xl text-teal-100 leading-relaxed italic">
                 Menjadi Pondok Pesantren Tahfidz dan Bahasa yang Unggul, Profesional, 
                 Transformatif, Humanis dan Qur&apos;ani
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center lg:justify-start">
               <Link href="/registration">
                 <Button
                   size="lg"
-                  className="rounded-full text-lg px-8 py-6 shadow-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 hover:scale-105"
+                  className="rounded-full text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 shadow-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 hover:scale-105 w-full sm:w-auto"
                 >
                   Pendaftaran
                 </Button>
@@ -49,15 +49,15 @@ export function Hero() {
               {/* Hotline Section - More precise styling */}
               <button
                 onClick={handleWhatsAppClick}
-                className="bg-teal-600/90 backdrop-blur-sm rounded-lg px-6 py-4 text-white shadow-lg border border-white/20 hover:bg-teal-500/90 transition-all duration-300 hover:scale-105 cursor-pointer group"
+                className="bg-teal-600/90 backdrop-blur-sm rounded-lg px-4 sm:px-6 py-3 sm:py-4 text-white shadow-lg border border-white/20 hover:bg-teal-500/90 transition-all duration-300 hover:scale-105 cursor-pointer group w-full sm:w-auto"
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full group-hover:bg-green-400 transition-colors duration-300">
-                    <Phone className="w-4 h-4 text-white" />
+                <div className="flex items-center gap-2 sm:gap-3 justify-center lg:justify-start">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full group-hover:bg-green-400 transition-colors duration-300">
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="font-semibold text-sm">Telepon</p>
-                    <p className="font-mono text-sm opacity-90">0852-2055-8881</p>
+                    <p className="font-semibold text-xs sm:text-sm">Telepon</p>
+                    <p className="font-mono text-xs sm:text-sm opacity-90">0852-2055-8881</p>
                   </div>
                 </div>
               </button>
@@ -65,25 +65,18 @@ export function Hero() {
           </div>
 
           {/* Right Column - Logo */}
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center lg:justify-end mt-8 lg:mt-0">
             <div className="relative">
-              {/* Circular Background */}
-              <div className="w-80 h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-teal-400/20 to-blue-500/20 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                <div className="w-72 h-72 lg:w-88 lg:h-88 rounded-full bg-gradient-to-br from-teal-300/30 to-blue-400/30 backdrop-blur-sm border border-white/30 flex items-center justify-center">
-                  <div className="w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-teal-200/40 to-blue-300/40 backdrop-blur-sm border border-white/40 flex items-center justify-center">
-                    {/* Logo */}
-                    <div className="relative w-48 h-48 lg:w-56 lg:h-56 flex items-center justify-center">
-                      <Image
-                        src="/logo.png"
-                        alt="PPTB BQ Logo"
-                        width={224}
-                        height={224}
-                        className="w-full h-full object-contain"
-                        priority
-                      />
-                    </div>
-                  </div>
-                </div>
+              {/* Logo */}
+              <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="PPTB BQ Logo"
+                  width={384}
+                  height={384}
+                  className="w-full h-full object-contain"
+                  priority
+                />
               </div>
             </div>
           </div>

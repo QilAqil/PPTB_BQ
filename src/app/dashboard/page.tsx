@@ -69,12 +69,12 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-sm sm:max-w-md">
           <CardContent className="pt-6">
             <div className="text-center">
-              <Shield className="h-16 w-16 text-red-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold mb-2">Akses Ditolak</h2>
-              <p className="text-muted-foreground mb-6">
+              <Shield className="h-12 w-12 sm:h-16 sm:w-16 text-red-500 mx-auto mb-4" />
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">Akses Ditolak</h2>
+              <p className="text-sm sm:text-base text-muted-foreground mb-6">
                 Anda harus login terlebih dahulu untuk mengakses dashboard.
               </p>
               <Link href="/sign-in">
@@ -90,36 +90,36 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold mb-2">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-3 sm:p-4">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl">
+        <CardHeader className="text-center px-4 sm:px-6">
+          <CardTitle className="text-2xl sm:text-3xl font-bold mb-2">
             Selamat Datang di Dashboard
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm sm:text-base">
             Mengarahkan Anda ke dashboard yang sesuai dengan role Anda
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6 pb-6">
           {/* User Info */}
           <div className="text-center">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-10 w-10 text-primary" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <User className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
             </div>
-            <h3 className="font-semibold text-lg mb-1">{user.name || 'N/A'}</h3>
-            <p className="text-sm text-muted-foreground mb-2">{user.email}</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
-              <User className="h-4 w-4" />
+            <h3 className="font-semibold text-base sm:text-lg mb-1">{user.name || 'N/A'}</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-2">{user.email}</p>
+            <div className="inline-flex items-center gap-2 px-2 sm:px-3 py-1 bg-primary/10 text-primary rounded-full text-xs sm:text-sm font-medium">
+              <User className="h-3 w-3 sm:h-4 sm:w-4" />
               User
             </div>
           </div>
 
           {/* Dashboard Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="font-semibold text-blue-800 mb-2">Dashboard yang Tersedia:</h4>
-            <div className="space-y-2 text-sm text-blue-700">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+            <h4 className="font-semibold text-blue-800 mb-2 text-sm sm:text-base">Dashboard yang Tersedia:</h4>
+            <div className="space-y-2 text-xs sm:text-sm text-blue-700">
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
+                <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                 <span>User Dashboard - Riwayat pendaftaran dan form pendaftaran</span>
               </div>
             </div>
@@ -127,18 +127,18 @@ export default function DashboardPage() {
 
           {/* Manual Navigation */}
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-xs sm:text-sm text-muted-foreground text-center">
               Atau klik tombol di bawah untuk navigasi manual:
             </p>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/user" className="flex-1">
-                <Button className="w-full">
-                  <User className="h-4 w-4 mr-2" />
+                <Button className="w-full text-sm sm:text-base">
+                  <User className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                   User Dashboard
                 </Button>
               </Link>
               <Link href="/" className="flex-1">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full text-sm sm:text-base">
                   Beranda
                 </Button>
               </Link>
@@ -148,8 +148,8 @@ export default function DashboardPage() {
           {/* Redirect Status */}
           {redirecting && (
             <div className="text-center">
-              <Loader2 className="h-6 w-6 animate-spin text-primary mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
+              <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-primary mx-auto mb-2" />
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Mengarahkan ke dashboard...
               </p>
             </div>

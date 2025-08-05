@@ -58,7 +58,7 @@ export default function KhodimulMahadPage() {
                     <User className="h-24 w-24 text-primary" />
                   </div>
                 </div>
-                <CardTitle className="text-2xl">Ustadz Moh Faesholy</CardTitle>
+                <CardTitle className="text-2xl">Ust. Al Faqir Moh. Faesholi, M.Pd.I.</CardTitle>
                 <CardDescription className="text-lg">
                   Pengasuh & Direktur PPTB BAROKATUL QUR&apos;AN
                 </CardDescription>
@@ -66,15 +66,11 @@ export default function KhodimulMahadPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
                   <GraduationCap className="h-5 w-5 text-primary" />
-                  <span className="text-sm">S1 Pendidikan Agama Islam</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Award className="h-5 w-5 text-primary" />
-                  <span className="text-sm">Hafidz Al-Qur&apos;an 30 Juz</span>
+                  <span className="text-sm">S2 Magister Pendidikan Islam</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-primary" />
-                  <span className="text-sm">Malang, Jawa Timur</span>
+                  <span className="text-sm">Ponorogo, Jawa Timur</span>
                 </div>
                 
                 <Separator />
@@ -189,39 +185,6 @@ export default function KhodimulMahadPage() {
               </CardContent>
             </Card>
 
-            {/* Prestasi & Penghargaan */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="h-5 w-5" />
-                  Prestasi & Penghargaan
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary">Juara 1 Musabaqah Hifdzil Qur&apos;an</h4>
-                    <p className="text-sm text-muted-foreground">Tingkat Provinsi Jawa Timur</p>
-                    <p className="text-xs text-muted-foreground">2012</p>
-                  </div>
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary">Penghargaan Guru Berprestasi</h4>
-                    <p className="text-sm text-muted-foreground">Kategori Pendidikan Agama</p>
-                    <p className="text-xs text-muted-foreground">2016</p>
-                  </div>
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary">Sertifikasi Metode Tahfidz</h4>
-                    <p className="text-sm text-muted-foreground">Lembaga Tahfidz Nasional</p>
-                    <p className="text-xs text-muted-foreground">2015</p>
-                  </div>
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary">Pengasuh Pesantren Terbaik</h4>
-                    <p className="text-sm text-muted-foreground">Kabupaten Malang</p>
-                    <p className="text-xs text-muted-foreground">2020</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
 
@@ -236,15 +199,15 @@ export default function KhodimulMahadPage() {
                     <User className="h-24 w-24 text-secondary" />
                   </div>
                 </div>
-                <CardTitle className="text-2xl">Ustadzah Rohatun Nihayah</CardTitle>
+                <CardTitle className="text-2xl">Ustazah. Rohatun Nihayah, Alhz., M.Si.</CardTitle>
                 <CardDescription className="text-lg">
-                  Pengasuh & Wakil Direktur PPTB BAROKATUL QUR&apos;AN
+                  Pengasuh PPTB BAROKATUL QUR&apos;AN
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
                   <GraduationCap className="h-5 w-5 text-secondary" />
-                  <span className="text-sm">S1 Pendidikan Agama Islam</span>
+                  <span className="text-sm">S2 Magister Sains</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Award className="h-5 w-5 text-secondary" />
@@ -252,7 +215,7 @@ export default function KhodimulMahadPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <MapPin className="h-5 w-5 text-secondary" />
-                  <span className="text-sm">Malang, Jawa Timur</span>
+                  <span className="text-sm">Demak, Jawa Tengah</span>
                 </div>
                 
                 <Separator />
@@ -341,7 +304,7 @@ export default function KhodimulMahadPage() {
                   <div className="flex items-start gap-4">
                     <div className="w-3 h-3 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-semibold">Wakil Direktur PPTB BAROKATUL QUR&apos;AN</h4>
+                      <h4 className="font-semibold">Pengasuh PPTB BAROKATUL QUR&apos;AN</h4>
                       <p className="text-sm text-muted-foreground">2019 - Sekarang</p>
                       <p className="text-sm text-muted-foreground mt-1">
                         Mengelola aspek pendidikan karakter dan akhlak Islami serta memastikan kualitas pendidikan tahfidz.
@@ -354,7 +317,7 @@ export default function KhodimulMahadPage() {
                       <h4 className="font-semibold">Guru Tahfidz Al-Qur&apos;an</h4>
                       <p className="text-sm text-muted-foreground">2016 - 2019</p>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Mengajar tahfidz di berbagai pondok pesantren putri di Jawa Timur.
+                        Mengajar tahfidz di berbagai pondok pesantren putri di Jawa Tengah.
                       </p>
                     </div>
                   </div>
@@ -367,40 +330,6 @@ export default function KhodimulMahadPage() {
                         Membina program pendidikan karakter dan akhlak Islami di berbagai sekolah.
                       </p>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Prestasi & Penghargaan */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Award className="h-5 w-5" />
-                  Prestasi & Penghargaan
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-secondary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-secondary">Juara 1 Musabaqah Hifdzil Qur&apos;an</h4>
-                    <p className="text-sm text-muted-foreground">Tingkat Provinsi Jawa Timur</p>
-                    <p className="text-xs text-muted-foreground">2014</p>
-                  </div>
-                  <div className="bg-secondary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-secondary">Penghargaan Guru Berprestasi</h4>
-                    <p className="text-sm text-muted-foreground">Kategori Pendidikan Agama</p>
-                    <p className="text-xs text-muted-foreground">2018</p>
-                  </div>
-                  <div className="bg-secondary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-secondary">Sertifikasi Metode Tahfidz</h4>
-                    <p className="text-sm text-muted-foreground">Lembaga Tahfidz Nasional</p>
-                    <p className="text-xs text-muted-foreground">2017</p>
-                  </div>
-                  <div className="bg-secondary/5 p-4 rounded-lg">
-                    <h4 className="font-semibold text-secondary">Pengasuh Pesantren Terbaik</h4>
-                    <p className="text-sm text-muted-foreground">Kabupaten Malang</p>
-                    <p className="text-xs text-muted-foreground">2021</p>
                   </div>
                 </div>
               </CardContent>

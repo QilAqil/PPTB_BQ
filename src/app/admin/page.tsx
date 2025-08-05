@@ -12,12 +12,13 @@ import {
   Image, 
   UserPlus, 
   BookOpen, 
-  TrendingUp, 
   Clock, 
   CheckCircle,
   AlertCircle,
   Activity,
-  BarChart3
+  BarChart3,
+  Settings,
+  Bell
 } from "lucide-react"
 import { NewsManagement } from "@/components/admin/news-management"
 import { GalleryManagement } from "@/components/admin/gallery-management"
@@ -26,8 +27,8 @@ import { RegistrationManagement } from "@/components/admin/registration-manageme
 import PrayerManagement from "@/components/admin/prayer-management"
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard - PPTB BAROKATUL QUR'AN",
-  description: "Panel administrasi untuk mengelola sistem PPTB BAROKATUL QUR'AN",
+  title: "Admin Dashboard - PPTB BAROKATUL QUR&apos;AN",
+  description: "Panel administrasi untuk mengelola sistem PPTB BAROKATUL QUR&apos;AN",
 }
 
 export default async function AdminPage() {
@@ -51,325 +52,398 @@ export default async function AdminPage() {
     redirect('/sign-in')
   }
 
-  // Fetch real data with error handling
-  let totalUsers = 0, totalNews = 0, totalGallery = 0, totalRegistrations = 0, totalPrayers = 0
-  let pendingRegistrations = 0, publishedNews = 0, publishedPrayers = 0
+  // Fetch real data from database
+  try {
+    const [
+      totalUsers,
+      totalNews,
+      totalGallery,
+      totalRegistrations,
+      totalPrayers,
+      pendingRegistrations,
+      publishedNews,
+      publishedPrayers,
+      latestUser,
+      latestNews,
+      latestGallery,
+      latestRegistration
+    ] = await Promise.all([
+      // Total counts
+      prisma.user.count(),
+      prisma.news.count(),
+      prisma.gallery.count(),
+      prisma.registration.count(),
+      prisma.prayer.count(),
+      
+      // Pending registrations
+      prisma.registration.count({
+        where: { status: 'PENDING' }
+      }),
+      
+      // Published content
+      prisma.news.count({
+        where: { isPublished: true }
+      }),
+      prisma.prayer.count({
+        where: { isPublished: true }
+      }),
+      
+      // Latest activities
+      prisma.user.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { name: true, email: true, createdAt: true }
+      }),
+      prisma.news.findFirst({
+        where: { isPublished: true },
+        orderBy: { publishedAt: 'desc' },
+        select: { title: true, publishedAt: true }
+      }),
+      prisma.gallery.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { title: true, createdAt: true }
+      }),
+      prisma.registration.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { fullName: true, createdAt: true }
+      })
+    ]);
 
-  // Use static data for now to avoid prisma issues
-  totalUsers = 5
-  totalNews = 2
-  totalGallery = 3
-  totalRegistrations = 8
-  totalPrayers = 4
-  pendingRegistrations = 2
-  publishedNews = 2
-  publishedPrayers = 3
+    // Calculate growth percentages (mock data for now)
+    const userGrowth = 12; // +12%
+    const newsGrowth = 5;  // +5%
+    const galleryGrowth = 8; // +8%
 
-  // Use static data for recent activities
-  const latestUser = {
-    name: 'Admin User',
-    email: 'admin@example.com',
-    createdAt: new Date()
-  }
-  const latestNews = {
-    title: 'Berita Terbaru',
-    publishedAt: new Date()
-  }
-  const latestGallery = {
-    title: 'Item Galeri Terbaru',
-    createdAt: new Date()
-  }
-  const latestRegistration = {
-    name: 'Pendaftar Baru',
-    createdAt: new Date()
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-blue-100 rounded-xl">
-              <Activity className="h-8 w-8 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Dashboard Admin
-              </h1>
-              <p className="text-muted-foreground text-lg">
-                Kelola konten, pengguna, dan sistem PPTB BAROKATUL QUR&apos;AN
-              </p>
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Top Navigation Bar */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <Activity className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <p className="text-sm text-gray-500">PPTB BAROKATUL QUR&apos;AN</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Bell className="h-5 w-5" />
+                </button>
+                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Settings className="h-5 w-5" />
+                </button>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">A</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-blue-100">Total Pengguna</CardTitle>
-              <Users className="h-5 w-5 text-blue-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{totalUsers}</div>
-              <p className="text-xs text-blue-200 flex items-center gap-1 mt-1">
-                <TrendingUp className="h-3 w-3" />
-                Pengguna terdaftar
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-green-100">Berita Aktif</CardTitle>
-              <Newspaper className="h-5 w-5 text-green-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{publishedNews}</div>
-              <p className="text-xs text-green-200 flex items-center gap-1 mt-1">
-                <CheckCircle className="h-3 w-3" />
-                Dipublikasikan
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-purple-100">Item Galeri</CardTitle>
-              <Image className="h-5 w-5 text-purple-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{totalGallery}</div>
-              <p className="text-xs text-purple-200 flex items-center gap-1 mt-1">
-                <Image className="h-3 w-3" />
-                Total item
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-orange-100">Pendaftaran</CardTitle>
-              <UserPlus className="h-5 w-5 text-orange-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{totalRegistrations}</div>
-              <p className="text-xs text-orange-200 flex items-center gap-1 mt-1">
-                <AlertCircle className="h-3 w-3" />
-                {pendingRegistrations} pending
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Additional Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border-0 shadow-lg">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-indigo-100">Do&apos;a Dipublikasi</CardTitle>
-              <BookOpen className="h-5 w-5 text-indigo-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{publishedPrayers}</div>
-              <p className="text-xs text-indigo-200">Dari {totalPrayers} total</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white border-0 shadow-lg">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-red-100">Pendaftaran Pending</CardTitle>
-              <Clock className="h-5 w-5 text-red-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{pendingRegistrations}</div>
-              <p className="text-xs text-red-200">Perlu review</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-teal-500 to-teal-600 text-white border-0 shadow-lg">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-teal-100">Total Konten</CardTitle>
-              <BarChart3 className="h-5 w-5 text-teal-200" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalNews + totalGallery + totalPrayers}</div>
-              <p className="text-xs text-teal-200">Berita + Galeri + Do&apos;a</p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Main Content */}
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-white shadow-lg">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Ringkasan
-            </TabsTrigger>
-            <TabsTrigger value="users" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Pengguna
-            </TabsTrigger>
-            <TabsTrigger value="registrations" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Pendaftaran
-            </TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Berita
-            </TabsTrigger>
-            <TabsTrigger value="gallery" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Galeri
-            </TabsTrigger>
-            <TabsTrigger value="prayers" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700">
-              Do&apos;a
-            </TabsTrigger>
-          </TabsList>
+        <div className="container mx-auto px-4 py-6">
 
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="shadow-lg border-0 bg-white">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-blue-600" />
-                    Aktivitas Terbaru
-                  </CardTitle>
-                  <CardDescription>
-                    Aktivitas terbaru di sistem
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {latestUser && (
-                      <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Users className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Pengguna baru mendaftar</p>
-                          <p className="text-xs text-muted-foreground">
-                            {latestUser.name || latestUser.email} • {new Date(latestUser.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {latestNews && (
-                      <div className="flex items-center gap-4 p-3 bg-green-50 rounded-lg">
-                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                          <Newspaper className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Berita baru dipublikasikan</p>
-                          <p className="text-xs text-muted-foreground">
-                            {latestNews.title} • {latestNews.publishedAt ? new Date(latestNews.publishedAt).toLocaleDateString() : "Baru saja"}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {latestGallery && (
-                      <div className="flex items-center gap-4 p-3 bg-purple-50 rounded-lg">
-                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                          <Image className="h-5 w-5 text-purple-600" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Item galeri ditambahkan</p>
-                          <p className="text-xs text-muted-foreground">
-                            {latestGallery.title} • {new Date(latestGallery.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {latestRegistration && (
-                      <div className="flex items-center gap-4 p-3 bg-orange-50 rounded-lg">
-                        <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                          <UserPlus className="h-5 w-5 text-orange-600" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium">Pendaftaran baru</p>
-                          <p className="text-xs text-muted-foreground">
-                            {latestRegistration.name} • {new Date(latestRegistration.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    )}
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-blue-100 text-sm font-medium">Total Users</p>
+                    <p className="text-3xl font-bold">{totalUsers}</p>
+                    <p className="text-blue-100 text-xs mt-1">+{userGrowth}% dari bulan lalu</p>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg border-0 bg-white">
-                <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-t-lg">
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-indigo-600" />
-                    Statistik Cepat
-                  </CardTitle>
-                  <CardDescription>
-                    Statistik penting sistem
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <span className="text-sm font-medium">Pengguna Aktif</span>
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">{totalUsers}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <span className="text-sm font-medium">Berita Dipublikasikan</span>
-                      <Badge variant="secondary" className="bg-green-100 text-green-800">{publishedNews}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                      <span className="text-sm font-medium">Item Galeri</span>
-                      <Badge variant="secondary" className="bg-purple-100 text-purple-800">{totalGallery}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm font-medium">Pendaftaran Pending</span>
-                      <Badge variant="destructive">{pendingRegistrations}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-indigo-50 rounded-lg">
-                      <span className="text-sm font-medium">Do&apos;a Dipublikasi</span>
-                      <Badge variant="secondary" className="bg-indigo-100 text-indigo-800">{publishedPrayers}</Badge>
-                    </div>
+                  <div className="w-12 h-12 bg-blue-400/30 rounded-lg flex items-center justify-center">
+                    <Users className="h-6 w-6" />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                </div>
+              </CardContent>
+            </Card>
 
-          <TabsContent value="users" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Manajemen Pengguna</h2>
-                <p className="text-muted-foreground">
-                  Kelola pengguna dan admin sistem
-                </p>
+            <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-green-100 text-sm font-medium">Total News</p>
+                    <p className="text-3xl font-bold">{totalNews}</p>
+                    <p className="text-green-100 text-xs mt-1">+{newsGrowth}% dari bulan lalu</p>
+                  </div>
+                  <div className="w-12 h-12 bg-green-400/30 rounded-lg flex items-center justify-center">
+                    <Newspaper className="h-6 w-6" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-purple-100 text-sm font-medium">Total Gallery</p>
+                    <p className="text-3xl font-bold">{totalGallery}</p>
+                    <p className="text-purple-100 text-xs mt-1">+{galleryGrowth}% dari bulan lalu</p>
+                  </div>
+                  <div className="w-12 h-12 bg-purple-400/30 rounded-lg flex items-center justify-center">
+                    <Image className="h-6 w-6" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-orange-100 text-sm font-medium">Registrations</p>
+                    <p className="text-3xl font-bold">{totalRegistrations}</p>
+                    <p className="text-orange-100 text-xs mt-1">{pendingRegistrations} pending</p>
+                  </div>
+                  <div className="w-12 h-12 bg-orange-400/30 rounded-lg flex items-center justify-center">
+                    <UserPlus className="h-6 w-6" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Quick Stats Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card className="border-l-4 border-l-yellow-500">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Pending Reviews</p>
+                    <p className="text-2xl font-bold text-yellow-600">{pendingRegistrations}</p>
+                  </div>
+                  <Clock className="h-8 w-8 text-yellow-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-green-500">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Published Content</p>
+                    <p className="text-2xl font-bold text-green-600">{publishedNews + publishedPrayers}</p>
+                  </div>
+                  <CheckCircle className="h-8 w-8 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-indigo-500">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Total Prayers</p>
+                    <p className="text-2xl font-bold text-indigo-600">{totalPrayers}</p>
+                  </div>
+                  <BookOpen className="h-8 w-8 text-indigo-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Navigation Tabs */}
+          <Card className="shadow-sm">
+            <Tabs defaultValue="overview" className="w-full">
+              <div className="border-b border-gray-200">
+                <div className="container mx-auto px-4">
+                  <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 h-auto bg-transparent border-b-0 p-0">
+                    <TabsTrigger 
+                      value="overview" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="users" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Users
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="news" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      News
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="gallery" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Gallery
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="registrations" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Registrations
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="prayers" 
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Prayers
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
               </div>
-              <UserManagement />
-            </div>
-          </TabsContent>
 
-          <TabsContent value="registrations" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <RegistrationManagement />
-            </div>
-          </TabsContent>
+              <div className="p-6">
+                <TabsContent value="overview" className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Recent Activities */}
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader className="pb-4">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                          <Activity className="h-5 w-5 text-blue-600" />
+                          Aktivitas Terbaru
+                        </CardTitle>
+                        <CardDescription>
+                          Aktivitas terbaru dalam sistem
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {latestUser && (
+                          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                              <Users className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">User baru terdaftar</p>
+                              <p className="text-sm text-gray-500">{latestUser.name || latestUser.email} - {new Date(latestUser.createdAt).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-700">Baru</Badge>
+                          </div>
+                        )}
+                        
+                        {latestNews && (
+                          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                              <Newspaper className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">Berita baru dipublikasi</p>
+                              <p className="text-sm text-gray-500">{latestNews.title} - {latestNews.publishedAt ? new Date(latestNews.publishedAt).toLocaleDateString('id-ID') : 'Baru saja'}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-green-100 text-green-700">Baru</Badge>
+                          </div>
+                        )}
+                        
+                        {latestGallery && (
+                          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                              <Image className="h-5 w-5 text-purple-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">Item galeri baru ditambahkan</p>
+                              <p className="text-sm text-gray-500">{latestGallery.title} - {new Date(latestGallery.createdAt).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-purple-100 text-purple-700">Baru</Badge>
+                          </div>
+                        )}
+                        
+                        {latestRegistration && (
+                          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                              <UserPlus className="h-5 w-5 text-orange-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">Pendaftaran baru</p>
+                              <p className="text-sm text-gray-500">{latestRegistration.fullName} - {new Date(latestRegistration.createdAt).toLocaleDateString('id-ID')}</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-orange-100 text-orange-700">Baru</Badge>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
 
-          <TabsContent value="news" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <NewsManagement />
-            </div>
-          </TabsContent>
+                    {/* Quick Stats */}
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader className="pb-4">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                          <BarChart3 className="h-5 w-5 text-blue-600" />
+                          Statistik Cepat
+                        </CardTitle>
+                        <CardDescription>
+                          Ringkasan statistik sistem
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <div className="text-2xl font-bold text-blue-600">{totalUsers}</div>
+                            <div className="text-sm text-blue-600 font-medium">Total Users</div>
+                          </div>
+                          <div className="text-center p-4 bg-green-50 rounded-lg border border-green-100">
+                            <div className="text-2xl font-bold text-green-600">{totalNews}</div>
+                            <div className="text-sm text-green-600 font-medium">Total News</div>
+                          </div>
+                          <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-100">
+                            <div className="text-2xl font-bold text-purple-600">{totalGallery}</div>
+                            <div className="text-sm text-purple-600 font-medium">Total Gallery</div>
+                          </div>
+                          <div className="text-center p-4 bg-orange-50 rounded-lg border border-orange-100">
+                            <div className="text-2xl font-bold text-orange-600">{totalRegistrations}</div>
+                            <div className="text-sm text-orange-600 font-medium">Registrations</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
 
-          <TabsContent value="gallery" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <GalleryManagement />
-            </div>
-          </TabsContent>
+                <TabsContent value="users" className="mt-0">
+                  <UserManagement />
+                </TabsContent>
 
-          <TabsContent value="prayers" className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <PrayerManagement />
-            </div>
-          </TabsContent>
-        </Tabs>
+                <TabsContent value="news" className="mt-0">
+                  <NewsManagement />
+                </TabsContent>
+
+                <TabsContent value="gallery" className="mt-0">
+                  <GalleryManagement />
+                </TabsContent>
+
+                <TabsContent value="registrations" className="mt-0">
+                  <RegistrationManagement />
+                </TabsContent>
+
+                <TabsContent value="prayers" className="mt-0">
+                  <PrayerManagement />
+                </TabsContent>
+              </div>
+            </Tabs>
+          </Card>
+        </div>
       </div>
-    </div>
-  )
+    )
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    
+    // Fallback dengan data minimal jika ada error
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Dashboard</h2>
+          <p className="text-gray-600 mb-4">Terjadi kesalahan saat memuat data dashboard</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+    );
+  }
 } 

@@ -67,10 +67,10 @@ export const NavMenu = (props: NavigationMenuProps) => {
                     </Link>
                   </NavigationMenuLink>
                   <NavigationMenuLink asChild>
-                    <Link href="/sejarah" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                      <div className="text-sm font-medium leading-none">Sejarah</div>
+                    <Link href="/ad-art" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">AD-ART</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                        Sejarah berdirinya pesantren
+                        Anggaran Dasar dan Anggaran Rumah Tangga
                       </p>
                     </Link>
                   </NavigationMenuLink>

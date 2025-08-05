@@ -61,6 +61,226 @@
   }
 }
 
+/* Responsive Utilities */
+@layer utilities {
+  /* Custom responsive text sizes */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl;
+  }
+  
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl;
+  }
+  
+  .text-responsive-3xl {
+    @apply text-3xl sm:text-4xl;
+  }
+  
+  /* Custom responsive spacing */
+  .space-responsive-sm {
+    @apply space-y-2 sm:space-y-3;
+  }
+  
+  .space-responsive-md {
+    @apply space-y-4 sm:space-y-6;
+  }
+  
+  .space-responsive-lg {
+    @apply space-y-6 sm:space-y-8;
+  }
+  
+  /* Custom responsive padding */
+  .p-responsive-sm {
+    @apply p-3 sm:p-4;
+  }
+  
+  .p-responsive-md {
+    @apply p-4 sm:p-6;
+  }
+  
+  .p-responsive-lg {
+    @apply p-6 sm:p-8;
+  }
+  
+  /* Custom responsive margins */
+  .m-responsive-sm {
+    @apply m-2 sm:m-3;
+  }
+  
+  .m-responsive-md {
+    @apply m-4 sm:m-6;
+  }
+  
+  .m-responsive-lg {
+    @apply m-6 sm:m-8;
+  }
+  
+  /* Custom responsive gaps */
+  .gap-responsive-sm {
+    @apply gap-2 sm:gap-3;
+  }
+  
+  .gap-responsive-md {
+    @apply gap-4 sm:gap-6;
+  }
+  
+  .gap-responsive-lg {
+    @apply gap-6 sm:gap-8;
+  }
+  
+  /* Custom responsive widths */
+  .w-responsive-sm {
+    @apply w-full sm:w-auto;
+  }
+  
+  .w-responsive-md {
+    @apply w-full md:w-auto;
+  }
+  
+  .w-responsive-lg {
+    @apply w-full lg:w-auto;
+  }
+  
+  /* Custom responsive heights */
+  .h-responsive-sm {
+    @apply h-32 sm:h-40;
+  }
+  
+  .h-responsive-md {
+    @apply h-40 sm:h-48;
+  }
+  
+  .h-responsive-lg {
+    @apply h-48 sm:h-56;
+  }
+  
+  /* Custom responsive flex directions */
+  .flex-responsive-col {
+    @apply flex-col sm:flex-row;
+  }
+  
+  .flex-responsive-col-reverse {
+    @apply flex-col-reverse sm:flex-row;
+  }
+  
+  /* Custom responsive grid columns */
+  .grid-responsive-1 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+  }
+  
+  .grid-responsive-2 {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .grid-responsive-3 {
+    @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  /* Custom responsive visibility */
+  .hidden-responsive-sm {
+    @apply hidden sm:block;
+  }
+  
+  .hidden-responsive-md {
+    @apply hidden md:block;
+  }
+  
+  .hidden-responsive-lg {
+    @apply hidden lg:block;
+  }
+  
+  .block-responsive-sm {
+    @apply block sm:hidden;
+  }
+  
+  .block-responsive-md {
+    @apply block md:hidden;
+  }
+  
+  .block-responsive-lg {
+    @apply block lg:hidden;
+  }
+}
+
+/* Mobile-first responsive design improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets on mobile */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improve text readability on mobile */
+  p, span, div {
+    line-height: 1.6;
+  }
+  
+  /* Improve form inputs on mobile */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  /* Improve card spacing on mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Improve modal on mobile */
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+/* Tablet improvements */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Improve spacing on tablets */
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  
+  /* Improve grid layouts on tablets */
+  .grid {
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop improvements */
+@media (min-width: 1025px) {
+  /* Improve spacing on desktop */
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  /* Improve hover effects on desktop */
+  .hover-effect {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
 @layer utilities {
   .line-clamp-2 {
     display: -webkit-box;

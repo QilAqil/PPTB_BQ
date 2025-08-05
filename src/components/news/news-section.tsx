@@ -177,7 +177,7 @@ export default function NewsSection() {
   }
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-12 sm:py-16 bg-background">
       <div className="container mx-auto px-4">
         {error && (
           <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -186,14 +186,14 @@ export default function NewsSection() {
             </p>
           </div>
         )}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <Badge variant="secondary" className="mb-4">
             Berita Terbaru
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
             Tetap Terinformasi dengan Berita Terbaru Kami
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto px-4">
             Dapatkan informasi terbaru tentang kegiatan, acara, dan perkembangan di Pondok Pesantren kami.
           </p>
         </div>
@@ -205,7 +205,7 @@ export default function NewsSection() {
         ) : (
           <>
             {/* News Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8">
               {news.map((item) => (
                 <Card key={item.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
                   <div className="relative overflow-hidden">

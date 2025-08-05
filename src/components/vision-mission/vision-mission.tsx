@@ -5,19 +5,19 @@ import { Target, Eye, BookOpen, Users, Award, Heart, Flag } from "lucide-react"
 
 export function VisionMission() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Visi, Misi & Tujuan
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4">
             Pondok Pesantren Tahfidz & Bahasa &quot;BAROKATUL QUR&apos;AN&quot; 
             berkomitmen membentuk generasi Qur&apos;ani yang unggul dalam tahfidz dan bahasa
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {/* Vision */}
           <Card className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-blue-50">
             <CardHeader className="text-center">
@@ -88,7 +88,7 @@ export function VisionMission() {
         </div>
 
         {/* Values */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="text-center hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
               <div className="flex justify-center mb-4">
