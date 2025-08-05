@@ -20,7 +20,7 @@ interface User {
 }
 
 export const NavMenu = (props: NavigationMenuProps) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {

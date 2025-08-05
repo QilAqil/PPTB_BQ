@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, BookOpen, Calendar, User, Share2, Copy } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Prayer {
   id: string;
@@ -132,16 +133,16 @@ export default function PrayerDetailPage() {
             <CardContent className="pt-6">
               <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                {error || 'Do\'a tidak ditemukan'}
+                {error || 'Do&apos;a tidak ditemukan'}
               </h2>
               <p className="text-gray-600 mb-4">
-                Do'a yang Anda cari tidak dapat ditemukan atau telah dihapus.
+                Do&apos;a yang Anda cari tidak dapat ditemukan atau telah dihapus.
               </p>
-              <Link href="/prayers">
-                <Button>
-                  Lihat Semua Do'a
-                </Button>
-              </Link>
+                              <Link href="/prayers">
+                  <Button>
+                    Lihat Semua Do&apos;a
+                  </Button>
+                </Link>
             </CardContent>
           </Card>
         </div>
@@ -159,7 +160,7 @@ export default function PrayerDetailPage() {
             onClick={() => router.back()}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Kembali ke Daftar Do'a
+            Kembali ke Daftar Do&apos;a
           </Button>
         </div>
 
@@ -197,9 +198,11 @@ export default function PrayerDetailPage() {
         {prayer.imageUrl && (
           <Card className="mb-6">
             <CardContent className="pt-6">
-              <img
+              <Image
                 src={prayer.imageUrl}
                 alt={prayer.title}
+                width={800}
+                height={384}
                 className="w-full max-h-96 object-contain rounded-lg mx-auto"
               />
             </CardContent>
@@ -283,11 +286,11 @@ export default function PrayerDetailPage() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <Button onClick={handleShare} variant="outline" className="flex-1 sm:flex-none">
             <Share2 className="h-4 w-4 mr-2" />
-            Bagikan Do'a
+            Bagikan Do&apos;a
           </Button>
           <Link href="/prayers" className="flex-1 sm:flex-none">
             <Button variant="outline" className="w-full">
-              Lihat Do'a Lainnya
+              Lihat Do&apos;a Lainnya
             </Button>
           </Link>
         </div>
@@ -295,13 +298,13 @@ export default function PrayerDetailPage() {
         {/* Related Prayers Section */}
         <div className="mt-12">
           <Separator className="mb-6" />
-          <h3 className="text-xl font-semibold mb-4">Do'a Terkait</h3>
+          <h3 className="text-xl font-semibold mb-4">Do&apos;a Terkait</h3>
           <p className="text-gray-600 mb-4">
-            Temukan do'a-do'a lainnya dalam kategori yang sama.
+            Temukan do&apos;a-do&apos;a lainnya dalam kategori yang sama.
           </p>
           <Link href={`/prayers?category=${encodeURIComponent(prayer.category)}`}>
             <Button variant="outline">
-              Lihat Do'a {prayer.category}
+              Lihat Do&apos;a {prayer.category}
             </Button>
           </Link>
         </div>

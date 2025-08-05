@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { ImageUpload } from '@/components/ui/image-upload';
+
 import { Plus, Edit, Trash2, Eye, BookOpen, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -181,31 +181,31 @@ export default function PrayerManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Manajemen Do'a</h2>
-          <p className="text-gray-600">Kelola do'a-do'a yang tersedia di website</p>
+          <h2 className="text-2xl font-bold">Manajemen Do&apos;a</h2>
+          <p className="text-gray-600">Kelola do&apos;a-do&apos;a yang tersedia di website</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Tambah Do'a
+              Tambah Do&apos;a
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {editingPrayer ? 'Edit Do\'a' : 'Tambah Do\'a Baru'}
+                {editingPrayer ? 'Edit Do&apos;a' : 'Tambah Do&apos;a Baru'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <Label htmlFor="title">Judul Do'a</Label>
+                  <Label htmlFor="title">Judul Do&apos;a</Label>
                   <Input
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Masukkan judul do'a"
+                    placeholder="Masukkan judul do&apos;a"
                     required
                   />
                 </div>
@@ -251,7 +251,7 @@ export default function PrayerManagement() {
                     id="arabicText"
                     value={formData.arabicText}
                     onChange={(e) => setFormData({ ...formData, arabicText: e.target.value })}
-                    placeholder="Masukkan teks Arab do'a"
+                    placeholder="Masukkan teks Arab do&apos;a"
                     className="text-right text-lg leading-relaxed"
                     rows={3}
                     required
@@ -264,7 +264,7 @@ export default function PrayerManagement() {
                     id="latinText"
                     value={formData.latinText}
                     onChange={(e) => setFormData({ ...formData, latinText: e.target.value })}
-                    placeholder="Masukkan transliterasi do'a (opsional)"
+                    placeholder="Masukkan transliterasi do&apos;a (opsional)"
                     rows={2}
                   />
                 </div>
@@ -275,7 +275,7 @@ export default function PrayerManagement() {
                     id="translation"
                     value={formData.translation}
                     onChange={(e) => setFormData({ ...formData, translation: e.target.value })}
-                    placeholder="Masukkan terjemahan do'a (opsional)"
+                    placeholder="Masukkan terjemahan do&apos;a (opsional)"
                     rows={3}
                   />
                 </div>
@@ -410,14 +410,14 @@ export default function PrayerManagement() {
           <CardContent className="text-center py-8">
             <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Belum ada do'a
+              Belum ada do&apos;a
             </h3>
             <p className="text-gray-600 mb-4">
-              Mulai dengan menambahkan do'a pertama Anda.
+                              Mulai dengan menambahkan do&apos;a pertama Anda.
             </p>
             <Button onClick={() => setIsDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              Tambah Do'a Pertama
+                              Tambah Do&apos;a Pertama
             </Button>
           </CardContent>
         </Card>

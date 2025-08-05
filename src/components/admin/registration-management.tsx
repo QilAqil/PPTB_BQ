@@ -13,7 +13,6 @@ import {
   MapPin, 
   User, 
   FileText, 
-  GraduationCap,
   Clock,
   AlertCircle,
   AlertTriangle

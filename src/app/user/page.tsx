@@ -8,7 +8,6 @@ import {
   User, 
   FileText, 
   Calendar, 
-  Phone, 
   MapPin, 
   Shield, 
   Loader2,

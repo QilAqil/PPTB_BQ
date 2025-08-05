@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Search, Filter, BookOpen } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Prayer {
   id: string;
@@ -56,7 +57,7 @@ export default function PrayersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalPrayers, setTotalPrayers] = useState(0);
 
-  const fetchPrayers = async () => {
+  const fetchPrayers = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -80,11 +81,11 @@ export default function PrayersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, selectedCategory]);
 
   useEffect(() => {
     fetchPrayers();
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, fetchPrayers]);
 
   const filteredPrayers = prayers.filter(prayer =>
     prayer.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,10 +106,10 @@ export default function PrayersPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Do'a-Do'a
+          Do&apos;a-Do&apos;a
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Kumpulan do'a-do'a yang dapat dipelajari dan diamalkan dalam kehidupan sehari-hari
+          Kumpulan do&apos;a-do&apos;a yang dapat dipelajari dan diamalkan dalam kehidupan sehari-hari
         </p>
       </div>
 
@@ -118,7 +119,7 @@ export default function PrayersPage() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Cari do'a..."
+              placeholder="Cari do&apos;a..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -146,7 +147,7 @@ export default function PrayersPage() {
         </div>
         
         <div className="text-sm text-gray-600">
-          Menampilkan {filteredPrayers.length} dari {totalPrayers} do'a
+          Menampilkan {filteredPrayers.length} dari {totalPrayers} do&apos;a
         </div>
       </div>
 
@@ -188,9 +189,11 @@ export default function PrayersPage() {
                 <CardContent>
                   {prayer.imageUrl && (
                     <div className="mb-4">
-                      <img
+                      <Image
                         src={prayer.imageUrl}
                         alt={prayer.title}
+                        width={400}
+                        height={128}
                         className="w-full h-32 object-cover rounded-md"
                       />
                     </div>
@@ -264,7 +267,7 @@ export default function PrayersPage() {
         <div className="text-center py-12">
           <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Tidak ada do'a ditemukan
+            Tidak ada do&apos;a ditemukan
           </h3>
           <p className="text-gray-600">
             Coba ubah filter atau kata kunci pencarian Anda.
