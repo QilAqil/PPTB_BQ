@@ -1,154 +1,164 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('🌱 Seeding database...');
+async function seedData() {
+  try {
+    console.log('🌱 Seeding sample data...');
+    console.log('');
 
-  // Create admin user if not exists
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
-      email: 'admin@example.com',
-      name: 'Admin User',
-      password: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4tbQJhKz8O', // password123
-      role: 'ADMIN',
-      isVerified: true,
-      isActive: true,
-    },
-  });
+    // Check if data already exists
+    const newsCount = await prisma.news.count();
+    const galleryCount = await prisma.gallery.count();
+    const prayerCount = await prisma.prayer.count();
 
-  console.log('✅ Admin user created:', adminUser.email);
+    if (newsCount > 0 || galleryCount > 0 || prayerCount > 0) {
+      console.log('⚠️  Sample data already exists, skipping...');
+      console.log(`News: ${newsCount} items`);
+      console.log(`Gallery: ${galleryCount} items`);
+      console.log(`Prayers: ${prayerCount} items`);
+      return;
+    }
 
-  // Create sample news with UploadThing images
-  const sampleNews = [
-    {
-      title: 'Selamat Datang di PPTB BAROKATUL QUR\'AN',
-      content: 'Pondok Pesantren Tahfidz & Bahasa "BAROKATUL QUR\'AN" dengan bangga mengumumkan pembukaan pendaftaran santri baru untuk tahun ajaran 2024/2025. Kami berkomitmen untuk memberikan pendidikan berkualitas yang mengintegrasikan tahfidz Al-Qur\'an dengan pembelajaran bahasa Arab dan Inggris.',
-      imageUrl: 'https://utfs.io/f/12345678-1234-1234-1234-123456789abc/pondok-pesantren-1.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Program Tahfidz Al-Qur\'an',
-      content: 'Program tahfidz Al-Qur\'an kami dirancang untuk membantu santri menghafal Al-Qur\'an dengan metode yang efektif dan sistematis. Dengan bimbingan ustadz/ustadzah yang berpengalaman, santri akan dibimbing untuk menghafal Al-Qur\'an dengan tartil dan benar.',
-      imageUrl: 'https://utfs.io/f/23456789-2345-2345-2345-234567890bcd/tahfidz-program.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Pembelajaran Bahasa Arab dan Inggris',
-      content: 'Selain program tahfidz, kami juga menyediakan pembelajaran bahasa Arab dan Inggris yang intensif. Program ini dirancang untuk mempersiapkan santri dalam berkomunikasi dan memahami teks-teks keagamaan dalam bahasa Arab.',
-      imageUrl: 'https://utfs.io/f/34567890-3456-3456-3456-345678901cde/bahasa-arab-inggris.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Fasilitas dan Akomodasi',
-      content: 'PPTB BAROKATUL QUR\'AN menyediakan fasilitas yang nyaman untuk para santri, termasuk asrama yang bersih, perpustakaan, laboratorium bahasa, dan masjid. Semua fasilitas dirancang untuk mendukung proses pembelajaran yang optimal.',
-      imageUrl: 'https://utfs.io/f/45678901-4567-4567-4567-456789012def/fasilitas-akomodasi.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-  ];
-
-  for (const news of sampleNews) {
-    await prisma.news.create({
-      data: news,
+    // Get admin user
+    const adminUser = await prisma.user.findFirst({
+      where: { role: 'ADMIN' }
     });
-  }
 
-  console.log('✅ Sample news created');
+    if (!adminUser) {
+      console.log('❌ Admin user not found. Please run: node scripts/create-admin.js');
+      return;
+    }
 
-  // Create sample gallery items with UploadThing images
-  const sampleGallery = [
-    {
-      title: 'Gedung Utama PPTB BAROKATUL QUR\'AN',
-      description: 'Gedung utama yang menjadi pusat kegiatan pembelajaran dan administrasi pondok pesantren.',
-      imageUrl: 'https://utfs.io/f/56789012-5678-5678-5678-567890123ef0/gedung-utama.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Masjid Pondok Pesantren',
-      description: 'Masjid yang menjadi pusat ibadah dan kegiatan keagamaan para santri.',
-      imageUrl: 'https://utfs.io/f/67890123-6789-6789-6789-678901234f01/masjid-pondok.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Asrama Santri',
-      description: 'Asrama yang nyaman untuk tempat tinggal para santri selama masa pembelajaran.',
-      imageUrl: 'https://utfs.io/f/78901234-7890-7890-7890-789012345f12/asrama-santri.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Perpustakaan',
-      description: 'Perpustakaan yang menyediakan berbagai buku referensi untuk mendukung pembelajaran.',
-      imageUrl: 'https://utfs.io/f/89012345-8901-8901-8901-890123456f23/perpustakaan.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Laboratorium Bahasa',
-      description: 'Laboratorium bahasa yang dilengkapi dengan peralatan modern untuk pembelajaran bahasa.',
-      imageUrl: 'https://utfs.io/f/90123456-9012-9012-9012-901234567f34/laboratorium-bahasa.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Kegiatan Santri',
-      description: 'Kegiatan santri dalam proses pembelajaran tahfidz dan bahasa.',
-      imageUrl: 'https://utfs.io/f/01234567-0123-0123-0123-012345678f45/kegiatan-santri.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Halaman Pondok',
-      description: 'Halaman yang luas untuk kegiatan outdoor dan rekreasi santri.',
-      imageUrl: 'https://utfs.io/f/12345678-1234-1234-1234-123456789f56/halaman-pondok.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-    {
-      title: 'Kantor Administrasi',
-      description: 'Kantor administrasi yang melayani kebutuhan administrasi pondok pesantren.',
-      imageUrl: 'https://utfs.io/f/23456789-2345-2345-2345-234567890f67/kantor-administrasi.jpg',
-      isPublished: true,
-      publishedAt: new Date(),
-      authorId: adminUser.id,
-    },
-  ];
-
-  for (const gallery of sampleGallery) {
-    await prisma.gallery.create({
-      data: gallery,
+    console.log('📰 Creating sample news...');
+    await prisma.news.createMany({
+      data: [
+        {
+          title: 'Selamat Datang di PPTB BQ',
+          content: 'Selamat datang di website resmi PPTB BQ. Kami berkomitmen untuk memberikan pendidikan berkualitas dan membentuk karakter siswa yang unggul dalam prestasi dan berakhlak mulia.',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Pendaftaran Siswa Baru 2024/2025',
+          content: 'Pendaftaran siswa baru untuk tahun ajaran 2024/2025 sudah dibuka. Segera daftarkan putra-putri Anda untuk mendapatkan pendidikan terbaik di PPTB BQ.',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Kegiatan Ekstrakurikuler',
+          content: 'Berbagai kegiatan ekstrakurikuler tersedia untuk mengembangkan bakat dan minat siswa, termasuk olahraga, seni, dan kegiatan keagamaan.',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        }
+      ]
     });
+
+    console.log('🖼️  Creating sample gallery...');
+    await prisma.gallery.createMany({
+      data: [
+        {
+          title: 'Gedung Sekolah PPTB BQ',
+          imageUrl: '/images/school-building.jpg',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Kegiatan Belajar Mengajar',
+          imageUrl: '/images/learning-activity.jpg',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Kegiatan Ekstrakurikuler',
+          imageUrl: '/images/extracurricular.jpg',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Fasilitas Sekolah',
+          imageUrl: '/images/facilities.jpg',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        }
+      ]
+    });
+
+    console.log('🙏 Creating sample prayers...');
+    await prisma.prayer.createMany({
+      data: [
+        {
+          title: 'Doa Sebelum Belajar',
+          arabicText: 'رَبِّ زِدْنِي عِلْمًا',
+          latinText: 'Rabbii zidnii \'ilmaa',
+          translation: 'Ya Tuhanku, tambahkanlah kepadaku ilmu pengetahuan',
+          category: 'Pendidikan',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Doa Sesudah Belajar',
+          arabicText: 'اَللّٰهُمَّ اِنِّى اِسْتَوْدِعُكَ مَاعَلَّمْتَنِيْهِ فَارْدُدْهُ اِلَىَّ عِنْدَ حَاجَتِيْ وَلاَ تَنْسَنِيْهِ يَارَبَّ الْعَالَمِيْنَ',
+          latinText: 'Allahumma innii istawdi\'uka maa \'allamtaniihi fardudhu ilayya \'inda haajatii wa laa tansanii hi yaa rabbal \'aalamiin',
+          translation: 'Ya Allah, sesungguhnya aku menitipkan kepada Engkau ilmu yang telah Engkau ajarkan kepadaku, maka kembalikanlah kepadaku di saat aku membutuhkannya. Janganlah Engkau lupakan aku kepada ilmu itu, wahai Tuhan semesta alam',
+          category: 'Pendidikan',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Doa Masuk Masjid',
+          arabicText: 'اَللّٰهُمَّ افْتَحْ لِيْ اَبْوَابَ رَحْمَتِكَ',
+          latinText: 'Allahummaftah lii abwaaba rahmatik',
+          translation: 'Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu',
+          category: 'Masjid',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        },
+        {
+          title: 'Doa Keluar Masjid',
+          arabicText: 'اَللّٰهُمَّ اِنِّى اَسْأَلُكَ مِنْ فَضْلِكَ وَرَحْمَتِكَ',
+          latinText: 'Allahumma innii as-aluka min fadlik wa rahmatik',
+          translation: 'Ya Allah, sesungguhnya aku memohon kepada-Mu akan keutamaan dan rahmat-Mu',
+          category: 'Masjid',
+          authorId: adminUser.id,
+          isPublished: true,
+          publishedAt: new Date()
+        }
+      ]
+    });
+
+    console.log('✅ Sample data created successfully!');
+    console.log('');
+    console.log('📊 Data Summary:');
+    console.log('- 3 News articles');
+    console.log('- 4 Gallery items');
+    console.log('- 4 Prayers');
+    console.log('');
+    console.log('🚀 You can now start the development server: npm run dev');
+
+  } catch (error) {
+    console.error('❌ Error seeding data:', error.message);
+    
+    if (error.code === 'P2002') {
+      console.log('💡 Some data already exists');
+    } else if (error.code === 'P2021') {
+      console.log('💡 Database tables do not exist. Run migrations first:');
+      console.log('   npx prisma migrate dev --name init');
+    }
+  } finally {
+    await prisma.$disconnect();
   }
-
-  console.log('✅ Sample gallery items created');
-
-  console.log('🎉 Database seeding completed!');
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Error seeding database:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  }); 
+seedData(); 
