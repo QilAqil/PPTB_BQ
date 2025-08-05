@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { Amiri } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar/navbar'
 
@@ -13,13 +14,19 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+const amiri = Amiri({
+  variable: '--font-amiri',
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+})
+
 export const metadata: Metadata = {
   title: 'PPTB BAROKATUL QUR\'AN',
   description: 'Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR\'AN',
   icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
-    apple: '/logo.png',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
 }
 
@@ -30,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} antialiased`}>
         <Navbar />
         <main className="pt-16">
           {children}

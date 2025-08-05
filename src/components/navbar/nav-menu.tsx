@@ -88,7 +88,7 @@ export const NavMenu = (props: NavigationMenuProps) => {
                     </Link>
                   </NavigationMenuLink>
                   <NavigationMenuLink asChild>
-                    <Link href="/doa" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    <Link href="/prayers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                       <div className="text-sm font-medium leading-none">Do&apos;a-do&apos;a</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Kumpulan do&apos;a harian
@@ -100,11 +100,7 @@ export const NavMenu = (props: NavigationMenuProps) => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="#">Tentang</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
+
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link href="/contact">Kontak</Link>

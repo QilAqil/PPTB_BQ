@@ -75,7 +75,9 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
       }
 
       // Redirect based on role
-      if (data.user.role === 'USER') {
+      if (data.user.role === 'ADMIN') {
+        router.push('/admin')
+      } else if (data.user.role === 'USER') {
         router.push('/user')
       } else {
         // Default redirect to home page

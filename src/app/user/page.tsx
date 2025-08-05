@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Search } from 'lucide-react';
 
 
 interface UserProfile {
@@ -62,6 +63,7 @@ interface UserRegistration {
 export default function UserPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userRegistrations, setUserRegistrations] = useState<UserRegistration[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [profileLoading, setProfileLoading] = useState(true);
   const [registrationsLoading, setRegistrationsLoading] = useState(true);
@@ -229,6 +231,11 @@ export default function UserPage() {
     }
   };
 
+  // Filter registrations based on search term
+  const filteredRegistrations = userRegistrations.filter(registration =>
+    registration.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (profileLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -392,6 +399,25 @@ export default function UserPage() {
                     Daftar semua pendaftaran yang telah Anda ajukan
                   </CardDescription>
                 </CardHeader>
+                
+                {/* Search Input */}
+                <div className="px-6 pb-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Cari berdasarkan nama..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  {searchTerm && (
+                    <div className="mt-2 text-sm text-muted-foreground">
+                      Menampilkan {filteredRegistrations.length} dari {userRegistrations.length} pendaftaran
+                    </div>
+                  )}
+                </div>
+                
                 <CardContent>
                   {registrationsLoading ? (
                     <div className="flex items-center justify-center py-12">
@@ -409,9 +435,19 @@ export default function UserPage() {
                         Daftar Sekarang
                       </Button>
                     </div>
+                  ) : filteredRegistrations.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-4">
+                        Tidak ada pendaftaran yang sesuai dengan pencarian
+                      </p>
+                      <Button variant="outline" onClick={() => setSearchTerm('')}>
+                        Reset Pencarian
+                      </Button>
+                    </div>
                   ) : (
                     <div className="space-y-4">
-                      {userRegistrations.map((registration) => (
+                      {filteredRegistrations.map((registration) => (
                         <Card key={registration.id} className="border-l-4 border-l-primary">
                           <CardContent className="p-6">
                             <div className="flex items-start justify-between">
@@ -424,16 +460,16 @@ export default function UserPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                                   <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">NIK:</span>
-                                      <span>{registration.nik}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <Phone className="h-3 w-3" />
-                                      <span>{registration.phoneNumber}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
                                       <MapPin className="h-3 w-3" />
                                       <span>{registration.address}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">Tempat Lahir:</span>
+                                      <span>{registration.birthPlace}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">Tanggal Lahir:</span>
+                                      <span>{formatDate(registration.birthDate)}</span>
                                     </div>
                                   </div>
                                   

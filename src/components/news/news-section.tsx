@@ -28,19 +28,64 @@ export default function NewsSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fallback data jika API tidak tersedia
+  const fallbackNews: NewsItem[] = [
+    {
+      id: 'fallback-1',
+      title: 'Selamat Datang di PPTB Barokatul Qur\'an',
+      content: 'Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR\'AN mengucapkan selamat datang kepada semua pengunjung website kami.',
+      isPublished: true,
+      createdAt: new Date().toISOString(),
+      author: {
+        id: 'admin',
+        name: 'Admin',
+        email: 'admin@pptb.com'
+      }
+    },
+    {
+      id: 'fallback-2',
+      title: 'Program Tahfidz Al-Qur\'an',
+      content: 'Program unggulan kami dalam menghafal Al-Qur\'an dengan metode yang efektif dan terstruktur.',
+      isPublished: true,
+      createdAt: new Date().toISOString(),
+      author: {
+        id: 'admin',
+        name: 'Admin',
+        email: 'admin@pptb.com'
+      }
+    }
+  ];
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         setLoading(true);
         setError(null);
         console.log('Fetching news from API...');
+        
+        // Check if we're in browser environment
+        if (typeof window === 'undefined') {
+          console.log('Not in browser environment, skipping fetch');
+          setLoading(false);
+          return;
+        }
+        
         // Add cache-busting parameter to ensure fresh data
-        const response = await fetch(`/api/news?published=true&limit=4&t=${Date.now()}`);
+        const response = await fetch(`/api/news?published=true&limit=4&t=${Date.now()}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // Add timeout
+          signal: AbortSignal.timeout(10000), // 10 second timeout
+        });
+        
         console.log('News API response status:', response.status);
         
         if (!response.ok) {
-          throw new Error('Gagal mengambil berita');
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
         const result = await response.json();
         console.log('News API result:', result);
         
@@ -51,7 +96,26 @@ export default function NewsSection() {
         setNews(Array.isArray(newsData) ? newsData : []);
       } catch (err) {
         console.error('Error fetching news:', err);
-        setError(err instanceof Error ? err.message : 'Gagal mengambil berita');
+        
+        // Handle different types of errors
+        let errorMessage = 'Gagal mengambil berita';
+        if (err instanceof Error) {
+          if (err.name === 'AbortError') {
+            errorMessage = 'Request timeout - coba lagi';
+          } else if (err.message.includes('Failed to fetch')) {
+            errorMessage = 'Tidak dapat terhubung ke server - pastikan server berjalan';
+          } else {
+            errorMessage = err.message;
+          }
+        }
+        
+        setError(errorMessage);
+        
+        // Use fallback data if API fails
+        if (news.length === 0) {
+          console.log('Using fallback news data');
+          setNews(fallbackNews);
+        }
       } finally {
         setLoading(false);
       }
@@ -88,7 +152,7 @@ export default function NewsSection() {
     );
   }
 
-  if (error) {
+  if (error && news.length === 0) {
     return (
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
@@ -115,6 +179,13 @@ export default function NewsSection() {
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
+        {error && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-yellow-800 text-sm">
+              ⚠️ {error} - Menampilkan data contoh
+            </p>
+          </div>
+        )}
         <div className="text-center mb-12">
           <Badge variant="secondary" className="mb-4">
             Berita Terbaru

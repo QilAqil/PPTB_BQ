@@ -1,9 +1,10 @@
-import { Metadata } from "next"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Kontak - PPTB BAROKATUL QUR'AN",
-  description: "Hubungi kami untuk informasi lebih lanjut tentang Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN",
-}
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { MapPin, Phone, Mail, Clock, ExternalLink } from "lucide-react"
+
+
 
 export default function ContactPage() {
   return (
@@ -15,145 +16,138 @@ export default function ContactPage() {
         </p>
       </div>
 
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Information */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold mb-4">Informasi Kontak</h2>
-            
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
-                  📞
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold">Informasi Kontak</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Telepon</h3>
+                    <p className="text-muted-foreground text-lg">0852-2055-8881</p>
+                    <p className="text-sm text-muted-foreground">Hubungi kami untuk informasi pendaftaran</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Telepon</h3>
-                  <p className="text-muted-foreground">0852-2055-8881</p>
-                </div>
-              </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
-                  📧
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Email</h3>
+                    <p className="text-muted-foreground text-lg">info@pptb-bq.com</p>
+                    <p className="text-sm text-muted-foreground">Kirim email untuk pertanyaan umum</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Email</h3>
-                  <p className="text-muted-foreground">info@pptb-bq.com</p>
-                </div>
-              </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
-                  📍
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div>
+                                         <h3 className="font-semibold text-lg">Alamat</h3>
+                     <p className="text-muted-foreground">
+                       Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR&apos;AN<br />
+                       MWF3+8XP, Jl. Bawah, RT.05/RW.11, Munggang<br />
+                       Kalibeber, Kec. Mojotengah, Kabupaten Wonosobo, Jawa Tengah
+                     </p>
+                                         <Button 
+                       variant="outline" 
+                       className="mt-2"
+                       onClick={() => window.open('https://maps.app.goo.gl/31VpxMWH83Rh31Yu9', '_blank')}
+                     >
+                       <ExternalLink className="h-4 w-4 mr-2" />
+                       Lihat di Google Maps
+                     </Button>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Alamat</h3>
-                  <p className="text-muted-foreground">
-                    Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR&apos;AN<br />
-                    Jl. Pesantren No. 123<br />
-                    Kota, Provinsi 12345
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white">
+                    <Clock className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Jam Operasional</h3>
+                    <div className="text-muted-foreground space-y-1">
+                      <p>Senin - Jumat: 08:00 - 17:00</p>
+                      <p>Sabtu: 08:00 - 15:00</p>
+                      <p>Minggu: Tutup</p>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Kunjungan di luar jam operasional dapat diatur sebelumnya
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Additional Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-semibold">Informasi Tambahan</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-900 mb-2">Pendaftaran Santri Baru</h4>
+                  <p className="text-blue-800 text-sm">
+                    Untuk pendaftaran santri baru, silakan hubungi kami melalui telepon atau email. 
+                    Tim kami akan memberikan informasi lengkap tentang persyaratan dan prosedur pendaftaran.
                   </p>
                 </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
-                  ⏰
-                </div>
-                <div>
-                  <h3 className="font-semibold">Jam Operasional</h3>
-                  <p className="text-muted-foreground">
-                    Senin - Jumat: 08:00 - 17:00<br />
-                    Sabtu: 08:00 - 15:00<br />
-                    Minggu: Tutup
+                
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-900 mb-2">Kunjungan Pesantren</h4>
+                  <p className="text-green-800 text-sm">
+                    Kami menyambut kunjungan dari calon santri dan orang tua untuk melihat langsung 
+                    fasilitas dan kegiatan pesantren. Silakan hubungi kami untuk mengatur jadwal kunjungan.
                   </p>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Contact Form */}
+          {/* Google Maps */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold mb-4">Kirim Pesan</h2>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold">Lokasi Kami</CardTitle>
+                <p className="text-muted-foreground">
+                  Lihat lokasi Pondok Pesantren BAROKATUL QUR&apos;AN di Google Maps
+                </p>
+              </CardHeader>
+              <CardContent>
+                                 <div className="relative w-full h-96 rounded-lg overflow-hidden border">
+                   <iframe
+                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.184393964019!2d109.902387!3d-7.3266552!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7aa18e96646f57%3A0xeeac98f14419a201!2sPptb%20barokatul%20Qur'an!5e0!3m2!1sid!2sid!4v1715080000000!5m2!1sid!2sid"
+                     width="100%"
+                     height="100%"
+                     style={{ border: 0 }}
+                     allowFullScreen
+                     loading="lazy"
+                     referrerPolicy="no-referrer-when-downgrade"
+                     title="Lokasi Pondok Pesantren BAROKATUL QUR'AN"
+                   ></iframe>
+                 </div>
+                                 <div className="mt-4 text-center">
+                   <Button 
+                     onClick={() => window.open('https://maps.app.goo.gl/31VpxMWH83Rh31Yu9', '_blank')}
+                     className="w-full"
+                   >
+                     <ExternalLink className="h-4 w-4 mr-2" />
+                     Buka di Google Maps
+                   </Button>
+                 </div>
+              </CardContent>
+            </Card>
+
             
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                  Nomor Telepon
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                  Subjek
-                </label>
-                <select
-                  id="subject"
-                  name="subject"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  required
-                >
-                  <option value="">Pilih subjek</option>
-                  <option value="pendaftaran">Pendaftaran Santri Baru</option>
-                  <option value="informasi">Informasi Umum</option>
-                  <option value="kegiatan">Kegiatan Pesantren</option>
-                  <option value="lainnya">Lainnya</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Pesan
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Tulis pesan Anda di sini..."
-                  required
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
-              >
-                Kirim Pesan
-              </button>
-            </form>
           </div>
         </div>
       </div>

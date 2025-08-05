@@ -1,63 +1,21 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
 import Link from "next/link";
 import { LogOut, AlertTriangle } from 'lucide-react'
-
-interface User {
-  id: string
-  email: string
-  name: string | null
-  role: string
-}
+import { useAuth } from '@/hooks/useAuth'
 
 const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading, logout, isAdmin } = useAuth()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me')
-        if (response.ok) {
-          const data = await response.json()
-          setUser(data)
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    checkAuth()
-  }, [])
-
   const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      })
-      
-      if (!response.ok) {
-        throw new Error('Logout gagal')
-      }
-      
-      setUser(null)
-      setShowLogoutConfirm(false)
-      window.location.href = '/'
-    } catch (error) {
-      console.error('Logout failed:', error)
-      // Even if logout fails, clear user state and redirect
-      setUser(null)
-      setShowLogoutConfirm(false)
-      window.location.href = '/'
-    }
+    setShowLogoutConfirm(false)
+    await logout()
   }
 
   return (
@@ -69,18 +27,13 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <NavMenu className="hidden md:block" />
 
-          <div className="flex items-center gap-3">
-            {!loading && !user && (
+          <div className="flex items-center gap-3" suppressHydrationWarning>
+            {loading ? (
+              // Show loading state to prevent hydration mismatch
+              <div className="h-9 w-20 bg-gray-200 rounded animate-pulse" />
+            ) : user ? (
               <>
-                <Link href="/sign-in">
-                  <Button variant="ghost">Masuk</Button>
-                </Link>
-              </>
-            )}
-            
-            {!loading && user && (
-              <>
-                <Link href="/dashboard">
+                <Link href={isAdmin ? '/admin' : '/dashboard'}>
                   <Button variant="outline" className="hidden sm:inline-flex">
                     Dashboard
                   </Button>
@@ -98,6 +51,12 @@ const Navbar = () => {
                     Keluar
                   </Button>
                 </div>
+              </>
+            ) : (
+              <>
+                <Link href="/sign-in">
+                  <Button variant="ghost">Masuk</Button>
+                </Link>
               </>
             )}
 
