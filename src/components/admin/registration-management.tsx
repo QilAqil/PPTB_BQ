@@ -30,14 +30,7 @@ interface Registration {
   phoneNumber: string;
   parentName: string;
   parentPhone: string;
-  parentAddress: string;
-  educationLevel: string;
-  schoolName: string;
-  schoolAddress: string;
-  graduationYear: string;
   motivation: string;
-  healthCondition: string;
-  specialNeeds: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   notes: string | null;
   createdAt: string;
@@ -221,10 +214,10 @@ export function RegistrationManagement() {
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">{registration.birthPlace}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{registration.educationLevel}</span>
-                </div>
+                                 <div className="flex items-center gap-2">
+                   <Phone className="h-4 w-4 text-muted-foreground" />
+                   <span className="text-sm">{registration.parentPhone}</span>
+                 </div>
               </div>
               
               <div className="flex items-center justify-between">
@@ -329,49 +322,9 @@ export function RegistrationManagement() {
               </div>
               
               <div>
-                <Label className="text-sm font-medium">Alamat Orang Tua</Label>
-                <p className="text-sm">{selectedRegistration.parentAddress}</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium">Tingkat Pendidikan</Label>
-                  <p className="text-sm">{selectedRegistration.educationLevel}</p>
-                </div>
-                <div>
-                  <Label className="text-sm font-medium">Nama Sekolah</Label>
-                  <p className="text-sm">{selectedRegistration.schoolName}</p>
-                </div>
-              </div>
-              
-              <div>
-                <Label className="text-sm font-medium">Alamat Sekolah</Label>
-                <p className="text-sm">{selectedRegistration.schoolAddress}</p>
-              </div>
-              
-              <div>
-                <Label className="text-sm font-medium">Tahun Lulus</Label>
-                <p className="text-sm">{selectedRegistration.graduationYear}</p>
-              </div>
-              
-              <div>
                 <Label className="text-sm font-medium">Motivasi</Label>
                 <p className="text-sm">{selectedRegistration.motivation}</p>
               </div>
-              
-              {selectedRegistration.healthCondition && (
-                <div>
-                  <Label className="text-sm font-medium">Kondisi Kesehatan</Label>
-                  <p className="text-sm">{selectedRegistration.healthCondition}</p>
-                </div>
-              )}
-              
-              {selectedRegistration.specialNeeds && (
-                <div>
-                  <Label className="text-sm font-medium">Kebutuhan Khusus</Label>
-                  <p className="text-sm">{selectedRegistration.specialNeeds}</p>
-                </div>
-              )}
               
               <div className="flex items-center justify-between pt-4 border-t">
                 <div className="text-sm text-muted-foreground">

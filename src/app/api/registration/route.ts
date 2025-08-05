@@ -61,18 +61,11 @@ export async function POST(request: NextRequest) {
       phoneNumber,
       parentName,
       parentPhone,
-      parentAddress,
-      educationLevel,
-      schoolName,
-      schoolAddress,
-      graduationYear,
       motivation,
-      healthCondition,
-      specialNeeds,
     } = body;
 
     // Validate required fields
-    if (!fullName || !nik || !birthPlace || !birthDate || !gender || !address || !phoneNumber || !parentName || !parentPhone || !parentAddress || !educationLevel || !schoolName || !schoolAddress || !motivation) {
+    if (!fullName || !nik || !birthPlace || !birthDate || !gender || !address || !phoneNumber || !parentName || !parentPhone || !motivation) {
       return NextResponse.json(
         { error: 'All required fields are required' },
         { status: 400 }
@@ -102,14 +95,7 @@ export async function POST(request: NextRequest) {
         phoneNumber,
         parentName,
         parentPhone,
-        parentAddress,
-        educationLevel,
-        schoolName,
-        schoolAddress,
-        graduationYear: graduationYear ? parseInt(graduationYear) : null,
         motivation,
-        healthCondition,
-        specialNeeds,
         status: 'PENDING',
       },
     });

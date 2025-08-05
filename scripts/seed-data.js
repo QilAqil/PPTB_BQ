@@ -38,21 +38,21 @@ async function seedData() {
           title: 'Selamat Datang di PPTB BQ',
           content: 'Selamat datang di website resmi PPTB BQ. Kami berkomitmen untuk memberikan pendidikan berkualitas dan membentuk karakter siswa yang unggul dalam prestasi dan berakhlak mulia.',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
           title: 'Pendaftaran Siswa Baru 2024/2025',
           content: 'Pendaftaran siswa baru untuk tahun ajaran 2024/2025 sudah dibuka. Segera daftarkan putra-putri Anda untuk mendapatkan pendidikan terbaik di PPTB BQ.',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
           title: 'Kegiatan Ekstrakurikuler',
           content: 'Berbagai kegiatan ekstrakurikuler tersedia untuk mengembangkan bakat dan minat siswa, termasuk olahraga, seni, dan kegiatan keagamaan.',
-          authorId: adminUser.id,
-          isPublished: true,
+      authorId: adminUser.id,
+      isPublished: true,
           publishedAt: new Date()
         }
       ]
@@ -65,28 +65,28 @@ async function seedData() {
           title: 'Gedung Sekolah PPTB BQ',
           imageUrl: '/images/school-building.jpg',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
           title: 'Kegiatan Belajar Mengajar',
           imageUrl: '/images/learning-activity.jpg',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
           title: 'Kegiatan Ekstrakurikuler',
           imageUrl: '/images/extracurricular.jpg',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
           title: 'Fasilitas Sekolah',
           imageUrl: '/images/facilities.jpg',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         }
       ]
@@ -101,7 +101,7 @@ async function seedData() {
           latinText: 'Rabbii zidnii \'ilmaa',
           translation: 'Ya Tuhanku, tambahkanlah kepadaku ilmu pengetahuan',
           category: 'Pendidikan',
-          authorId: adminUser.id,
+      authorId: adminUser.id,
           isPublished: true,
           publishedAt: new Date()
         },
@@ -112,7 +112,7 @@ async function seedData() {
           translation: 'Ya Allah, sesungguhnya aku menitipkan kepada Engkau ilmu yang telah Engkau ajarkan kepadaku, maka kembalikanlah kepadaku di saat aku membutuhkannya. Janganlah Engkau lupakan aku kepada ilmu itu, wahai Tuhan semesta alam',
           category: 'Pendidikan',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
@@ -122,7 +122,7 @@ async function seedData() {
           translation: 'Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu',
           category: 'Masjid',
           authorId: adminUser.id,
-          isPublished: true,
+      isPublished: true,
           publishedAt: new Date()
         },
         {
@@ -131,8 +131,8 @@ async function seedData() {
           latinText: 'Allahumma innii as-aluka min fadlik wa rahmatik',
           translation: 'Ya Allah, sesungguhnya aku memohon kepada-Mu akan keutamaan dan rahmat-Mu',
           category: 'Masjid',
-          authorId: adminUser.id,
-          isPublished: true,
+      authorId: adminUser.id,
+      isPublished: true,
           publishedAt: new Date()
         }
       ]

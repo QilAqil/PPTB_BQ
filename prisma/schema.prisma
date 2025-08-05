@@ -103,14 +103,7 @@ model Registration {
   phoneNumber       String
   parentName        String
   parentPhone       String
-  parentAddress     String
-  educationLevel    String
-  schoolName        String
-  schoolAddress     String
-  graduationYear    Int?
   motivation        String
-  healthCondition   String?
-  specialNeeds      String?
   status            RegistrationStatus @default(PENDING)
   notes             String?
   processedBy       String?

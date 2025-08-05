@@ -46,14 +46,7 @@ interface UserRegistration {
   phoneNumber: string;
   parentName: string;
   parentPhone: string;
-  parentAddress: string;
-  educationLevel: string;
-  schoolName: string;
-  schoolAddress: string;
-  graduationYear: string;
   motivation: string;
-  healthCondition: string;
-  specialNeeds: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   notes: string | null;
   createdAt: string;
@@ -83,14 +76,7 @@ export default function UserPage() {
     phoneNumber: "",
     parentName: "",
     parentPhone: "",
-    parentAddress: "",
-    educationLevel: "",
-    schoolName: "",
-    schoolAddress: "",
-    graduationYear: "",
-    motivation: "",
-    healthCondition: "",
-    specialNeeds: ""
+    motivation: ""
   });
 
   useEffect(() => {
@@ -178,14 +164,7 @@ export default function UserPage() {
         phoneNumber: "",
         parentName: "",
         parentPhone: "",
-        parentAddress: "",
-        educationLevel: "",
-        schoolName: "",
-        schoolAddress: "",
-        graduationYear: "",
-        motivation: "",
-        healthCondition: "",
-        specialNeeds: ""
+        motivation: ""
       });
       
       // Refresh registrations list
@@ -475,12 +454,12 @@ export default function UserPage() {
                                   
                                   <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Pendidikan:</span>
-                                      <span>{registration.educationLevel}</span>
+                                      <span className="font-medium">Orang Tua:</span>
+                                      <span>{registration.parentName}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Sekolah:</span>
-                                      <span>{registration.schoolName}</span>
+                                      <span className="font-medium">Telepon:</span>
+                                      <span>{registration.parentPhone}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       <Calendar className="h-3 w-3" />
@@ -558,25 +537,18 @@ export default function UserPage() {
                         variant="outline"
                         onClick={() => {
                           setFormSuccess(false);
-                          setFormData({
-                            fullName: "",
-                            nik: "",
-                            birthPlace: "",
-                            birthDate: "",
-                            gender: "",
-                            address: "",
-                            phoneNumber: "",
-                            parentName: "",
-                            parentPhone: "",
-                            parentAddress: "",
-                            educationLevel: "",
-                            schoolName: "",
-                            schoolAddress: "",
-                            graduationYear: "",
-                            motivation: "",
-                            healthCondition: "",
-                            specialNeeds: ""
-                          });
+                                                  setFormData({
+                          fullName: "",
+                          nik: "",
+                          birthPlace: "",
+                          birthDate: "",
+                          gender: "",
+                          address: "",
+                          phoneNumber: "",
+                          parentName: "",
+                          parentPhone: "",
+                          motivation: ""
+                        });
                         }}
                         className="flex-1"
                       >
@@ -709,81 +681,11 @@ export default function UserPage() {
                         </div>
                       </div>
                       
-                      <div>
-                        <Label htmlFor="parentAddress">Alamat Orang Tua *</Label>
-                        <Textarea
-                          id="parentAddress"
-                          value={formData.parentAddress}
-                          onChange={(e) => handleInputChange('parentAddress', e.target.value)}
-                          required
-                          rows={3}
-                        />
-                      </div>
                     </div>
 
-                    {/* Data Pendidikan */}
+                    {/* Motivasi */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold border-b pb-2">Data Pendidikan</h3>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="educationLevel">Tingkat Pendidikan *</Label>
-                          <select 
-                            id="educationLevel"
-                            value={formData.educationLevel} 
-                            onChange={(e) => handleInputChange('educationLevel', e.target.value)}
-                            required
-                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="">Pilih tingkat pendidikan</option>
-                            <option value="SD">SD</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SMA">SMA</option>
-                            <option value="SMK">SMK</option>
-                            <option value="MA">MA</option>
-                            <option value="Perguruan Tinggi">Perguruan Tinggi</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <Label htmlFor="graduationYear">Tahun Lulus</Label>
-                          <Input
-                            id="graduationYear"
-                            type="number"
-                            min="1990"
-                            max="2030"
-                            value={formData.graduationYear}
-                            onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-                            placeholder="Contoh: 2023"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="schoolName">Nama Sekolah *</Label>
-                        <Input
-                          id="schoolName"
-                          value={formData.schoolName}
-                          onChange={(e) => handleInputChange('schoolName', e.target.value)}
-                          required
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="schoolAddress">Alamat Sekolah *</Label>
-                        <Textarea
-                          id="schoolAddress"
-                          value={formData.schoolAddress}
-                          onChange={(e) => handleInputChange('schoolAddress', e.target.value)}
-                          required
-                          rows={2}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Motivasi dan Kesehatan */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold border-b pb-2">Motivasi dan Kesehatan</h3>
+                      <h3 className="text-lg font-semibold border-b pb-2">Motivasi</h3>
                       
                       <div>
                         <Label htmlFor="motivation">Motivasi Masuk Pesantren *</Label>
@@ -794,28 +696,6 @@ export default function UserPage() {
                           required
                           rows={4}
                           placeholder="Jelaskan motivasi Anda untuk masuk pesantren..."
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="healthCondition">Kondisi Kesehatan</Label>
-                        <Textarea
-                          id="healthCondition"
-                          value={formData.healthCondition}
-                          onChange={(e) => handleInputChange('healthCondition', e.target.value)}
-                          rows={3}
-                          placeholder="Jelaskan kondisi kesehatan (jika ada riwayat penyakit khusus)"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="specialNeeds">Kebutuhan Khusus</Label>
-                        <Textarea
-                          id="specialNeeds"
-                          value={formData.specialNeeds}
-                          onChange={(e) => handleInputChange('specialNeeds', e.target.value)}
-                          rows={3}
-                          placeholder="Jelaskan kebutuhan khusus (jika ada)"
                         />
                       </div>
                     </div>

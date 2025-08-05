@@ -17,14 +17,7 @@ interface Registration {
   phoneNumber: string;
   parentName: string;
   parentPhone: string;
-  parentAddress: string;
-  educationLevel: string;
-  schoolName: string;
-  schoolAddress: string;
-  graduationYear?: number;
   motivation: string;
-  healthCondition?: string;
-  specialNeeds?: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   notes?: string;
   processedBy?: string;
