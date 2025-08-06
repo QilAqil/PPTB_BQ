@@ -274,7 +274,7 @@ export function GalleryManagement() {
                          alt="Preview"
                          width={300}
                          height={200}
-                         className="w-full h-48 object-cover rounded-md"
+                         className="w-full h-64 object-cover rounded-md"
                        />
                       <Button
                         type="button"
@@ -287,7 +287,7 @@ export function GalleryManagement() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                       <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                       <Label htmlFor="image-upload" className="cursor-pointer text-blue-600 hover:text-blue-700">
                         Klik untuk upload gambar
@@ -345,10 +345,10 @@ export function GalleryManagement() {
                    alt={item.title}
                    width={400}
                    height={250}
-                   className="w-full h-48 object-cover"
+                   className="w-full h-64 object-cover"
                  />
               ) : (
-                <div className="w-full h-48 bg-muted flex items-center justify-center">
+                <div className="w-full h-64 bg-muted flex items-center justify-center">
                   <span className="text-muted-foreground">Tidak Ada Gambar</span>
                 </div>
               )}

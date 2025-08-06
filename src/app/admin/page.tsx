@@ -17,9 +17,9 @@ import {
   AlertCircle,
   Activity,
   BarChart3,
-  Settings,
-  Bell
+  Settings
 } from "lucide-react"
+import LogoutButton from "@/components/admin/logout-button"
 import { NewsManagement } from "@/components/admin/news-management"
 import { GalleryManagement } from "@/components/admin/gallery-management"
 import UserManagement from "@/components/admin/user-management"
@@ -132,15 +132,7 @@ export default async function AdminPage() {
               </div>
               
               <div className="flex items-center space-x-3">
-                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <Bell className="h-5 w-5" />
-                </button>
-                <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                  <Settings className="h-5 w-5" />
-                </button>
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">A</span>
-                </div>
+                <LogoutButton />
               </div>
             </div>
           </div>

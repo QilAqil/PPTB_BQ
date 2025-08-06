@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Amiri } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar/navbar'
+import NavbarWrapper from '@/components/navbar/navbar-wrapper'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,9 +40,11 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} ${amiri.variable} antialiased`}>
         <Navbar />
-        <main className="pt-16">
-          {children}
-        </main>
+        <NavbarWrapper>
+          <main>
+            {children}
+          </main>
+        </NavbarWrapper>
       </body>
     </html>
   )

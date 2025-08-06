@@ -43,7 +43,7 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
 
     try {
       setLoading(true)
-      console.log('Attempting login with:', { email: email.trim(), password: password.length })
+      setErrors({}) // Clear previous errors
       
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -56,15 +56,20 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
         }),
       })
 
-      console.log('Response status:', response.status)
       const data = await response.json()
-      console.log('Response data:', data)
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed')
+        // Handle specific error messages from API
+        const errorMessage = data.error || 'Login failed'
+        setErrors({ password: errorMessage })
+        
+        if (onError) {
+          onError(errorMessage)
+        }
+        return
       }
 
-      // Clear form
+      // Clear form on success
       setEmail('')
       setPassword('')
       setErrors({})
@@ -85,7 +90,7 @@ export default function LoginForm({ onSuccess, onError }: LoginFormProps) {
       }
     } catch (error) {
       console.error('Login error:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Login failed'
+      const errorMessage = error instanceof Error ? error.message : 'Network error occurred'
       setErrors({ password: errorMessage })
       
       if (onError) {

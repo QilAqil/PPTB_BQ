@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // Find user
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: email.trim().toLowerCase() },
     })
 
     if (!user) {
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(
-      { error: 'Failed to login' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

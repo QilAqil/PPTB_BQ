@@ -143,10 +143,10 @@ export default function NewsPage() {
                     alt={item.title}
                     width={400}
                     height={250}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 ) : (
-                  <div className="w-full h-48 bg-muted flex items-center justify-center">
+                  <div className="w-full h-64 bg-muted flex items-center justify-center">
                     <span className="text-muted-foreground">Tidak Ada Gambar</span>
                   </div>
                 )}

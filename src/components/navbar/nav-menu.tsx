@@ -103,6 +103,12 @@ export const NavMenu = (props: NavigationMenuProps) => {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
+            <Link href="/registration">Pendaftaran</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
             <Link href="/contact">Kontak</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>

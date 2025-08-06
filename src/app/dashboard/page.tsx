@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2, Shield, User } from 'lucide-react';
+import LogoutButton from '@/components/ui/logout-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -142,6 +143,13 @@ export default function DashboardPage() {
                   Beranda
                 </Button>
               </Link>
+            </div>
+            
+            <div className="pt-4 border-t">
+              <LogoutButton 
+                variant="outline"
+                className="w-full text-sm sm:text-base"
+              />
             </div>
           </div>
 

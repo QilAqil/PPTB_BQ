@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button";
 import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
@@ -12,6 +13,16 @@ import { useAuth } from '@/hooks/useAuth'
 const Navbar = () => {
   const { user, loading, logout, isAdmin } = useAuth()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const pathname = usePathname()
+  
+  // Don't show navbar on dashboard pages
+  const isDashboardPage = pathname?.startsWith('/admin') || 
+                         pathname?.startsWith('/dashboard') || 
+                         pathname?.startsWith('/user')
+  
+  if (isDashboardPage) {
+    return null
+  }
 
   const handleLogout = async () => {
     setShowLogoutConfirm(false)

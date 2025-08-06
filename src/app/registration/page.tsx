@@ -73,7 +73,7 @@ export default function RegistrationPage() {
                   <Calendar className="h-4 w-4 text-muted-foreground mt-1" />
                   <div>
                     <h4 className="font-medium">Periode Pendaftaran</h4>
-                    <p className="text-sm text-muted-foreground">Januari - Juni 2024</p>
+                    <p className="text-sm text-muted-foreground">Januari - Juni 2025</p>
                   </div>
                 </div>
                 
@@ -81,7 +81,7 @@ export default function RegistrationPage() {
                   <User className="h-4 w-4 text-muted-foreground mt-1" />
                   <div>
                     <h4 className="font-medium">Kuota</h4>
-                    <p className="text-sm text-muted-foreground">100 santri baru</p>
+                    <p className="text-sm text-muted-foreground">50 santri baru</p>
                   </div>
                 </div>
                 
@@ -97,7 +97,7 @@ export default function RegistrationPage() {
                   <Mail className="h-4 w-4 text-muted-foreground mt-1" />
                   <div>
                     <h4 className="font-medium">Email</h4>
-                    <p className="text-sm text-muted-foreground">info@pptb-bq.com</p>
+                    <p className="text-sm text-muted-foreground">popestahfidzbarokatulquran@gmail.com</p>
                   </div>
                 </div>
                 
@@ -107,8 +107,8 @@ export default function RegistrationPage() {
                     <h4 className="font-medium">Alamat</h4>
                     <p className="text-sm text-muted-foreground">
                       Pondok Pesantren Tahfidz Al-Qur&apos;an BAROKATUL QUR&apos;AN<br />
-                      Jl. Pesantren No. 123<br />
-                      Kota, Provinsi 12345
+                      Munggang RT.05/RW.11, Kalibeber<br />
+                      Mojotengah, Wonosobo, Jawa Tengah
                     </p>
                   </div>
                 </div>
@@ -324,38 +324,7 @@ export default function RegistrationPage() {
                     <Badge variant="outline" className="w-5 h-5 p-0 flex items-center justify-center text-xs">✓</Badge>
                     <span className="text-sm">Asrama Nyaman</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="w-5 h-5 p-0 flex items-center justify-center text-xs">✓</Badge>
-                    <span className="text-sm">Program Ekstrakurikuler</span>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Butuh Bantuan?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  Jika Anda mengalami kesulitan dalam proses pendaftaran, silakan hubungi kami:
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>0852-2055-8881</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span>info@pptb-bq.com</span>
-                  </div>
-                </div>
-                <Link href="/contact">
-                  <Button variant="outline" className="w-full">
-                    Hubungi Kami
-                  </Button>
-                </Link>
               </CardContent>
             </Card>
           </div>

@@ -17,6 +17,7 @@ import {
   Plus,
   AlertTriangle
 } from 'lucide-react';
+import LogoutButton from '@/components/ui/logout-button';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -179,9 +180,7 @@ export default function UserPage() {
     return new Date(dateString).toLocaleDateString('id-ID', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 
@@ -288,7 +287,7 @@ export default function UserPage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t space-y-3">
                   <Button 
                     onClick={() => setShowRegistrationForm(true)}
                     className="w-full text-sm sm:text-base"
@@ -296,6 +295,11 @@ export default function UserPage() {
                     <Plus className="h-4 w-4 mr-2" />
                     Daftar Santri Baru
                   </Button>
+                  
+                  <LogoutButton 
+                    variant="outline"
+                    className="w-full text-sm sm:text-base"
+                  />
                 </div>
               </CardContent>
             </Card>

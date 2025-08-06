@@ -79,7 +79,7 @@ export default function KhodimulMahadPage() {
                   <h4 className="font-semibold text-sm">Kontak:</h4>
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>+62 812-3456-7890</span>
+                    <span>+62 852-2972-2907</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" />
@@ -123,14 +123,9 @@ export default function KhodimulMahadPage() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold">S1 Pendidikan Agama Islam</h4>
-                    <p className="text-sm text-muted-foreground">Universitas Islam Negeri Maulana Malik Ibrahim Malang</p>
+                    <h4 className="font-semibold">S2 Pendidikan Agama Islam</h4>
+                    <p className="text-sm text-muted-foreground">Universitas Sains Al-Qur&apos;an (UNSIQ) </p>
                     <p className="text-xs text-muted-foreground">2010 - 2014</p>
-                  </div>
-                  <div className="border-l-4 border-primary pl-4">
-                    <h4 className="font-semibold">Tahfidz Al-Qur&apos;an 30 Juz</h4>
-                    <p className="text-sm text-muted-foreground">Pondok Pesantren Al-Hikam Malang</p>
-                    <p className="text-xs text-muted-foreground">2005 - 2009</p>
                   </div>
                   <div className="border-l-4 border-primary pl-4">
                     <h4 className="font-semibold">Sertifikasi Metode Tahfidz</h4>
@@ -224,7 +219,7 @@ export default function KhodimulMahadPage() {
                   <h4 className="font-semibold text-sm">Kontak:</h4>
                   <div className="flex items-center gap-3 text-sm">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span>+62 812-3456-7891</span>
+                    <span>+62 852-2055-8881</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
                     <Mail className="h-4 w-4 text-muted-foreground" />
@@ -268,13 +263,13 @@ export default function KhodimulMahadPage() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="border-l-4 border-secondary pl-4">
-                    <h4 className="font-semibold">S1 Pendidikan Agama Islam</h4>
-                    <p className="text-sm text-muted-foreground">Universitas Islam Negeri Maulana Malik Ibrahim Malang</p>
+                    <h4 className="font-semibold">S2 Megister Sains</h4>
+                    <p className="text-sm text-muted-foreground">Universitas Sains Al-Qur&apos;an (UNSIQ) </p>
                     <p className="text-xs text-muted-foreground">2012 - 2016</p>
                   </div>
                   <div className="border-l-4 border-secondary pl-4">
                     <h4 className="font-semibold">Tahfidz Al-Qur&apos;an 30 Juz</h4>
-                    <p className="text-sm text-muted-foreground">Pondok Pesantren Putri Al-Hikam Malang</p>
+                    <p className="text-sm text-muted-foreground">Pondok Pesantren Tahfidz Al-Asy&apos;ariyyah Kalibeber Wonosobo</p>
                     <p className="text-xs text-muted-foreground">2008 - 2012</p>
                   </div>
                   <div className="border-l-4 border-secondary pl-4">

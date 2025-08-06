@@ -40,7 +40,7 @@ export function ImageUpload({ value, onChange, endpoint, className }: ImageUploa
     <div className={`space-y-4 ${className}`}>
       {value ? (
         <div className="relative">
-          <div className="relative h-48 w-full rounded-lg overflow-hidden border">
+          <div className="relative h-64 w-full rounded-lg overflow-hidden border">
             <Image
               src={value}
               alt="Uploaded image"
@@ -59,7 +59,7 @@ export function ImageUpload({ value, onChange, endpoint, className }: ImageUploa
           </Button>
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
           <UploadDropzone
             endpoint={endpoint}
             onClientUploadComplete={handleUploadComplete}

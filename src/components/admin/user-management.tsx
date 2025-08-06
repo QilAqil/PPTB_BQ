@@ -125,9 +125,7 @@ export default function UserManagement() {
     return new Date(dateString).toLocaleDateString('id-ID', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     });
   };
 

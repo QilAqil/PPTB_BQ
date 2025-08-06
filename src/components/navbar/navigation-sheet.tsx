@@ -74,7 +74,11 @@ export const NavigationSheet = () => {
             )}
           </div>
           
-
+          <Link href="/registration">
+            <Button variant="ghost" className="w-full justify-start">
+              Pendaftaran
+            </Button>
+          </Link>
           
           <Link href="/contact">
             <Button variant="ghost" className="w-full justify-start">
