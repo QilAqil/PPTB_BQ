@@ -1,16 +1,17 @@
 "use client"
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { Menu, User, ChevronDown, ChevronRight } from "lucide-react";
+// import { Menu, User, ChevronDown, ChevronRight } from "lucide-react";
+import { Menu, User } from "lucide-react";
 import { Logo } from "./logo";
 import Link from "next/link";
 import { useAuth } from '@/hooks/useAuth'
 
 export const NavigationSheet = () => {
   const { user, loading, isAdmin } = useAuth()
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  // const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   return (
     <Sheet>
@@ -22,7 +23,7 @@ export const NavigationSheet = () => {
       <SheetContent>
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <Logo />
-        
+
         {/* Mobile Navigation Menu */}
         <div className="mt-12 space-y-4">
           <Link href="/">
@@ -30,14 +31,26 @@ export const NavigationSheet = () => {
               Beranda
             </Button>
           </Link>
-          
+
           <Link href="/news">
             <Button variant="ghost" className="w-full justify-start">
               Berita
             </Button>
           </Link>
-          
-          {/* Profile Dropdown */}
+
+          {/* untuk KP */}
+          <Link href="/prayers">
+            <Button variant="ghost" className="w-full justify-start">
+              Do&apos;a-do&apos;a
+            </Button>
+          </Link>
+          <Link href="/gallery">
+            <Button variant="ghost" className="w-full justify-start">
+              Galeri
+            </Button>
+          </Link>
+
+          {/* Profile Dropdown
           <div className="space-y-2">
             <Button 
               variant="ghost" 
@@ -72,23 +85,21 @@ export const NavigationSheet = () => {
                 </Link>
               </div>
             )}
-          </div>
-          
+          </div> */}
+
           <Link href="/registration">
             <Button variant="ghost" className="w-full justify-start">
               Pendaftaran
             </Button>
           </Link>
-          
+
           <Link href="/contact">
             <Button variant="ghost" className="w-full justify-start">
               Kontak
             </Button>
           </Link>
-          
-
         </div>
-        
+
         {/* User Dashboard Links */}
         {loading ? (
           <div className="mt-6 pt-6 border-t">
@@ -97,9 +108,11 @@ export const NavigationSheet = () => {
           </div>
         ) : user ? (
           <div className="mt-6 pt-6 border-t">
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">Dashboard</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Dashboard
+            </h3>
             <div className="space-y-2">
-              <Link href={isAdmin ? '/admin' : '/dashboard'}>
+              <Link href={isAdmin ? "/admin" : "/dashboard"}>
                 <Button variant="outline" className="w-full justify-start">
                   <User className="h-4 w-4 mr-2" />
                   Dashboard

@@ -6,8 +6,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
+  // NavigationMenuTrigger,
+  // NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 import { NavigationMenuProps } from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
@@ -51,7 +51,20 @@ export const NavMenu = (props: NavigationMenuProps) => {
             <Link href="/news">Berita</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
+
+        {/* untuk KP */}
         <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href="/prayers">Do&apos;a-do&apos;a</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href="/gallery">Galeri</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger>Profil</NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
@@ -99,7 +112,7 @@ export const NavMenu = (props: NavigationMenuProps) => {
               </div>
             </div>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>

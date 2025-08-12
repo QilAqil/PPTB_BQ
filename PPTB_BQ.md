@@ -699,6 +699,42 @@ Pada tahap perancangan sistem dilakukan penyusunan arsitektur sistem yang mencak
        │                                   │◄───Selesai────────│
 ```
 
+**6. Activity Diagram Alur Pendaftaran Santri (User)**
+
+```
+┌─────────────┐                    ┌─────────────────────┐
+│     User    │                    │      Sistem         │
+└─────────────┘                    └─────────────────────┘
+       │                                   │
+       │───Login sebagai User─────────────►│
+       │                                   │
+       │                                   │───Verifikasi Login───┐
+       │                                   │                      │
+       │                                   │◄───Login Berhasil────│
+       │                                   │                      │
+       │───Akses Menu Pendaftaran Santri──►│                      │
+       │                                   │───Tampilkan Form────►│
+       │                                   │                      │
+       │                                   │◄───Form Pendaftaran──│
+       │                                   │                      │
+       │───Isi Form Pendaftaran──────────►│                      │
+       │                                   │───Validasi Data─────►│
+       │                                   │                      │
+       │                                   │◄───Data Valid?──────│
+       │                                   │                      │
+       │                                   │───Generate Kode Reg─►│
+       │                                   │                      │
+       │                                   │◄───Kode Dibuat──────│
+       │                                   │                      │
+       │                                   │───Simpan ke DB──────►│
+       │                                   │                      │
+       │                                   │◄───Data Tersimpan───│
+       │                                   │                      │
+       │◄───Pesan Sukses & Kode Pendaftaran│                      │
+       │                                   │                      │
+       │                                   │◄───Selesai──────────│
+```
+
 ### c. Sequence Diagram (Format UML Standar)
 
 **Pengertian Sequence Diagram:**
