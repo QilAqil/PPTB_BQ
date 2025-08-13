@@ -264,7 +264,7 @@ export default async function AdminPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-l-4 border-l-indigo-500">
+            {/* <Card className="border-l-4 border-l-indigo-500">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -278,7 +278,7 @@ export default async function AdminPage() {
                   <BookOpen className="h-8 w-8 text-indigo-500" />
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Main Navigation Tabs */}
@@ -317,12 +317,12 @@ export default async function AdminPage() {
                     >
                       Pendaftaran
                     </TabsTrigger>
-                    <TabsTrigger
+                    {/* <TabsTrigger
                       value="prayers"
                       className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
                     >
                       Doa
-                    </TabsTrigger>
+                    </TabsTrigger> */}
                   </TabsList>
                 </div>
               </div>

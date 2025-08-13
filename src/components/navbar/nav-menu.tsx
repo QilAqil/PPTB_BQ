@@ -57,12 +57,12 @@ export const NavMenu = (props: NavigationMenuProps) => {
           </NavigationMenuLink>
         </NavigationMenuItem>
 
-        {/* untuk KP */}
+        {/* untuk KP
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
             <Link href="/prayers">Doa</Link>
           </NavigationMenuLink>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
 
         {/* <NavigationMenuItem>
           <NavigationMenuTrigger>Profil</NavigationMenuTrigger>
