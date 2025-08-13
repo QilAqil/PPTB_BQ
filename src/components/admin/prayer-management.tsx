@@ -1,18 +1,38 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
-import { Plus, Edit, Trash2, Eye, BookOpen, Calendar, User } from 'lucide-react';
-import Link from 'next/link';
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  BookOpen,
+  Calendar,
+  User,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Prayer {
   id: string;
@@ -41,12 +61,12 @@ interface PrayerFormData {
 }
 
 const categories = [
-  'Shalat',
-  'Harian',
-  'Khusus',
-  'Dzikir',
-  'Al-Quran',
-  'Lainnya'
+  "Shalat",
+  "Harian",
+  "Khusus",
+  "Dzikir",
+  "Al-Quran",
+  "Lainnya",
 ];
 
 export default function PrayerManagement() {
@@ -55,24 +75,24 @@ export default function PrayerManagement() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPrayer, setEditingPrayer] = useState<Prayer | null>(null);
   const [formData, setFormData] = useState<PrayerFormData>({
-    title: '',
-    arabicText: '',
-    latinText: '',
-    translation: '',
-    category: '',
+    title: "",
+    arabicText: "",
+    latinText: "",
+    translation: "",
+    category: "",
     isPublished: false,
   });
 
   const fetchPrayers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/prayers?limit=100');
+      const response = await fetch("/api/prayers?limit=100");
       if (response.ok) {
         const data = await response.json();
         setPrayers(data.prayers);
       }
     } catch (error) {
-      console.error('Error fetching prayers:', error);
+      console.error("Error fetching prayers:", error);
     } finally {
       setLoading(false);
     }
@@ -84,18 +104,18 @@ export default function PrayerManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const url = editingPrayer 
+      const url = editingPrayer
         ? `/api/prayers/${editingPrayer.id}`
-        : '/api/prayers';
-      
-      const method = editingPrayer ? 'PUT' : 'POST';
-      
+        : "/api/prayers";
+
+      const method = editingPrayer ? "PUT" : "POST";
+
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -110,8 +130,8 @@ export default function PrayerManagement() {
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
-      console.error('Error saving prayer:', error);
-      alert('Terjadi kesalahan saat menyimpan do\'a');
+      console.error("Error saving prayer:", error);
+      alert("Terjadi kesalahan saat menyimpan do'a");
     }
   };
 
@@ -129,13 +149,13 @@ export default function PrayerManagement() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus do\'a ini?')) {
+    if (!confirm("Apakah Anda yakin ingin menghapus do'a ini?")) {
       return;
     }
 
     try {
       const response = await fetch(`/api/prayers/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (response.ok) {
@@ -145,18 +165,18 @@ export default function PrayerManagement() {
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
-      console.error('Error deleting prayer:', error);
-      alert('Terjadi kesalahan saat menghapus do\'a');
+      console.error("Error deleting prayer:", error);
+      alert("Terjadi kesalahan saat menghapus do'a");
     }
   };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      arabicText: '',
-      latinText: '',
-      translation: '',
-      category: '',
+      title: "",
+      arabicText: "",
+      latinText: "",
+      translation: "",
+      category: "",
       isPublished: false,
     });
   };
@@ -170,10 +190,10 @@ export default function PrayerManagement() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -182,7 +202,9 @@ export default function PrayerManagement() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Manajemen Do&apos;a</h2>
-          <p className="text-gray-600">Kelola do&apos;a-do&apos;a yang tersedia di website</p>
+          <p className="text-gray-600">
+            Kelola do&apos;a-do&apos;a yang tersedia di website
+          </p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpen}>
           <DialogTrigger asChild>
@@ -194,7 +216,7 @@ export default function PrayerManagement() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {editingPrayer ? 'Edit Do&apos;a' : 'Tambah Do&apos;a Baru'}
+                {editingPrayer ? "Edit Do&apos;a" : "Tambah Do&apos;a Baru"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -204,17 +226,21 @@ export default function PrayerManagement() {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Masukkan judul do&apos;a"
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    placeholder="Masukkan judul do'a"
                     required
                   />
                 </div>
-                
+
                 <div>
                   <Label htmlFor="category">Kategori</Label>
                   <Select
                     value={formData.category}
-                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, category: value })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih kategori" />
@@ -233,7 +259,12 @@ export default function PrayerManagement() {
                   <Label htmlFor="isPublished">Status Publikasi</Label>
                   <Select
                     value={formData.isPublished.toString()}
-                    onValueChange={(value) => setFormData({ ...formData, isPublished: value === 'true' })}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        isPublished: value === "true",
+                      })
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -250,8 +281,10 @@ export default function PrayerManagement() {
                   <Textarea
                     id="arabicText"
                     value={formData.arabicText}
-                    onChange={(e) => setFormData({ ...formData, arabicText: e.target.value })}
-                    placeholder="Masukkan teks Arab do&apos;a"
+                    onChange={(e) =>
+                      setFormData({ ...formData, arabicText: e.target.value })
+                    }
+                    placeholder="Masukkan teks Arab do'a"
                     className="text-right text-lg leading-relaxed"
                     rows={3}
                     required
@@ -263,8 +296,10 @@ export default function PrayerManagement() {
                   <Textarea
                     id="latinText"
                     value={formData.latinText}
-                    onChange={(e) => setFormData({ ...formData, latinText: e.target.value })}
-                    placeholder="Masukkan transliterasi do&apos;a (opsional)"
+                    onChange={(e) =>
+                      setFormData({ ...formData, latinText: e.target.value })
+                    }
+                    placeholder="Masukkan transliterasi do'a (opsional)"
                     rows={2}
                   />
                 </div>
@@ -274,13 +309,13 @@ export default function PrayerManagement() {
                   <Textarea
                     id="translation"
                     value={formData.translation}
-                    onChange={(e) => setFormData({ ...formData, translation: e.target.value })}
-                    placeholder="Masukkan terjemahan do&apos;a (opsional)"
+                    onChange={(e) =>
+                      setFormData({ ...formData, translation: e.target.value })
+                    }
+                    placeholder="Masukkan terjemahan do'a (opsional)"
                     rows={3}
                   />
                 </div>
-
-
               </div>
 
               <Separator />
@@ -294,7 +329,7 @@ export default function PrayerManagement() {
                   Batal
                 </Button>
                 <Button type="submit">
-                  {editingPrayer ? 'Update Do\'a' : 'Simpan Do\'a'}
+                  {editingPrayer ? "Update Do'a" : "Simpan Do'a"}
                 </Button>
               </div>
             </form>
@@ -347,18 +382,20 @@ export default function PrayerManagement() {
                   </div>
                 </div>
 
-
-
                 <div className="space-y-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Teks Arab:</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Teks Arab:
+                    </p>
                     <p className="text-right text-sm font-arabic line-clamp-2">
                       {prayer.arabicText}
                     </p>
                   </div>
                   {prayer.latinText && (
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Transliterasi:</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        Transliterasi:
+                      </p>
                       <p className="text-sm text-gray-600 line-clamp-2">
                         {prayer.latinText}
                       </p>
@@ -366,7 +403,9 @@ export default function PrayerManagement() {
                   )}
                   {prayer.translation && (
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Terjemahan:</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        Terjemahan:
+                      </p>
                       <p className="text-sm text-gray-600 line-clamp-2">
                         {prayer.translation}
                       </p>
@@ -378,10 +417,10 @@ export default function PrayerManagement() {
 
                 <div className="flex gap-2">
                   <Link href={`/prayers/${prayer.id}`} className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full">
+                    {/* <Button variant="outline" size="sm" className="w-full">
                       <Eye className="h-3 w-3 mr-1" />
                       Lihat
-                    </Button>
+                    </Button> */}
                   </Link>
                   <Button
                     variant="outline"
@@ -413,15 +452,15 @@ export default function PrayerManagement() {
               Belum ada do&apos;a
             </h3>
             <p className="text-gray-600 mb-4">
-                              Mulai dengan menambahkan do&apos;a pertama Anda.
+              Mulai dengan menambahkan do&apos;a pertama Anda.
             </p>
             <Button onClick={() => setIsDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
-                              Tambah Do&apos;a Pertama
+              Tambah Do&apos;a Pertama
             </Button>
           </CardContent>
         </Card>
       )}
     </div>
   );
-} 
+}
