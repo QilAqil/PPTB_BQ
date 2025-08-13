@@ -58,14 +58,6 @@ export default function ContactPage() {
                        MWF3+8XP, Jl. Bawah, RT.05/RW.11, Munggang<br />
                        Kalibeber, Kec. Mojotengah, Kabupaten Wonosobo, Jawa Tengah
                      </p>
-                                         <Button 
-                       variant="outline" 
-                       className="mt-2"
-                       onClick={() => window.open('https://maps.app.goo.gl/31VpxMWH83Rh31Yu9', '_blank')}
-                     >
-                       <ExternalLink className="h-4 w-4 mr-2" />
-                       Lihat di Google Maps
-                     </Button>
                   </div>
                 </div>
 
@@ -88,29 +80,6 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            {/* Additional Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold">Informasi Tambahan</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">Pendaftaran Santri Baru</h4>
-                  <p className="text-blue-800 text-sm">
-                    Untuk pendaftaran santri baru, silakan hubungi kami melalui telepon atau email. 
-                    Tim kami akan memberikan informasi lengkap tentang persyaratan dan prosedur pendaftaran.
-                  </p>
-                </div>
-                
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-900 mb-2">Kunjungan Pesantren</h4>
-                  <p className="text-green-800 text-sm">
-                    Kami menyambut kunjungan dari calon santri dan orang tua untuk melihat langsung 
-                    fasilitas dan kegiatan pesantren. Silakan hubungi kami untuk mengatur jadwal kunjungan.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Google Maps */}

@@ -51,16 +51,16 @@ export const NavMenu = (props: NavigationMenuProps) => {
             <Link href="/news">Berita</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link href="/gallery">Galeri</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
 
         {/* untuk KP */}
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/prayers">Do&apos;a-do&apos;a</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/gallery">Galeri</Link>
+            <Link href="/prayers">Doa</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
@@ -125,8 +125,7 @@ export const NavMenu = (props: NavigationMenuProps) => {
             <Link href="/contact">Kontak</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
-
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 };
