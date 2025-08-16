@@ -22,8 +22,6 @@ import {
   CheckCircle,
   AlertCircle,
   Activity,
-  BarChart3,
-  Settings,
 } from "lucide-react";
 import LogoutButton from "@/components/admin/logout-button";
 import { NewsManagement } from "@/components/admin/news-management";
@@ -74,6 +72,7 @@ export default async function AdminPage() {
       latestNews,
       latestGallery,
       latestRegistration,
+      latestProcessedRegistration,
     ] = await Promise.all([
       // Total counts
       prisma.user.count(),
@@ -111,7 +110,12 @@ export default async function AdminPage() {
       }),
       prisma.registration.findFirst({
         orderBy: { createdAt: "desc" },
-        select: { fullName: true, createdAt: true },
+        select: { fullName: true, createdAt: true, status: true },
+      }),
+      prisma.registration.findFirst({
+        where: { status: { in: ["APPROVED", "REJECTED"] } },
+        orderBy: { processedAt: "desc" },
+        select: { fullName: true, processedAt: true, status: true },
       }),
     ]);
 
@@ -152,7 +156,7 @@ export default async function AdminPage() {
         {/* Main Content */}
         <div className="container mx-auto px-4 py-6">
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -228,10 +232,10 @@ export default async function AdminPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
 
           {/* Quick Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card className="border-l-4 border-l-yellow-500">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -279,7 +283,7 @@ export default async function AdminPage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
 
           {/* Main Navigation Tabs */}
           <Card className="shadow-sm">
@@ -440,6 +444,45 @@ export default async function AdminPage() {
                               className="bg-orange-100 text-orange-700"
                             >
                               Baru
+                            </Badge>
+                          </div>
+                        )}
+
+                        {latestProcessedRegistration && (
+                          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                              <CheckCircle className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">
+                                Pendaftaran diproses
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {latestProcessedRegistration.fullName} -{" "}
+                                {latestProcessedRegistration.status ===
+                                "APPROVED"
+                                  ? "Diterima"
+                                  : "Ditolak"}{" "}
+                                pada{" "}
+                                {latestProcessedRegistration.processedAt
+                                  ? new Date(
+                                      latestProcessedRegistration.processedAt
+                                    ).toLocaleDateString("id-ID")
+                                  : "Baru saja"}
+                              </p>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                latestProcessedRegistration.status ===
+                                "APPROVED"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {latestProcessedRegistration.status === "APPROVED"
+                                ? "Diterima"
+                                : "Ditolak"}
                             </Badge>
                           </div>
                         )}

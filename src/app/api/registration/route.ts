@@ -1,18 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const limit = searchParams.get('limit');
-    const page = searchParams.get('page');
+    const status = searchParams.get("status");
+    const limit = searchParams.get("limit");
+    const page = searchParams.get("page");
 
     const where: Record<string, unknown> = {};
-    
-    if (status && status !== 'ALL') {
+
+    if (status && status !== "ALL") {
       where.status = status;
     }
 
@@ -22,10 +22,18 @@ export async function GET(request: NextRequest) {
     const registrations = await prisma.registration.findMany({
       where,
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
       take,
       skip,
+      include: {
+        processedByUser: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
     const total = await prisma.registration.count({ where });
@@ -40,9 +48,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching registrations:', error);
+    console.error("Error fetching registrations:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -65,9 +73,20 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!fullName || !nik || !birthPlace || !birthDate || !gender || !address || !phoneNumber || !parentName || !parentPhone || !motivation) {
+    if (
+      !fullName ||
+      !nik ||
+      !birthPlace ||
+      !birthDate ||
+      !gender ||
+      !address ||
+      !phoneNumber ||
+      !parentName ||
+      !parentPhone ||
+      !motivation
+    ) {
       return NextResponse.json(
-        { error: 'All required fields are required' },
+        { error: "All required fields are required" },
         { status: 400 }
       );
     }
@@ -79,7 +98,7 @@ export async function POST(request: NextRequest) {
 
     if (existingRegistration) {
       return NextResponse.json(
-        { error: 'NIK already registered' },
+        { error: "NIK already registered" },
         { status: 400 }
       );
     }
@@ -96,16 +115,16 @@ export async function POST(request: NextRequest) {
         parentName,
         parentPhone,
         motivation,
-        status: 'PENDING',
+        status: "PENDING",
       },
     });
 
     return NextResponse.json(registration, { status: 201 });
   } catch (error) {
-    console.error('Error creating registration:', error);
+    console.error("Error creating registration:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}

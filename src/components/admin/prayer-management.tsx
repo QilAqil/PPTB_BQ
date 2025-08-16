@@ -23,15 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  BookOpen,
-  Calendar,
-  User,
-} from "lucide-react";
+import { Plus, Edit, Trash2, BookOpen, Calendar, User } from "lucide-react";
 import Link from "next/link";
 
 interface Prayer {
