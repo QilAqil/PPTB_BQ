@@ -215,7 +215,7 @@ export function RegistrationManagement() {
   return (
     <div className="space-y-6">
       {/* Statistics Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="border-l-4 border-l-blue-500">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -283,7 +283,7 @@ export function RegistrationManagement() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       {/* Search and Filter */}
       <div className="flex flex-col gap-4">
@@ -444,11 +444,11 @@ export function RegistrationManagement() {
                       </div>
 
                       <div>
-                        <span className="font-medium text-gray-700">
+                        {/* <span className="font-medium text-gray-700">
                           Status:
-                        </span>
+                        </span> */}
                         <div className="mt-1">
-                  {getStatusBadge(registration.status)}
+                  {/* {getStatusBadge(registration.status)} */}
                 </div>
                  </div>
               </div>
