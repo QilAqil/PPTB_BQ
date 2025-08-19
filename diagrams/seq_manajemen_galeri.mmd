@@ -1,0 +1,46 @@
+sequenceDiagram
+  participant A as Admin (Logged In)
+  participant UI as Halaman Admin - Galeri
+  participant API as Controller/API
+  participant DB as Database
+  participant UTH as UploadThing (Storage)
+
+  A->>UI: Buka halaman galeri
+  UI->>API: GET /api/gallery
+  API->>DB: Ambil daftar galeri
+  DB-->>API: List<Gallery>
+  API-->>UI: 200 List<Gallery>
+  UI-->>A: Tampilkan daftar
+
+  rect rgb(240,240,240)
+    note over A,UI: Upload gambar baru
+    A->>UI: Pilih file + isi judul
+    UI->>UTH: Upload file gambar
+    UTH-->>UI: URL gambar
+    UI->>API: POST /api/gallery {title, imageUrl}
+    API->>DB: Insert galeri (isPublished=false)
+    DB-->>API: OK
+    API-->>UI: 201 {gallery}
+    UI-->>A: Item galeri dibuat
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Publikasi galeri
+    A->>UI: Klik Publish
+    UI->>API: PATCH /api/gallery/:id {isPublished=true, publishedAt}
+    API->>DB: Update galeri
+    DB-->>API: OK
+    API-->>UI: 200 {gallery}
+    UI-->>A: Item dipublikasikan
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Hapus galeri
+    A->>UI: Konfirmasi hapus
+    UI->>API: DELETE /api/gallery/:id
+    API->>DB: Delete by id
+    DB-->>API: OK
+    API-->>UI: 204 No Content
+    UI-->>A: Item dihapus
+  end
+

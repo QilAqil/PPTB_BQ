@@ -1,0 +1,43 @@
+sequenceDiagram
+  participant A as Admin (Logged In)
+  participant UI as Halaman Admin - Berita
+  participant API as Controller/API
+  participant DB as Database
+
+  A->>UI: Buka halaman berita
+  UI->>API: GET /api/news
+  API->>DB: Ambil daftar berita
+  DB-->>API: List<News>
+  API-->>UI: 200 List<News>
+  UI-->>A: Tampilkan daftar
+
+  rect rgb(240,240,240)
+    note over A,UI: Buat berita
+    A->>UI: Isi form berita
+    UI->>API: POST /api/news {title, content, imageUrl}
+    API->>DB: Insert berita (isPublished=false)
+    DB-->>API: OK
+    API-->>UI: 201 {news}
+    UI-->>A: Berita dibuat
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Publikasi berita
+    A->>UI: Klik Publish
+    UI->>API: PATCH /api/news/:id {isPublished=true, publishedAt}
+    API->>DB: Update berita
+    DB-->>API: OK
+    API-->>UI: 200 {news}
+    UI-->>A: Berita dipublikasikan
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Hapus berita
+    A->>UI: Konfirmasi hapus
+    UI->>API: DELETE /api/news/:id
+    API->>DB: Delete by id
+    DB-->>API: OK
+    API-->>UI: 204 No Content
+    UI-->>A: Berita dihapus
+  end
+

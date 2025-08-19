@@ -1,0 +1,23 @@
+sequenceDiagram
+  participant A as Admin (Logged In)
+  participant UI as Halaman Admin - Pendaftaran
+  participant API as Controller/API
+  participant DB as Database
+
+  A->>UI: Buka halaman pendaftaran
+  UI->>API: GET /api/registration?status=PENDING
+  API->>DB: Ambil pendaftaran status PENDING
+  DB-->>API: List<Registration>
+  API-->>UI: 200 List<Registration>
+  UI-->>A: Tampilkan daftar
+
+  rect rgb(240,240,240)
+    note over A,UI: Setujui / Tolak pendaftaran
+    A->>UI: Pilih APPROVE/REJECT + catatan
+    UI->>API: PATCH /api/registration/:id {status, notes}
+    API->>DB: Update status, processedBy, processedAt
+    DB-->>API: OK
+    API-->>UI: 200 {registration}
+    UI-->>A: Status diperbarui
+  end
+

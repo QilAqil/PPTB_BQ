@@ -1,0 +1,128 @@
+classDiagram
+  direction LR
+
+  class User {
+    +id: String
+    +email: String
+    +name: String
+    +password: String
+    +role: UserRole
+    +isVerified: Boolean
+    +isActive: Boolean
+    +lastLoginAt: Date
+    +createdAt: Date
+    +updatedAt: Date
+    +login(email: String, password: String)
+    +logout()
+    +register(name: String, email: String, password: String)
+    +manageUsers()
+    +manageNews()
+    +manageGallery()
+    +managePrayers()
+    +manageRegistrations()
+  }
+
+  class Session {
+    +id: String
+    +userId: String
+    +token: String
+    +expiresAt: Date
+    +createdAt: Date
+  }
+
+  class News {
+    +id: String
+    +title: String
+    +content: String
+    +imageUrl: String
+    +authorId: String
+    +isPublished: Boolean
+    +publishedAt: Date
+    +createdAt: Date
+    +updatedAt: Date
+    +create()
+    +update()
+    +delete()
+    +publish()
+    +unpublish()
+  }
+
+  class Gallery {
+    +id: String
+    +title: String
+    +imageUrl: String
+    +authorId: String
+    +isPublished: Boolean
+    +publishedAt: Date
+    +createdAt: Date
+    +updatedAt: Date
+    +upload()
+    +update()
+    +delete()
+    +publish()
+  }
+
+  class Prayer {
+    +id: String
+    +title: String
+    +arabicText: String
+    +latinText: String
+    +translation: String
+    +category: String
+    +authorId: String
+    +isPublished: Boolean
+    +publishedAt: Date
+    +createdAt: Date
+    +updatedAt: Date
+    +add()
+    +update()
+    +delete()
+    +publish()
+  }
+
+  class Registration {
+    +id: String
+    +fullName: String
+    +nik: String
+    +birthPlace: String
+    +birthDate: Date
+    +gender: String
+    +address: String
+    +phoneNumber: String
+    +parentName: String
+    +parentPhone: String
+    +motivation: String
+    +status: RegistrationStatus
+    +notes: String
+    +processedBy: String
+    +processedAt: Date
+    +createdAt: Date
+    +updatedAt: Date
+    +submit()
+    +approve(notes: String)
+    +reject(notes: String)
+  }
+
+  class UserRole {
+    <<enumeration>>
+    USER
+    ADMIN
+  }
+
+  class RegistrationStatus {
+    <<enumeration>>
+    PENDING
+    APPROVED
+    REJECTED
+  }
+
+  %% Relationships
+  User "1" --> "many" Session : sessions
+  User "1" --> "many" News : author
+  User "1" --> "many" Gallery : author
+  User "1" --> "many" Prayer : author
+  User "1" --> "many" Registration : processedBy
+
+  User ..> UserRole : role
+  Registration ..> RegistrationStatus : status
+

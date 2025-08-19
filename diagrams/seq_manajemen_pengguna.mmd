@@ -1,0 +1,43 @@
+sequenceDiagram
+  participant A as Admin (Logged In)
+  participant UI as Halaman Admin - Users
+  participant API as Controller/API
+  participant DB as Database
+
+  A->>UI: Buka halaman manajemen pengguna
+  UI->>API: GET /api/users
+  API->>DB: Ambil daftar user
+  DB-->>API: List<User>
+  API-->>UI: 200 List<User>
+  UI-->>A: Tampilkan daftar user
+
+  rect rgb(240,240,240)
+    note over A,UI: Tambah user
+    A->>UI: Isi form user baru
+    UI->>API: POST /api/users {data}
+    API->>DB: Insert user
+    DB-->>API: OK
+    API-->>UI: 201 {user}
+    UI-->>A: User berhasil ditambahkan
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Update user
+    A->>UI: Edit data user
+    UI->>API: PUT /api/users/:id {data}
+    API->>DB: Update user by id
+    DB-->>API: OK
+    API-->>UI: 200 {user}
+    UI-->>A: User berhasil diupdate
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Hapus user
+    A->>UI: Konfirmasi hapus
+    UI->>API: DELETE /api/users/:id
+    API->>DB: Delete user by id
+    DB-->>API: OK
+    API-->>UI: 204 No Content
+    UI-->>A: User dihapus
+  end
+

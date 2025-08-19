@@ -304,6 +304,12 @@ export default async function AdminPage() {
                       Pengguna Sistem
                     </TabsTrigger>
                     <TabsTrigger
+                      value="registrations"
+                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
+                    >
+                      Pendaftaran
+                    </TabsTrigger>
+                    <TabsTrigger
                       value="news"
                       className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
                     >
@@ -315,12 +321,7 @@ export default async function AdminPage() {
                     >
                       Galeri
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="registrations"
-                      className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"
-                    >
-                      Pendaftaran
-                    </TabsTrigger>
+                    
                     <TabsTrigger
                       value="prayers"
                       className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none border-b-2 border-transparent py-4 text-sm font-medium"

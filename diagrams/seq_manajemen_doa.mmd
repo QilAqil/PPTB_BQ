@@ -1,0 +1,43 @@
+sequenceDiagram
+  participant A as Admin (Logged In)
+  participant UI as Halaman Admin - Doa
+  participant API as Controller/API
+  participant DB as Database
+
+  A->>UI: Buka halaman doa
+  UI->>API: GET /api/prayers
+  API->>DB: Ambil daftar doa
+  DB-->>API: List<Prayer>
+  API-->>UI: 200 List<Prayer>
+  UI-->>A: Tampilkan daftar
+
+  rect rgb(240,240,240)
+    note over A,UI: Tambah doa
+    A->>UI: Isi form doa (judul, arabicText, latinText, translation, category)
+    UI->>API: POST /api/prayers {data}
+    API->>DB: Insert doa (isPublished=false)
+    DB-->>API: OK
+    API-->>UI: 201 {prayer}
+    UI-->>A: Doa dibuat
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Publikasi doa
+    A->>UI: Klik Publish
+    UI->>API: PATCH /api/prayers/:id {isPublished=true, publishedAt}
+    API->>DB: Update doa
+    DB-->>API: OK
+    API-->>UI: 200 {prayer}
+    UI-->>A: Doa dipublikasikan
+  end
+
+  rect rgb(240,240,240)
+    note over A,UI: Hapus doa
+    A->>UI: Konfirmasi hapus
+    UI->>API: DELETE /api/prayers/:id
+    API->>DB: Delete by id
+    DB-->>API: OK
+    API-->>UI: 204 No Content
+    UI-->>A: Doa dihapus
+  end
+

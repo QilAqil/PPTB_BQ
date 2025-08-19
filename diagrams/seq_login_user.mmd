@@ -1,0 +1,21 @@
+sequenceDiagram
+  participant U as User
+  participant UI as Halaman Login
+  participant API as Controller/API
+  participant DB as Database
+
+  U->>UI: Masukkan email dan password
+  UI->>API: POST /api/auth/login {email, password}
+  API->>DB: Cari user berdasarkan email
+  DB-->>API: Data user (jika ada)
+  API->>API: Validasi password (bcrypt.compare)
+
+  alt Kredensial valid
+    API->>API: Generate JWT & buat Session
+    API-->>UI: 200 {token, user}
+    UI-->>U: Login Berhasil
+  else Kredensial tidak valid
+    API-->>UI: 401 {error}
+    UI-->>U: Login Gagal
+  end
+

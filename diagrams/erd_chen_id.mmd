@@ -1,0 +1,110 @@
+flowchart LR
+  %% ========== Entities ==========
+  User[User]
+  Session[Session]
+  News[News]
+  Gallery[Gallery]
+  Prayer[Prayer]
+  Registration[Registration]
+
+  %% ========== User Attributes ==========
+  U_id(((id))) --> User
+  U_email(((email))) --> User
+  U_name(((name))) --> User
+  U_password(((password))) --> User
+  U_role(((role: enum))) --> User
+  U_isVerified(((isVerified))) --> User
+  U_isActive(((isActive))) --> User
+  U_lastLoginAt(((lastLoginAt))) --> User
+  U_createdAt(((createdAt))) --> User
+  U_updatedAt(((updatedAt))) --> User
+
+  %% ========== Session Attributes ==========
+  S_id(((id))) --> Session
+  S_userId(((userId))) --> Session
+  S_token(((token))) --> Session
+  S_expiresAt(((expiresAt))) --> Session
+  S_createdAt(((createdAt))) --> Session
+
+  %% ========== News Attributes ==========
+  N_id(((id))) --> News
+  N_title(((title))) --> News
+  N_content(((content))) --> News
+  N_imageUrl(((imageUrl))) --> News
+  N_authorId(((authorId))) --> News
+  N_isPublished(((isPublished))) --> News
+  N_publishedAt(((publishedAt))) --> News
+  N_createdAt(((createdAt))) --> News
+  N_updatedAt(((updatedAt))) --> News
+
+  %% ========== Gallery Attributes ==========
+  G_id(((id))) --> Gallery
+  G_title(((title))) --> Gallery
+  G_imageUrl(((imageUrl))) --> Gallery
+  G_authorId(((authorId))) --> Gallery
+  G_isPublished(((isPublished))) --> Gallery
+  G_publishedAt(((publishedAt))) --> Gallery
+  G_createdAt(((createdAt))) --> Gallery
+  G_updatedAt(((updatedAt))) --> Gallery
+
+  %% ========== Prayer Attributes ==========
+  P_id(((id))) --> Prayer
+  P_title(((title))) --> Prayer
+  P_arabicText(((arabicText))) --> Prayer
+  P_latinText(((latinText))) --> Prayer
+  P_translation(((translation))) --> Prayer
+  P_category(((category))) --> Prayer
+  P_authorId(((authorId))) --> Prayer
+  P_isPublished(((isPublished))) --> Prayer
+  P_publishedAt(((publishedAt))) --> Prayer
+  P_createdAt(((createdAt))) --> Prayer
+  P_updatedAt(((updatedAt))) --> Prayer
+
+  %% ========== Registration Attributes ==========
+  R_id(((id))) --> Registration
+  R_fullName(((fullName))) --> Registration
+  R_nik(((nik))) --> Registration
+  R_birthPlace(((birthPlace))) --> Registration
+  R_birthDate(((birthDate))) --> Registration
+  R_gender(((gender))) --> Registration
+  R_address(((address))) --> Registration
+  R_phoneNumber(((phoneNumber))) --> Registration
+  R_parentName(((parentName))) --> Registration
+  R_parentPhone(((parentPhone))) --> Registration
+  R_motivation(((motivation))) --> Registration
+  R_status(((status: enum))) --> Registration
+  R_notes(((notes))) --> Registration
+  R_processedBy(((processedBy))) --> Registration
+  R_processedAt(((processedAt))) --> Registration
+  R_createdAt(((createdAt))) --> Registration
+  R_updatedAt(((updatedAt))) --> Registration
+
+  %% ========== Relationships (Chen-style with diamonds via rhombus) ==========
+  RS{memiliki}:::rel
+  RN{mengelola}:::rel
+  RG{mengunggah}:::rel
+  RP{menambah}:::rel
+  RR{memproses}:::rel
+
+  %% User - Session
+  User -->|1| RS
+  RS -->|N| Session
+
+  %% User - News
+  User -->|1| RN
+  RN -->|N| News
+
+  %% User - Gallery
+  User -->|1| RG
+  RG -->|N| Gallery
+
+  %% User - Prayer
+  User -->|1| RP
+  RP -->|N| Prayer
+
+  %% User - Registration (processedBy admin)
+  User -->|1| RR
+  RR -->|N| Registration
+
+  classDef rel fill:#fff,stroke:#333,stroke-width:1px
+

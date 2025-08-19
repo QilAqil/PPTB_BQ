@@ -1,0 +1,21 @@
+sequenceDiagram
+  participant U as User
+  participant UI as Halaman Register
+  participant API as Controller/API
+  participant DB as Database
+
+  U->>UI: Isi form registrasi (nama, email, password)
+  UI->>API: POST /api/auth/register {name, email, password}
+  API->>DB: Cek email sudah ada?
+  DB-->>API: Ada/Tidak
+  alt Email belum terdaftar
+    API->>API: Hash password (bcrypt.hash)
+    API->>DB: Simpan user baru
+    DB-->>API: User tersimpan
+    API-->>UI: 201 {user}
+    UI-->>U: Registrasi Berhasil
+  else Email sudah terdaftar
+    API-->>UI: 409 {error: email exists}
+    UI-->>U: Registrasi Gagal (email sudah digunakan)
+  end
+

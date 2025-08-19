@@ -3,16 +3,20 @@
 ## 1. PENDAHULUAN
 
 ### 1.1 Latar Belakang
+
 Sistem PPTB-BQ adalah aplikasi web yang dikembangkan untuk Pondok Pesantren Tahfidz & Bahasa BAROKATUL QUR'AN. Sistem ini dirancang untuk mengelola informasi pondok pesantren, pendaftaran santri baru, berita, galeri, dan doa-doa Islam.
 
 ### 1.2 Tujuan
+
 - Memudahkan pengelolaan informasi pondok pesantren
 - Menyediakan sistem pendaftaran santri baru yang terintegrasi
 - Mengelola konten berita, galeri, dan doa-doa
 - Memberikan akses informasi yang mudah bagi pengunjung
 
 ### 1.3 Ruang Lingkup
+
 Sistem mencakup:
+
 - Website informasi pondok pesantren
 - Sistem pendaftaran santri baru
 - Panel administrasi untuk pengelolaan konten
@@ -22,6 +26,7 @@ Sistem mencakup:
 ## 2. TEKNOLOGI YANG DIGUNAKAN
 
 ### 2.1 Frontend
+
 - **Next.js 15.4.4** - React framework
 - **React 19.1.0** - JavaScript library
 - **TypeScript** - Type-safe JavaScript
@@ -29,6 +34,7 @@ Sistem mencakup:
 - **Radix UI** - Unstyled, accessible UI components
 
 ### 2.2 Backend
+
 - **Next.js API Routes** - Server-side API
 - **Prisma ORM** - Database toolkit
 - **PostgreSQL** - Database management system
@@ -36,12 +42,14 @@ Sistem mencakup:
 - **bcryptjs** - Password hashing
 
 ### 2.3 Database
+
 - **PostgreSQL** dengan Neon sebagai provider
 - **Prisma Schema** untuk model data
 
 ## 3. ARSITEKTUR SISTEM
 
 ### 3.1 Arsitektur Umum
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │   Database      │
@@ -51,6 +59,7 @@ Sistem mencakup:
 ```
 
 ### 3.2 Struktur Folder
+
 ```
 pptb-bq/
 ├── src/
@@ -72,19 +81,23 @@ pptb-bq/
 ### 4.1 Pengunjung (Public Users)
 
 #### 4.1.1 Karakteristik
+
 - **Demografi**: Masyarakat umum, calon santri, orang tua santri
 - **Usia**: 15-50 tahun
 - **Lokasi**: Lokal dan regional
 - **Teknologi**: Menggunakan smartphone dan komputer
 
 #### 4.1.2 Kebutuhan
+
 - **Informasi Pondok Pesantren**
+
   - Profil dan visi misi
   - Program pendidikan
   - Fasilitas yang tersedia
   - Lokasi dan kontak
 
 - **Konten Religius**
+
   - Berita pondok pesantren
   - Galeri kegiatan
   - Kumpulan doa-doa
@@ -95,12 +108,15 @@ pptb-bq/
   - Status pendaftaran
 
 #### 4.1.3 Aktivitas Utama
+
 1. **Melihat Halaman Utama**
+
    - Hero section dengan informasi utama
    - Visi misi pondok pesantren
    - Berita terbaru
 
 2. **Mengakses Konten**
+
    - Membaca berita pondok pesantren
    - Melihat galeri kegiatan
    - Mempelajari doa-doa
@@ -113,23 +129,28 @@ pptb-bq/
 ### 4.2 Admin
 
 #### 4.2.1 Karakteristik
+
 - **Demografi**: Pengurus pondok pesantren, staff administrasi
 - **Usia**: 25-60 tahun
 - **Lokasi**: Di dalam pondok pesantren
 - **Teknologi**: Menggunakan komputer dan laptop
 
 #### 4.2.2 Kebutuhan
+
 - **Manajemen Konten**
+
   - Membuat dan mengedit berita
   - Mengelola galeri foto
   - Menambah doa-doa baru
 
 - **Manajemen Pendaftaran**
+
   - Melihat daftar pendaftar
   - Menyetujui/menolak pendaftaran
   - Memberikan catatan pada pendaftaran
 
 - **Manajemen Pengguna**
+
   - Membuat akun admin baru
   - Mengelola hak akses
   - Memantau aktivitas pengguna
@@ -140,16 +161,20 @@ pptb-bq/
   - Monitoring sistem
 
 #### 4.2.3 Aktivitas Utama
+
 1. **Login ke Sistem**
+
    - Autentikasi dengan email dan password
    - Akses ke panel admin
 
 2. **Manajemen Konten**
+
    - CRUD berita
    - CRUD galeri
    - CRUD doa-doa
 
 3. **Manajemen Pendaftaran**
+
    - Melihat daftar pendaftar
    - Menyetujui/menolak pendaftaran
    - Memberikan catatan
@@ -164,6 +189,7 @@ pptb-bq/
 ### 5.1 Kebutuhan Fungsional
 
 #### 5.1.1 Manajemen Autentikasi
+
 - **RF-001**: Sistem login dengan email dan password
 - **RF-002**: Sistem registrasi pengguna baru
 - **RF-003**: Logout dan manajemen session
@@ -171,6 +197,7 @@ pptb-bq/
 - **RF-005**: Password hashing dan keamanan
 
 #### 5.1.2 Manajemen Berita
+
 - **RF-006**: Membuat berita baru
 - **RF-007**: Mengedit berita yang ada
 - **RF-008**: Menghapus berita
@@ -178,6 +205,7 @@ pptb-bq/
 - **RF-010**: Menampilkan berita di halaman publik
 
 #### 5.1.3 Manajemen Galeri
+
 - **RF-011**: Upload foto ke galeri
 - **RF-012**: Mengedit informasi foto
 - **RF-013**: Menghapus foto
@@ -185,6 +213,7 @@ pptb-bq/
 - **RF-015**: Menampilkan galeri di halaman publik
 
 #### 5.1.4 Manajemen Doa-doa
+
 - **RF-016**: Menambah doa baru
 - **RF-017**: Mengedit doa yang ada
 - **RF-018**: Menghapus doa
@@ -192,6 +221,7 @@ pptb-bq/
 - **RF-020**: Menampilkan doa di halaman publik
 
 #### 5.1.5 Sistem Pendaftaran Santri
+
 - **RF-021**: Form pendaftaran santri baru
 - **RF-022**: Validasi data pendaftaran
 - **RF-023**: Menyimpan data pendaftaran
@@ -200,6 +230,7 @@ pptb-bq/
 - **RF-026**: Memberikan catatan pada pendaftaran
 
 #### 5.1.6 Manajemen Pengguna
+
 - **RF-027**: Membuat akun pengguna baru
 - **RF-028**: Mengedit data pengguna
 - **RF-029**: Menghapus akun pengguna
@@ -207,6 +238,7 @@ pptb-bq/
 - **RF-031**: Menonaktifkan/mengaktifkan akun
 
 #### 5.1.7 Dashboard dan Laporan
+
 - **RF-032**: Dashboard admin dengan statistik
 - **RF-033**: Laporan pendaftaran santri
 - **RF-034**: Laporan aktivitas pengguna
@@ -215,12 +247,14 @@ pptb-bq/
 ### 5.2 Kebutuhan Non-Fungsional
 
 #### 5.2.1 Kebutuhan Performa
+
 - **RNF-001**: Response time < 3 detik untuk semua operasi
 - **RNF-002**: Sistem dapat menangani 100+ pengguna bersamaan
 - **RNF-003**: Optimasi loading gambar dan konten
 - **RNF-004**: Caching untuk konten statis
 
 #### 5.2.2 Kebutuhan Keamanan
+
 - **RNF-005**: Enkripsi password dengan bcrypt
 - **RNF-006**: JWT token dengan expiry time
 - **RNF-007**: Validasi input untuk mencegah SQL injection
@@ -229,6 +263,7 @@ pptb-bq/
 - **RNF-010**: Role-based access control
 
 #### 5.2.3 Kebutuhan Usabilitas
+
 - **RNF-011**: Interface yang responsif (mobile-first)
 - **RNF-012**: Navigasi yang intuitif
 - **RNF-013**: Loading states dan feedback
@@ -236,12 +271,14 @@ pptb-bq/
 - **RNF-015**: Accessibility compliance
 
 #### 5.2.4 Kebutuhan Reliability
+
 - **RNF-016**: Uptime 99.5%
 - **RNF-017**: Backup database otomatis
 - **RNF-018**: Error logging dan monitoring
 - **RNF-019**: Graceful error handling
 
 #### 5.2.5 Kebutuhan Scalability
+
 - **RNF-020**: Arsitektur yang dapat di-scale
 - **RNF-021**: Database optimization
 - **RNF-022**: CDN untuk static assets
@@ -279,6 +316,7 @@ pptb-bq/
 ### 6.2 Activity Diagram
 
 #### 6.2.1 Activity Diagram Login Admin
+
 ```
 ┌─────────────┐
 │    Start    │
@@ -330,6 +368,7 @@ pptb-bq/
 ```
 
 #### 6.2.2 Activity Diagram Pendaftaran Santri
+
 ```
 ┌─────────────┐
 │    Start    │
@@ -385,6 +424,7 @@ pptb-bq/
 ### 6.3 Sequence Diagram
 
 #### 6.3.1 Sequence Diagram Login Admin
+
 ```
 ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
 │  Admin  │    │ Frontend│    │ Backend │    │Database │
@@ -414,6 +454,7 @@ pptb-bq/
 ```
 
 #### 6.3.2 Sequence Diagram Pendaftaran Santri
+
 ```
 ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
 │ Visitor │    │ Frontend│    │ Backend │    │Database │
@@ -498,11 +539,79 @@ pptb-bq/
        └─────────────────────────────────────────────────┘
 ```
 
+### 6.5 Class Diagram (Gambar)
+
+- Menggambarkan struktur kelas aplikasi, atribut, metode inti, dan relasi antar kelas.
+- Kelas utama: `User`, `Session`, `News`, `Gallery`, `Prayer`, `Registration`.
+- Enumerasi: `UserRole` (USER, ADMIN), `RegistrationStatus` (PENDING, APPROVED, REJECTED).
+
+![Class Diagram](/diagrams/class_diagram_boxes.png)
+
+Ringkasan relasi:
+
+- `User` 1..\* `Session` (multi-device login)
+- `User` 1..\* `News` / `Gallery` / `Prayer` (authoring konten)
+- `User` 1..\* `Registration` melalui `processedBy` (admin pemroses)
+
+### 6.6 ERD Crow's Foot (Gambar)
+
+- Menunjukkan entitas, atribut kunci, dan kardinalitas relasi.
+- Kunci/constraint penting: `User.email` UNIQUE, `Session.token` UNIQUE.
+
+![ERD Crow's Foot](/diagrams/erd_crows_foot_id.png)
+
+### 6.7 ERD Gaya Chen (Gambar)
+
+- Visualisasi entity–attribute dengan hubungan bertanda berlian (relationship) sesuai contoh konvensi Chen.
+
+![ERD Chen](/diagrams/erd_chen_id.png)
+
+### 6.8 Sequence Diagram (Gambar)
+
+Penjelasan umum: interaksi antar aktor–UI–API–Database sesuai alur fitur. Setiap diagram berikut ditautkan sebagai PNG.
+
+1. Login User
+
+![Sequence Login User](/diagrams/seq_login_user.png)
+
+2. Register User
+
+![Sequence Register User](/diagrams/seq_register_user.png)
+
+3. Pendaftaran User (Kirim Form)
+
+![Sequence Pendaftaran User](/diagrams/seq_pendaftaran_user.png)
+
+4. Login Admin (dengan verifikasi role)
+
+![Sequence Login Admin](/diagrams/seq_login_admin.png)
+
+5. Manajemen Pengguna (CRUD)
+
+![Sequence Manajemen Pengguna](/diagrams/seq_manajemen_pengguna.png)
+
+6. Manajemen Pendaftaran (Approve/Reject)
+
+![Sequence Manajemen Pendaftaran](/diagrams/seq_manajemen_pendaftaran.png)
+
+7. Manajemen Berita (CRUD + Publish)
+
+![Sequence Manajemen Berita](/diagrams/seq_manajemen_berita.png)
+
+8. Manajemen Galeri (Upload + CRUD + Publish)
+
+![Sequence Manajemen Galeri](/diagrams/seq_manajemen_galeri.png)
+
+9. Manajemen Doa (CRUD + Publish)
+
+![Sequence Manajemen Doa](/diagrams/seq_manajemen_doa.png)
+
 ## 7. PERANCANGAN BASIS DATA
 
 ### 7.1 Struktur Database
 
 #### 7.1.1 Tabel User
+
 ```sql
 CREATE TABLE users (
     id VARCHAR(255) PRIMARY KEY,
@@ -519,6 +628,7 @@ CREATE TABLE users (
 ```
 
 #### 7.1.2 Tabel Session
+
 ```sql
 CREATE TABLE sessions (
     id VARCHAR(255) PRIMARY KEY,
@@ -531,6 +641,7 @@ CREATE TABLE sessions (
 ```
 
 #### 7.1.3 Tabel News
+
 ```sql
 CREATE TABLE news (
     id VARCHAR(255) PRIMARY KEY,
@@ -547,6 +658,7 @@ CREATE TABLE news (
 ```
 
 #### 7.1.4 Tabel Gallery
+
 ```sql
 CREATE TABLE gallery (
     id VARCHAR(255) PRIMARY KEY,
@@ -562,6 +674,7 @@ CREATE TABLE gallery (
 ```
 
 #### 7.1.5 Tabel Registration
+
 ```sql
 CREATE TABLE registrations (
     id VARCHAR(255) PRIMARY KEY,
@@ -586,6 +699,7 @@ CREATE TABLE registrations (
 ```
 
 #### 7.1.6 Tabel Prayer
+
 ```sql
 CREATE TABLE prayers (
     id VARCHAR(255) PRIMARY KEY,
@@ -606,6 +720,7 @@ CREATE TABLE prayers (
 ### 7.2 Indeks Database
 
 #### 7.2.1 Indeks untuk Performa Query
+
 ```sql
 -- Indeks untuk tabel users
 CREATE INDEX idx_users_email ON users(email);
@@ -640,6 +755,7 @@ CREATE INDEX idx_prayers_isPublished ON prayers(isPublished);
 ### 7.3 Relasi Antar Tabel
 
 #### 7.3.1 Relasi One-to-Many
+
 - **User → Session**: Satu user dapat memiliki banyak session
 - **User → News**: Satu user dapat membuat banyak berita
 - **User → Gallery**: Satu user dapat upload banyak foto
@@ -647,20 +763,22 @@ CREATE INDEX idx_prayers_isPublished ON prayers(isPublished);
 - **User → Registration**: Satu admin dapat memproses banyak pendaftaran
 
 #### 7.3.2 Relasi One-to-One
+
 - **User ↔ Registration (processedBy)**: Satu pendaftaran hanya dapat diproses oleh satu admin
 
 ### 7.4 Constraints dan Validasi
 
 #### 7.4.1 Constraints Database
+
 ```sql
 -- Unique constraints
 ALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);
 ALTER TABLE sessions ADD CONSTRAINT unique_token UNIQUE (token);
 
 -- Check constraints
-ALTER TABLE registrations ADD CONSTRAINT check_gender 
+ALTER TABLE registrations ADD CONSTRAINT check_gender
     CHECK (gender IN ('Laki-laki', 'Perempuan'));
-ALTER TABLE registrations ADD CONSTRAINT check_status 
+ALTER TABLE registrations ADD CONSTRAINT check_status
     CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED'));
 
 -- Not null constraints
@@ -671,6 +789,7 @@ ALTER TABLE news MODIFY content TEXT NOT NULL;
 ```
 
 #### 7.4.2 Validasi Aplikasi
+
 - **Email**: Format email yang valid
 - **Password**: Minimal 6 karakter
 - **NIK**: 16 digit angka
@@ -681,11 +800,13 @@ ALTER TABLE news MODIFY content TEXT NOT NULL;
 ### 7.5 Backup dan Recovery
 
 #### 7.5.1 Strategi Backup
+
 - **Daily Backup**: Backup otomatis setiap hari
 - **Weekly Backup**: Backup lengkap setiap minggu
 - **Monthly Backup**: Backup arsip setiap bulan
 
 #### 7.5.2 Recovery Plan
+
 - **Point-in-time Recovery**: Dapat memulihkan ke waktu tertentu
 - **Disaster Recovery**: Prosedur pemulihan bencana
 - **Data Integrity**: Validasi integritas data setelah recovery
@@ -700,4 +821,4 @@ Sistem ini dapat memenuhi kebutuhan pengunjung untuk mendapatkan informasi pondo
 
 **Dokumentasi ini dibuat pada:** [Tanggal]
 **Versi:** 1.0
-**Status:** Final 
+**Status:** Final
