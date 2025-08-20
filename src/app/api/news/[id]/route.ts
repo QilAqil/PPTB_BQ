@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../lib/prisma'
-import { verifyToken } from '../../../../lib/auth'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../../lib/prisma";
+import { verifyToken } from "../../../../lib/auth";
 
 // GET /api/news/[id] - Get single news
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await params;
     const news = await prisma.news.findUnique({
       where: { id },
       include: {
@@ -20,22 +20,19 @@ export async function GET(
           },
         },
       },
-    })
+    });
 
     if (!news) {
-      return NextResponse.json(
-        { error: 'News not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "News not found" }, { status: 404 });
     }
 
-    return NextResponse.json(news)
+    return NextResponse.json(news);
   } catch (error) {
-    console.error('Error fetching news:', error)
+    console.error("Error fetching news:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch news' },
+      { error: "Failed to fetch news" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -45,24 +42,21 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await params;
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
-      )
+      );
     }
 
     // Verify JWT token
-    const payload = verifyToken(authToken)
+    const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -75,36 +69,33 @@ export async function PUT(
         role: true,
         isActive: true,
       },
-    })
+    });
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
-      )
+      );
     }
 
     // Check if user is admin
-    if (user.role !== 'ADMIN') {
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Admin access required" },
         { status: 403 }
-      )
+      );
     }
 
-    const body = await request.json()
-    const { title, content, imageUrl, isPublished } = body
+    const body = await request.json();
+    const { title, content, imageUrl } = body;
 
     // Check if news exists
     const existingNews = await prisma.news.findUnique({
       where: { id },
-    })
+    });
 
     if (!existingNews) {
-      return NextResponse.json(
-        { error: 'News not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "News not found" }, { status: 404 });
     }
 
     // Update news
@@ -114,8 +105,6 @@ export async function PUT(
         title,
         content,
         imageUrl,
-        isPublished,
-        publishedAt: isPublished && !existingNews.isPublished ? new Date() : existingNews.publishedAt,
       },
       include: {
         author: {
@@ -126,15 +115,15 @@ export async function PUT(
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(updatedNews)
+    return NextResponse.json(updatedNews);
   } catch (error) {
-    console.error('Error updating news:', error)
+    console.error("Error updating news:", error);
     return NextResponse.json(
-      { error: 'Failed to update news' },
+      { error: "Failed to update news" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -145,22 +134,19 @@ export async function DELETE(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
-      )
+      );
     }
 
     // Verify JWT token
-    const payload = verifyToken(authToken)
+    const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -173,47 +159,44 @@ export async function DELETE(
         role: true,
         isActive: true,
       },
-    })
+    });
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
-      )
+      );
     }
 
     // Check if user is admin
-    if (user.role !== 'ADMIN') {
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Admin access required" },
         { status: 403 }
-      )
+      );
     }
 
-    const { id } = await params
+    const { id } = await params;
     // Check if news exists
     const existingNews = await prisma.news.findUnique({
       where: { id },
-    })
+    });
 
     if (!existingNews) {
-      return NextResponse.json(
-        { error: 'News not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: "News not found" }, { status: 404 });
     }
 
     // Delete news
     await prisma.news.delete({
       where: { id },
-    })
+    });
 
-    return NextResponse.json({ message: 'News deleted successfully' })
+    return NextResponse.json({ message: "News deleted successfully" });
   } catch (error) {
-    console.error('Error deleting news:', error)
+    console.error("Error deleting news:", error);
     return NextResponse.json(
-      { error: 'Failed to delete news' },
+      { error: "Failed to delete news" },
       { status: 500 }
-    )
+    );
   }
-} 
+}

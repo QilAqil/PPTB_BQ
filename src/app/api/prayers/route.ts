@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { verifyToken } from "@/lib/auth";
 
 // GET /api/prayers - Get all prayers (published only for non-admin users)
 export async function GET(request: NextRequest) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value;
+    const authToken = request.cookies.get("auth-token")?.value;
     let user = null;
-    
+
     if (authToken) {
       // Verify JWT token
       const payload = verifyToken(authToken);
@@ -26,21 +26,16 @@ export async function GET(request: NextRequest) {
         });
       }
     }
-    
+
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const category = searchParams.get("category");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
     // Build where clause
     const where: Record<string, unknown> = {};
-    
-    // If user is not admin, only show published prayers
-    if (!user || user.role !== 'ADMIN') {
-      where.isPublished = true;
-    }
-    
+
     // Filter by category if provided
     if (category) {
       where.category = category;
@@ -59,7 +54,7 @@ export async function GET(request: NextRequest) {
           },
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: "desc",
         },
         skip,
         take: limit,
@@ -77,9 +72,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching prayers:', error);
+    console.error("Error fetching prayers:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -89,11 +84,11 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value;
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
       );
     }
@@ -101,10 +96,7 @@ export async function POST(request: NextRequest) {
     // Verify JWT token
     const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -121,25 +113,28 @@ export async function POST(request: NextRequest) {
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
       );
     }
-    
-    if (user.role !== 'ADMIN') {
+
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Unauthorized - Admin access required' },
+        { error: "Unauthorized - Admin access required" },
         { status: 403 }
       );
     }
 
     const body = await request.json();
-    const { title, arabicText, latinText, translation, category, isPublished } = body;
+    const { title, arabicText, latinText, translation, category } = body;
 
     // Validate required fields
     if (!title || !arabicText || !category) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, arabicText, and category are required' },
+        {
+          error:
+            "Missing required fields: title, arabicText, and category are required",
+        },
         { status: 400 }
       );
     }
@@ -151,8 +146,6 @@ export async function POST(request: NextRequest) {
         latinText,
         translation,
         category,
-        isPublished: isPublished || false,
-        publishedAt: isPublished ? new Date() : null,
         authorId: user.id,
       },
       include: {
@@ -168,10 +161,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(prayer, { status: 201 });
   } catch (error) {
-    console.error('Error creating prayer:', error);
+    console.error("Error creating prayer:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}

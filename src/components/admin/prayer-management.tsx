@@ -33,9 +33,7 @@ interface Prayer {
   latinText: string;
   translation: string;
   category: string;
-  isPublished: boolean;
   createdAt: string;
-  publishedAt?: string;
   author: {
     id: string;
     name: string;
@@ -49,7 +47,6 @@ interface PrayerFormData {
   latinText: string;
   translation: string;
   category: string;
-  isPublished: boolean;
 }
 
 const categories = [
@@ -72,7 +69,6 @@ export default function PrayerManagement() {
     latinText: "",
     translation: "",
     category: "",
-    isPublished: false,
   });
 
   const fetchPrayers = async () => {
@@ -135,7 +131,6 @@ export default function PrayerManagement() {
       latinText: prayer.latinText,
       translation: prayer.translation,
       category: prayer.category,
-      isPublished: prayer.isPublished,
     });
     setIsDialogOpen(true);
   };
@@ -169,7 +164,6 @@ export default function PrayerManagement() {
       latinText: "",
       translation: "",
       category: "",
-      isPublished: false,
     });
   };
 
@@ -243,27 +237,6 @@ export default function PrayerManagement() {
                           {category}
                         </SelectItem>
                       ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="isPublished">Status Publikasi</Label>
-                  <Select
-                    value={formData.isPublished.toString()}
-                    onValueChange={(value) =>
-                      setFormData({
-                        ...formData,
-                        isPublished: value === "true",
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="true">Dipublikasi</SelectItem>
-                      <SelectItem value="false">Draft</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -353,9 +326,6 @@ export default function PrayerManagement() {
                   <CardTitle className="text-lg line-clamp-2 flex-1">
                     {prayer.title}
                   </CardTitle>
-                  <Badge variant={prayer.isPublished ? "default" : "secondary"}>
-                    {prayer.isPublished ? "Dipublikasi" : "Draft"}
-                  </Badge>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <BookOpen className="h-3 w-3" />

@@ -12,7 +12,6 @@ interface NewsItem {
   title: string;
   content?: string;
   imageUrl?: string;
-  isPublished: boolean;
   publishedAt?: string;
   createdAt: string;
   author: {

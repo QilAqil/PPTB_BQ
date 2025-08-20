@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../lib/prisma'
-import { verifyToken } from '../../../../lib/auth'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../../lib/prisma";
+import { verifyToken } from "../../../../lib/auth";
 
 // GET /api/gallery/[id] - Get single gallery item
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params
+    const { id } = await params;
     const galleryItem = await prisma.gallery.findUnique({
       where: { id },
       include: {
@@ -20,22 +20,22 @@ export async function GET(
           },
         },
       },
-    })
+    });
 
     if (!galleryItem) {
       return NextResponse.json(
-        { error: 'Gallery item not found' },
+        { error: "Gallery item not found" },
         { status: 404 }
-      )
+      );
     }
 
-    return NextResponse.json(galleryItem)
+    return NextResponse.json(galleryItem);
   } catch (error) {
-    console.error('Error fetching gallery item:', error)
+    console.error("Error fetching gallery item:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch gallery item' },
+      { error: "Failed to fetch gallery item" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -46,22 +46,19 @@ export async function PUT(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
-      )
+      );
     }
 
     // Verify JWT token
-    const payload = verifyToken(authToken)
+    const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -74,37 +71,37 @@ export async function PUT(
         role: true,
         isActive: true,
       },
-    })
+    });
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
-      )
+      );
     }
 
     // Check if user is admin
-    if (user.role !== 'ADMIN') {
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Admin access required" },
         { status: 403 }
-      )
+      );
     }
 
-    const body = await request.json()
-    const { title, imageUrl, isPublished } = body
+    const body = await request.json();
+    const { title, imageUrl } = body;
 
-    const { id } = await params
+    const { id } = await params;
     // Check if gallery item exists
     const existingItem = await prisma.gallery.findUnique({
       where: { id },
-    })
+    });
 
     if (!existingItem) {
       return NextResponse.json(
-        { error: 'Gallery item not found' },
+        { error: "Gallery item not found" },
         { status: 404 }
-      )
+      );
     }
 
     // Update gallery item
@@ -113,8 +110,6 @@ export async function PUT(
       data: {
         title,
         imageUrl,
-        isPublished,
-        publishedAt: isPublished && !existingItem.isPublished ? new Date() : existingItem.publishedAt,
       },
       include: {
         author: {
@@ -125,15 +120,15 @@ export async function PUT(
           },
         },
       },
-    })
+    });
 
-    return NextResponse.json(updatedItem)
+    return NextResponse.json(updatedItem);
   } catch (error) {
-    console.error('Error updating gallery item:', error)
+    console.error("Error updating gallery item:", error);
     return NextResponse.json(
-      { error: 'Failed to update gallery item' },
+      { error: "Failed to update gallery item" },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -144,22 +139,19 @@ export async function DELETE(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
-      )
+      );
     }
 
     // Verify JWT token
-    const payload = verifyToken(authToken)
+    const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -172,47 +164,47 @@ export async function DELETE(
         role: true,
         isActive: true,
       },
-    })
+    });
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
-      )
+      );
     }
 
     // Check if user is admin
-    if (user.role !== 'ADMIN') {
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: "Admin access required" },
         { status: 403 }
-      )
+      );
     }
 
-    const { id } = await params
+    const { id } = await params;
     // Check if gallery item exists
     const existingItem = await prisma.gallery.findUnique({
       where: { id },
-    })
+    });
 
     if (!existingItem) {
       return NextResponse.json(
-        { error: 'Gallery item not found' },
+        { error: "Gallery item not found" },
         { status: 404 }
-      )
+      );
     }
 
     // Delete gallery item
     await prisma.gallery.delete({
       where: { id },
-    })
+    });
 
-    return NextResponse.json({ message: 'Gallery item deleted successfully' })
+    return NextResponse.json({ message: "Gallery item deleted successfully" });
   } catch (error) {
-    console.error('Error deleting gallery item:', error)
+    console.error("Error deleting gallery item:", error);
     return NextResponse.json(
-      { error: 'Failed to delete gallery item' },
+      { error: "Failed to delete gallery item" },
       { status: 500 }
-    )
+    );
   }
-} 
+}

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { verifyToken } from "@/lib/auth";
 
 // GET /api/prayers/[id] - Get specific prayer
 export async function GET(
@@ -9,9 +9,9 @@ export async function GET(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value;
+    const authToken = request.cookies.get("auth-token")?.value;
     let user = null;
-    
+
     if (authToken) {
       // Verify JWT token
       const payload = verifyToken(authToken);
@@ -29,7 +29,7 @@ export async function GET(
         });
       }
     }
-    
+
     const { id } = await params;
 
     const prayer = await prisma.prayer.findUnique({
@@ -46,27 +46,16 @@ export async function GET(
     });
 
     if (!prayer) {
-      return NextResponse.json(
-        { error: 'Prayer not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Prayer not found" }, { status: 404 });
     }
 
-    // If user is not admin, only show published prayers
-    if (!user || user.role !== 'ADMIN') {
-      if (!prayer.isPublished) {
-        return NextResponse.json(
-          { error: 'Prayer not found' },
-          { status: 404 }
-        );
-      }
-    }
+    // No publication filter anymore
 
     return NextResponse.json(prayer);
   } catch (error) {
-    console.error('Error fetching prayer:', error);
+    console.error("Error fetching prayer:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -79,11 +68,11 @@ export async function PUT(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value;
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
       );
     }
@@ -91,10 +80,7 @@ export async function PUT(
     // Verify JWT token
     const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -111,21 +97,21 @@ export async function PUT(
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
       );
     }
-    
-    if (user.role !== 'ADMIN') {
+
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Unauthorized - Admin access required' },
+        { error: "Unauthorized - Admin access required" },
         { status: 403 }
       );
     }
 
     const { id } = await params;
     const body = await request.json();
-    const { title, arabicText, latinText, translation, category, isPublished } = body;
+    const { title, arabicText, latinText, translation, category } = body;
 
     // Check if prayer exists
     const existingPrayer = await prisma.prayer.findUnique({
@@ -133,16 +119,16 @@ export async function PUT(
     });
 
     if (!existingPrayer) {
-      return NextResponse.json(
-        { error: 'Prayer not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Prayer not found" }, { status: 404 });
     }
 
     // Validate required fields
     if (!title || !arabicText || !category) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, arabicText, and category are required' },
+        {
+          error:
+            "Missing required fields: title, arabicText, and category are required",
+        },
         { status: 400 }
       );
     }
@@ -155,8 +141,6 @@ export async function PUT(
         latinText,
         translation,
         category,
-        isPublished: isPublished || false,
-        publishedAt: isPublished && !existingPrayer.isPublished ? new Date() : existingPrayer.publishedAt,
       },
       include: {
         author: {
@@ -171,9 +155,9 @@ export async function PUT(
 
     return NextResponse.json(updatedPrayer);
   } catch (error) {
-    console.error('Error updating prayer:', error);
+    console.error("Error updating prayer:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
@@ -186,11 +170,11 @@ export async function DELETE(
 ) {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth-token')?.value;
-    
+    const authToken = request.cookies.get("auth-token")?.value;
+
     if (!authToken) {
       return NextResponse.json(
-        { error: 'Authentication required' },
+        { error: "Authentication required" },
         { status: 401 }
       );
     }
@@ -198,10 +182,7 @@ export async function DELETE(
     // Verify JWT token
     const payload = verifyToken(authToken);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     // Get user from database
@@ -218,14 +199,14 @@ export async function DELETE(
 
     if (!user || !user.isActive) {
       return NextResponse.json(
-        { error: 'User not found or inactive' },
+        { error: "User not found or inactive" },
         { status: 401 }
       );
     }
-    
-    if (user.role !== 'ADMIN') {
+
+    if (user.role !== "ADMIN") {
       return NextResponse.json(
-        { error: 'Unauthorized - Admin access required' },
+        { error: "Unauthorized - Admin access required" },
         { status: 403 }
       );
     }
@@ -238,10 +219,7 @@ export async function DELETE(
     });
 
     if (!existingPrayer) {
-      return NextResponse.json(
-        { error: 'Prayer not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Prayer not found" }, { status: 404 });
     }
 
     await prisma.prayer.delete({
@@ -249,14 +227,14 @@ export async function DELETE(
     });
 
     return NextResponse.json(
-      { message: 'Prayer deleted successfully' },
+      { message: "Prayer deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting prayer:', error);
+    console.error("Error deleting prayer:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
-} 
+}
