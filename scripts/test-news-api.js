@@ -1,43 +1,67 @@
-// Using built-in fetch (Node.js 18+)
+const fetch = require("node-fetch");
 
 async function testNewsAPI() {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  console.log("Testing News API...");
+  console.log("Base URL:", baseUrl);
+
   try {
-    console.log('🧪 Testing News API...');
-    
-    // Test 1: Get published news
-    console.log('\n1. Testing GET /api/news?published=true&limit=4...');
-    const response = await fetch('http://localhost:3000/api/news?published=true&limit=4');
-    
-    console.log('Response status:', response.status);
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Test 1: Get all news
+    console.log("\n1. Testing GET /api/news...");
+    const allNewsResponse = await fetch(`${baseUrl}/api/news`);
+    console.log("Status:", allNewsResponse.status);
+    console.log(
+      "Headers:",
+      Object.fromEntries(allNewsResponse.headers.entries())
+    );
+
+    if (allNewsResponse.ok) {
+      const allNews = await allNewsResponse.json();
+      console.log(
+        "News count:",
+        allNews.data ? allNews.data.length : allNews.length
+      );
+
+      // Test 2: Get specific news if available
+      if (allNews.data && allNews.data.length > 0) {
+        const firstNewsId = allNews.data[0].id;
+        console.log("\n2. Testing GET /api/news/" + firstNewsId + "...");
+
+        const singleNewsResponse = await fetch(
+          `${baseUrl}/api/news/${firstNewsId}`
+        );
+        console.log("Status:", singleNewsResponse.status);
+
+        if (singleNewsResponse.ok) {
+          const singleNews = await singleNewsResponse.json();
+          console.log("Single news title:", singleNews.title);
+        } else {
+          console.log("Error response:", singleNewsResponse.statusText);
+        }
+      } else if (allNews.length > 0) {
+        const firstNewsId = allNews[0].id;
+        console.log("\n2. Testing GET /api/news/" + firstNewsId + "...");
+
+        const singleNewsResponse = await fetch(
+          `${baseUrl}/api/news/${firstNewsId}`
+        );
+        console.log("Status:", singleNewsResponse.status);
+
+        if (singleNewsResponse.ok) {
+          const singleNews = await singleNewsResponse.json();
+          console.log("Single news title:", singleNews.title);
+        } else {
+          console.log("Error response:", singleNewsResponse.statusText);
+        }
+      }
+    } else {
+      console.log("Error getting all news:", allNewsResponse.statusText);
     }
-    
-    const data = await response.json();
-    console.log('✅ News API response:', JSON.stringify(data, null, 2));
-    
-    // Test 2: Get all news (without published filter)
-    console.log('\n2. Testing GET /api/news...');
-    const response2 = await fetch('http://localhost:3000/api/news');
-    
-    console.log('Response status:', response2.status);
-    
-    if (!response2.ok) {
-      throw new Error(`HTTP error! status: ${response2.status}`);
-    }
-    
-    const data2 = await response2.json();
-    console.log('✅ All news response:', JSON.stringify(data2, null, 2));
-    
   } catch (error) {
-    console.error('❌ Error testing news API:', error.message);
-    
-    if (error.code === 'ECONNREFUSED') {
-      console.log('💡 Make sure the development server is running: npm run dev');
-    }
+    console.error("Test failed:", error.message);
   }
 }
 
-testNewsAPI(); 
+// Run the test
+testNewsAPI();
