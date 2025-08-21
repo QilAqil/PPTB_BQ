@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -13,54 +13,62 @@ import { NavigationMenuProps } from "@radix-ui/react-navigation-menu";
 import Link from "next/link";
 
 interface User {
-  id: string
-  email: string
-  name: string | null
-  role: string
+  id: string;
+  email: string;
+  name: string | null;
+  role: string;
 }
 
 export const NavMenu = (props: NavigationMenuProps) => {
-  const [, setUser] = useState<User | null>(null)
+  const [, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/auth/me')
+        const response = await fetch("/api/auth/me");
         if (response.ok) {
-          const data = await response.json()
-          setUser(data.user)
+          const data = await response.json();
+          setUser(data.user);
         }
       } catch (error) {
-        console.error('Auth check failed:', error)
+        console.error("Auth check failed:", error);
       }
-    }
+    };
 
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   return (
     <NavigationMenu {...props}>
-      <NavigationMenuList className="gap-6 space-x-0 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start">
+      <NavigationMenuList className="gap-3 sm:gap-6 space-x-0 data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-start">
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/">Beranda</Link>
+            <Link href="/" className="text-xs sm:text-sm">
+              Beranda
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/news">Berita</Link>
+            <Link href="/news" className="text-xs sm:text-sm">
+              Berita
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/gallery">Galeri</Link>
+            <Link href="/gallery" className="text-xs sm:text-sm">
+              Galeri
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
         {/* untuk KP */}
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/prayers">Doa</Link>
+            <Link href="/prayers" className="text-xs sm:text-sm">
+              Doa
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
@@ -116,13 +124,17 @@ export const NavMenu = (props: NavigationMenuProps) => {
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/registration">Pendaftaran</Link>
+            <Link href="/registration" className="text-xs sm:text-sm">
+              Pendaftaran
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link href="/contact">Kontak</Link>
+            <Link href="/contact" className="text-xs sm:text-sm">
+              Kontak
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -1,7 +1,7 @@
 sequenceDiagram
   participant A as Admin (Logged In)
   participant UI as Halaman Admin - Galeri
-  participant API as Controller/API
+  participant API as API Galeri
   participant DB as Database
   participant UTH as UploadThing (Storage)
 
@@ -22,16 +22,6 @@ sequenceDiagram
     DB-->>API: OK
     API-->>UI: 201 {gallery}
     UI-->>A: Item galeri dibuat
-  end
-
-  rect rgb(240,240,240)
-    note over A,UI: Publikasi galeri
-    A->>UI: Klik Publish
-    UI->>API: PATCH /api/gallery/:id {isPublished=true, publishedAt}
-    API->>DB: Update galeri
-    DB-->>API: OK
-    API-->>UI: 200 {gallery}
-    UI-->>A: Item dipublikasikan
   end
 
   rect rgb(240,240,240)

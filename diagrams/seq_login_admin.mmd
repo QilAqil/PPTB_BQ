@@ -1,20 +1,24 @@
 sequenceDiagram
   participant A as Admin
   participant UI as Halaman Login Admin
-  participant API as Controller/API
+  participant API as API Auth
   participant DB as Database
 
-  A->>UI: Masukkan email dan password
+  A->>UI: Masukkan email & password
   UI->>API: POST /api/auth/login {email, password}
-  API->>DB: Cari user berdasarkan email
-  DB-->>API: Data user
-  API->>API: Validasi password & role==ADMIN?
-  alt Kredensial valid & role ADMIN
-    API->>API: Generate JWT & Session
-    API-->>UI: 200 {token, user}
-    UI-->>A: Login Admin Berhasil
-  else Tidak valid atau bukan ADMIN
-    API-->>UI: 403/401 {error}
-    UI-->>A: Akses Ditolak / Login Gagal
+  API->>DB: Cari user by email
+  DB-->>API: User (jika ada)
+  API->>API: Validasi password & isActive
+  alt Valid
+    API->>API: Buat sesi & set cookie auth-token
+    API-->>UI: 200 {user}
+    alt role == ADMIN
+      UI-->>A: Redirect ke Dashboard Admin
+    else bukan ADMIN
+      UI-->>A: Tampilkan "Akses Admin Ditolak"
+    end
+  else Tidak valid / tidak aktif
+    API-->>UI: 401/403 {error}
+    UI-->>A: Login gagal
   end
 

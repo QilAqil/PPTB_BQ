@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 export const Logo = () => (
   <Image
@@ -6,6 +6,6 @@ export const Logo = () => (
     alt="Logo"
     width={124}
     height={32}
-    className="h-8 w-auto"
+    className="h-6 sm:h-8 w-auto"
   />
 );

@@ -1,7 +1,7 @@
 sequenceDiagram
   participant A as Admin (Logged In)
   participant UI as Halaman Admin - Users
-  participant API as Controller/API
+  participant API as API Users
   participant DB as Database
 
   A->>UI: Buka halaman manajemen pengguna
@@ -15,7 +15,7 @@ sequenceDiagram
     note over A,UI: Tambah user
     A->>UI: Isi form user baru
     UI->>API: POST /api/users {data}
-    API->>DB: Insert user
+    API->>DB: Insert user (hash password)
     DB-->>API: OK
     API-->>UI: 201 {user}
     UI-->>A: User berhasil ditambahkan

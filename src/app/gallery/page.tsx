@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -58,22 +57,18 @@ export default function GalleryPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-4">
-            Portofolio Kami
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Jelajahi Galeri Kreatif Kami
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+            Dokumentasi Kegiatan Pesantren
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Temukan proyek terbaru dan solusi kreatif kami. Setiap karya
-            mencerminkan komitmen kami untuk keunggulan dan inovasi dalam
-            pengembangan web.
+          <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
+            Lihat dokumentasi kegiatan dan aktivitas di Pondok Pesantren
+            <b>BAROKATUL QUR&apos;AN</b> 
           </p>
         </div>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex items-center justify-center py-8 sm:py-12">
+          <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary" />
         </div>
       </div>
     );
@@ -81,119 +76,83 @@ export default function GalleryPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <Badge variant="secondary" className="mb-4">
-            Portofolio Kami
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Jelajahi Galeri Kreatif Kami
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+            Dokumentasi Kegiatan Pesantren
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Temukan proyek terbaru dan solusi kreatif kami. Setiap karya
-            mencerminkan komitmen kami untuk keunggulan dan inovasi dalam
-            pengembangan web.
+          <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
+            Lihat dokumentasi kegiatan dan aktivitas di Pondok Pesantren
+            <b>BAROKATUL QUR&apos;AN</b> .
           </p>
         </div>
-        <div className="text-center py-12">
-          <p className="text-red-600 mb-4">Error: {error}</p>
-          <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
+        <div className="text-center py-8 sm:py-12">
+          <p className="text-red-600 mb-4 text-sm sm:text-base">
+            Error: {error}
+          </p>
+          <Button onClick={() => window.location.reload()} size="sm">
+            Coba Lagi
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-12">
-        <Badge variant="secondary" className="mb-4">
-          Portofolio Kami
-        </Badge>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Jelajahi Galeri Kreatif Kami
+    <div className="container mx-auto px-4 py-6 sm:py-8">
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+          Dokumentasi Kegiatan Pesantren
         </h1>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          Temukan proyek terbaru dan solusi kreatif kami. Setiap karya
-          mencerminkan komitmen kami untuk keunggulan dan inovasi dalam
-          pengembangan web.
+        <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
+          Lihat dokumentasi kegiatan dan aktivitas di Pondok Pesantren BAROKATUL
+          <b>BAROKATUL QUR&apos;AN</b>.
         </p>
       </div>
 
-      {!Array.isArray(gallery) || gallery.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="max-w-md mx-auto">
-            <div className="mb-4">
-              <svg
-                className="mx-auto h-12 w-12 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Belum Ada Galeri
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              Belum ada item galeri yang dipublikasikan saat ini. Silakan cek
-              kembali nanti.
-            </p>
-          </div>
+      {gallery.length === 0 ? (
+        <div className="text-center py-8 sm:py-12">
+          <p className="text-muted-foreground text-sm sm:text-base">
+            Belum ada dokumentasi yang tersedia.
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {gallery.map((item) => (
             <Card
               key={item.id}
               className="group hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <div className="relative overflow-hidden">
-                {item.imageUrl ? (
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    width={400}
-                    height={250}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-64 bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground">
-                      Tidak Ada Gambar
-                    </span>
-                  </div>
-                )}
-                <div className="absolute top-4 left-4">
-                  <Badge variant="secondary">Galeri</Badge>
+                <Image
+                  src={item.imageUrl}
+                  alt={item.title}
+                  width={400}
+                  height={300}
+                  className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
+                  <span className="text-xs">Galeri</span>
                 </div>
               </div>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-sm text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors">
+              <CardContent className="p-3 sm:p-4">
+                <h3 className="font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2 text-sm sm:text-base">
                   {item.title}
                 </h3>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <User className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>{item.author.name}</span>
                   </div>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
       )}
-
     </div>
   );
 }

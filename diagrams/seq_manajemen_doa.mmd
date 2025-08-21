@@ -1,7 +1,7 @@
 sequenceDiagram
   participant A as Admin (Logged In)
   participant UI as Halaman Admin - Doa
-  participant API as Controller/API
+  participant API as API Doa
   participant DB as Database
 
   A->>UI: Buka halaman doa
@@ -13,22 +13,12 @@ sequenceDiagram
 
   rect rgb(240,240,240)
     note over A,UI: Tambah doa
-    A->>UI: Isi form doa (judul, arabicText, latinText, translation, category)
+    A->>UI: Isi form doa (title, arabicText, latinText, translation, category)
     UI->>API: POST /api/prayers {data}
-    API->>DB: Insert doa (isPublished=false)
+    API->>DB: Insert doa (authorId=ADMIN)
     DB-->>API: OK
     API-->>UI: 201 {prayer}
     UI-->>A: Doa dibuat
-  end
-
-  rect rgb(240,240,240)
-    note over A,UI: Publikasi doa
-    A->>UI: Klik Publish
-    UI->>API: PATCH /api/prayers/:id {isPublished=true, publishedAt}
-    API->>DB: Update doa
-    DB-->>API: OK
-    API-->>UI: 200 {prayer}
-    UI-->>A: Doa dipublikasikan
   end
 
   rect rgb(240,240,240)

@@ -1,7 +1,7 @@
 sequenceDiagram
   participant A as Admin (Logged In)
   participant UI as Halaman Admin - Berita
-  participant API as Controller/API
+  participant API as API Berita
   participant DB as Database
 
   A->>UI: Buka halaman berita
@@ -12,23 +12,13 @@ sequenceDiagram
   UI-->>A: Tampilkan daftar
 
   rect rgb(240,240,240)
-    note over A,UI: Buat berita
+    note over A,UI: Tambah berita
     A->>UI: Isi form berita
     UI->>API: POST /api/news {title, content, imageUrl}
-    API->>DB: Insert berita (isPublished=false)
+    API->>DB: Insert berita (authorId=ADMIN)
     DB-->>API: OK
     API-->>UI: 201 {news}
     UI-->>A: Berita dibuat
-  end
-
-  rect rgb(240,240,240)
-    note over A,UI: Publikasi berita
-    A->>UI: Klik Publish
-    UI->>API: PATCH /api/news/:id {isPublished=true, publishedAt}
-    API->>DB: Update berita
-    DB-->>API: OK
-    API-->>UI: 200 {news}
-    UI-->>A: Berita dipublikasikan
   end
 
   rect rgb(240,240,240)

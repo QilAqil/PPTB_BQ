@@ -109,27 +109,27 @@ export default function PrayersPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div className="container mx-auto px-4 py-6 sm:py-8">
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
           Do&apos;a-Do&apos;a
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
           Kumpulan do&apos;a-do&apos;a yang dapat dipelajari dan diamalkan dalam
           kehidupan sehari-hari
         </p>
       </div>
 
       {/* Search and Filter Section */}
-      <div className="mb-8 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="mb-6 sm:mb-8 space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
               placeholder="Cari do'a..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-sm"
               onKeyPress={(e) => e.key === "Enter" && handleSearch()}
             />
           </div>
@@ -138,7 +138,7 @@ export default function PrayersPage() {
               value={selectedCategory}
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[140px] sm:w-[180px] text-sm">
                 <Filter className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Kategori" />
               </SelectTrigger>
@@ -150,20 +150,20 @@ export default function PrayersPage() {
                 ))}
               </SelectContent>
             </Select>
-            <Button onClick={handleSearch} variant="outline">
+            <Button onClick={handleSearch} variant="outline" size="sm">
               Cari
             </Button>
           </div>
         </div>
 
-        <div className="text-sm text-gray-600">
+        <div className="text-xs sm:text-sm text-gray-600">
           Menampilkan {filteredPrayers.length} dari {totalPrayers} do&apos;a
         </div>
       </div>
 
       {/* Prayers Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {[...Array(6)].map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader>
@@ -179,7 +179,7 @@ export default function PrayersPage() {
         </div>
       ) : filteredPrayers.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {filteredPrayers.map((prayer) => (
               <Card
                 key={prayer.id}
@@ -187,33 +187,33 @@ export default function PrayersPage() {
               >
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg font-semibold line-clamp-2">
+                    <CardTitle className="text-base sm:text-lg font-semibold line-clamp-2">
                       {prayer.title}
                     </CardTitle>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <BookOpen className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+                    <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span>{prayer.category}</span>
                   </div>
                 </CardHeader>
                 <CardContent>
                   {prayer.imageUrl && (
-                    <div className="mb-4">
+                    <div className="mb-3 sm:mb-4">
                       <Image
                         src={prayer.imageUrl}
                         alt={prayer.title}
                         width={400}
                         height={128}
-                        className="w-full h-32 object-cover rounded-md"
+                        className="w-full h-24 sm:h-32 object-cover rounded-md"
                       />
                     </div>
                   )}
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     <div>
-                      <h4 className="font-medium text-sm text-gray-700 mb-1">
+                      <h4 className="font-medium text-xs sm:text-sm text-gray-700 mb-1">
                         Teks Arab:
                       </h4>
-                      <p className="text-right text-lg leading-relaxed font-arabic">
+                      <p className="text-right text-sm sm:text-lg leading-relaxed font-arabic">
                         {prayer.arabicText}
                       </p>
                     </div>
@@ -221,10 +221,10 @@ export default function PrayersPage() {
                       <>
                         <Separator />
                         <div>
-                          <h4 className="font-medium text-sm text-gray-700 mb-1">
+                          <h4 className="font-medium text-xs sm:text-sm text-gray-700 mb-1">
                             Transliterasi:
                           </h4>
-                          <p className="text-sm text-gray-600 italic">
+                          <p className="text-xs sm:text-sm text-gray-600 italic">
                             {prayer.latinText}
                           </p>
                         </div>
@@ -234,19 +234,19 @@ export default function PrayersPage() {
                       <>
                         <Separator />
                         <div>
-                          <h4 className="font-medium text-sm text-gray-700 mb-1">
+                          <h4 className="font-medium text-xs sm:text-sm text-gray-700 mb-1">
                             Terjemahan:
                           </h4>
-                          <p className="text-sm text-gray-600 line-clamp-3">
+                          <p className="text-xs sm:text-sm text-gray-600 line-clamp-3">
                             {prayer.translation}
                           </p>
                         </div>
                       </>
                     )}
                   </div>
-                  <div className="mt-4 pt-4 border-t">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t">
                     <Link href={`/prayers/${prayer.id}`}>
-                      <Button className="w-full" variant="outline">
+                      <Button className="w-full" variant="outline" size="sm">
                         Baca Selengkapnya
                       </Button>
                     </Link>
@@ -261,16 +261,18 @@ export default function PrayersPage() {
             <div className="flex justify-center items-center gap-2">
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
               >
                 Sebelumnya
               </Button>
-              <span className="px-4 py-2 text-sm">
+              <span className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
                 Halaman {currentPage} dari {totalPages}
               </span>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() =>
                   setCurrentPage(Math.min(totalPages, currentPage + 1))
                 }
@@ -282,12 +284,12 @@ export default function PrayersPage() {
           )}
         </>
       ) : (
-        <div className="text-center py-12">
-          <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <div className="text-center py-8 sm:py-12">
+          <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
+          <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">
             Tidak ada do&apos;a ditemukan
           </h3>
-          <p className="text-gray-600">
+          <p className="text-sm text-gray-600">
             Coba ubah filter atau kata kunci pencarian Anda.
           </p>
         </div>
