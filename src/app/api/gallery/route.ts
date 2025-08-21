@@ -56,7 +56,6 @@ export async function GET(request: NextRequest) {
       gallery.map((g) => ({
         id: g.id,
         title: g.title,
-        isPublished: g.isPublished,
       }))
     );
 

@@ -201,28 +201,6 @@ export function NewsManagement() {
     setIsDialogOpen(true);
   };
 
-  const handlePublishToggle = async (id: string, currentStatus: boolean) => {
-    try {
-      const response = await fetch(`/api/news/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isPublished: !currentStatus }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Gagal mengubah status publikasi");
-      }
-
-      fetchNews();
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Gagal mengubah status publikasi"
-      );
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -253,7 +231,6 @@ export function NewsManagement() {
                   title: "",
                   content: "",
                   imageUrl: "",
-                  isPublished: false,
                 });
               }}
             >

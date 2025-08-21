@@ -113,7 +113,7 @@ async function getNewsDetail(id: string): Promise<NewsItem | null> {
       try {
         const errorData = await response.text();
         console.error("Error response body:", errorData);
-      } catch (e) {
+      } catch {
         console.error("Could not read error response body");
       }
 

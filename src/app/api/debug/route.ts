@@ -1,19 +1,19 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '../../../lib/prisma'
+import { NextResponse } from "next/server";
+import { prisma } from "../../../lib/prisma";
 
 export async function GET() {
   try {
-    console.log('Debug endpoint called')
-    
+    console.log("Debug endpoint called");
+
     // Check if DATABASE_URL is configured
     if (!process.env.DATABASE_URL) {
-      return NextResponse.json({ 
-        error: 'DATABASE_URL not configured',
+      return NextResponse.json({
+        error: "DATABASE_URL not configured",
         news: [],
-        gallery: []
-      })
+        gallery: [],
+      });
     }
-    
+
     // Get all news (including unpublished)
     const allNews = await prisma.news.findMany({
       include: {
@@ -26,10 +26,10 @@ export async function GET() {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
-    })
-    
+    });
+
     // Get all gallery (including unpublished)
     const allGallery = await prisma.gallery.findMany({
       include: {
@@ -42,48 +42,40 @@ export async function GET() {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
-    })
-    
+    });
+
     // Get counts
-    const newsCount = await prisma.news.count()
-    const publishedNewsCount = await prisma.news.count({ where: { isPublished: true } })
-    const galleryCount = await prisma.gallery.count()
-    const publishedGalleryCount = await prisma.gallery.count({ where: { isPublished: true } })
-    
-    console.log('Debug data:', {
+    const newsCount = await prisma.news.count();
+    const galleryCount = await prisma.gallery.count();
+
+    console.log("Debug data:", {
       newsCount,
-      publishedNewsCount,
       galleryCount,
-      publishedGalleryCount,
-      news: allNews.map(n => ({ id: n.id, title: n.title, isPublished: n.isPublished })),
-      gallery: allGallery.map(g => ({ id: g.id, title: g.title, isPublished: g.isPublished }))
-    })
-    
+      news: allNews.map((n) => ({ id: n.id, title: n.title })),
+      gallery: allGallery.map((g) => ({ id: g.id, title: g.title })),
+    });
+
     return NextResponse.json({
       summary: {
         news: {
           total: newsCount,
-          published: publishedNewsCount,
-          unpublished: newsCount - publishedNewsCount
         },
         gallery: {
           total: galleryCount,
-          published: publishedGalleryCount,
-          unpublished: galleryCount - publishedGalleryCount
-        }
+        },
       },
       news: allNews,
-      gallery: allGallery
-    })
+      gallery: allGallery,
+    });
   } catch (error) {
-    console.error('Debug endpoint error:', error)
-    return NextResponse.json({ 
-      error: 'Database error',
-      details: error instanceof Error ? error.message : 'Unknown error',
+    console.error("Debug endpoint error:", error);
+    return NextResponse.json({
+      error: "Database error",
+      details: error instanceof Error ? error.message : "Unknown error",
       news: [],
-      gallery: []
-    })
+      gallery: [],
+    });
   }
-} 
+}

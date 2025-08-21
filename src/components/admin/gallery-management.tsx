@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// Badge not used after removing publish status
 import {
   Dialog,
   DialogContent,
@@ -19,8 +18,7 @@ import NextImage from "next/image";
 interface GalleryItem {
   id: string;
   title: string;
-  imageUrl: string;
-  publishedAt?: string;
+  imageUrl: string;               
   createdAt: string;
   author: {
     id: string;
@@ -203,11 +201,6 @@ export function GalleryManagement() {
     });
     setIsDialogOpen(true);
   };
-
-  const handlePublishToggle = async (
-    _id: string,
-    _currentStatus: boolean
-  ) => {};
 
   if (loading) {
     return (

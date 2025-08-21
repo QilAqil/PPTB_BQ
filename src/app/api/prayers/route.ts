@@ -5,27 +5,28 @@ import { verifyToken } from "@/lib/auth";
 // GET /api/prayers - Get all prayers (published only for non-admin users)
 export async function GET(request: NextRequest) {
   try {
-    // Get auth token from cookie
-    const authToken = request.cookies.get("auth-token")?.value;
-    let user = null;
+    // Get auth token from cookie - not used in this endpoint but kept for future use
+    // const authToken = request.cookies.get("auth-token")?.value;
+    // Note: user variable is not used in this endpoint but kept for future use
+    // let user = null;
 
-    if (authToken) {
-      // Verify JWT token
-      const payload = verifyToken(authToken);
-      if (payload) {
-        // Get user from database
-        user = await prisma.user.findUnique({
-          where: { id: payload.userId },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            role: true,
-            isActive: true,
-          },
-        });
-      }
-    }
+    // if (authToken) {
+    //   // Verify JWT token
+    //   const payload = verifyToken(authToken);
+    //   if (payload) {
+    //     // Get user from database
+    //     user = await prisma.user.findUnique({
+    //       where: { id: payload.userId },
+    //       select: {
+    //         id: true,
+    //         email: true,
+    //         name: true,
+    //         role: true,
+    //         isActive: true,
+    //       },
+    //     });
+    //   }
+    // }
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");

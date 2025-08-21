@@ -17,8 +17,6 @@ import {
   Newspaper,
   Image,
   UserPlus,
-  BookOpen,
-  Clock,
   CheckCircle,
   AlertCircle,
   Activity,
@@ -60,36 +58,12 @@ export default async function AdminPage() {
   // Fetch real data from database
   try {
     const [
-      totalUsers,
-      totalNews,
-      totalGallery,
-      totalRegistrations,
-      totalPrayers,
-      pendingRegistrations,
-      publishedNews,
-      publishedPrayers,
       latestUser,
       latestNews,
       latestGallery,
       latestRegistration,
       latestProcessedRegistration,
     ] = await Promise.all([
-      // Total counts
-      prisma.user.count(),
-      prisma.news.count(),
-      prisma.gallery.count(),
-      prisma.registration.count(),
-      prisma.prayer.count(),
-
-      // Pending registrations
-      prisma.registration.count({
-        where: { status: "PENDING" },
-      }),
-
-      // Published content
-      Promise.resolve(0),
-      Promise.resolve(0),
-
       // Latest activities
       prisma.user.findFirst({
         orderBy: { createdAt: "desc" },
@@ -115,9 +89,9 @@ export default async function AdminPage() {
     ]);
 
     // Calculate growth percentages (mock data for now)
-    const userGrowth = 12; // +12%
-    const newsGrowth = 5; // +5%
-    const galleryGrowth = 8; // +8%
+    // const userGrowth = 12; // +12%
+    // const newsGrowth = 5; // +5%
+    // const galleryGrowth = 8; // +8%
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -379,7 +353,7 @@ export default async function AdminPage() {
                               <p className="text-sm text-gray-500">
                                 {latestNews.title} -{" "}
                                 {new Date(
-                                  (latestNews as any).createdAt
+                                  latestNews.createdAt
                                 ).toLocaleDateString("id-ID")}
                               </p>
                             </div>
