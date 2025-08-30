@@ -5,19 +5,19 @@ sequenceDiagram
   participant DB as Database
 
   A->>UI: Buka halaman pendaftaran
-  UI->>API: GET /api/registration?status=[PENDING|APPROVED|REJECTED|ALL]
+  UI->>API: Ambil daftar pendaftaran
   API->>DB: Ambil pendaftaran sesuai filter
-  DB-->>API: List<Registration>
-  API-->>UI: 200 List<Registration>
+  DB-->>API: Daftar pendaftaran
+  API-->>UI: Daftar pendaftaran
   UI-->>A: Tampilkan daftar
 
   rect rgb(240,240,240)
-    note over A,UI: Setujui / Tolak pendaftaran
-    A->>UI: Pilih APPROVE/REJECT + catatan
-    UI->>API: PATCH /api/registration/:id {status, notes}
-    API->>DB: Update status, processedBy, processedAt, notes
-    DB-->>API: OK
-    API-->>UI: 200 {registration}
+    note over A,UI: Kelola pendaftaran
+    A->>UI: Pilih setujui/tolak + catatan
+    UI->>API: Kirim keputusan pendaftaran
+    API->>DB: Update status pendaftaran
+    DB-->>API: Berhasil
+    API-->>UI: Data pendaftaran
     UI-->>A: Status diperbarui
   end
 

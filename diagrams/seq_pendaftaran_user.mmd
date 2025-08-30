@@ -5,9 +5,9 @@ sequenceDiagram
   participant DB as Database
 
   U->>UI: Isi form pendaftaran santri
-  UI->>API: POST /api/registration {data pendaftaran}
+  UI->>API: Kirim data pendaftaran
   API->>DB: Simpan data pendaftaran (status=PENDING)
-  DB-->>API: OK
-  API-->>UI: 201 {registration}
+  DB-->>API: Berhasil
+  API-->>UI: Data pendaftaran
   UI-->>U: Pendaftaran berhasil dikirim (PENDING)
 

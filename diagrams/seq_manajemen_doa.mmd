@@ -5,29 +5,19 @@ sequenceDiagram
   participant DB as Database
 
   A->>UI: Buka halaman doa
-  UI->>API: GET /api/prayers
+  UI->>API: Ambil daftar doa
   API->>DB: Ambil daftar doa
-  DB-->>API: List<Prayer>
-  API-->>UI: 200 List<Prayer>
+  DB-->>API: Daftar doa
+  API-->>UI: Daftar doa
   UI-->>A: Tampilkan daftar
 
   rect rgb(240,240,240)
-    note over A,UI: Tambah doa
-    A->>UI: Isi form doa (title, arabicText, latinText, translation, category)
-    UI->>API: POST /api/prayers {data}
-    API->>DB: Insert doa (authorId=ADMIN)
-    DB-->>API: OK
-    API-->>UI: 201 {prayer}
-    UI-->>A: Doa dibuat
-  end
-
-  rect rgb(240,240,240)
-    note over A,UI: Hapus doa
-    A->>UI: Konfirmasi hapus
-    UI->>API: DELETE /api/prayers/:id
-    API->>DB: Delete by id
-    DB-->>API: OK
-    API-->>UI: 204 No Content
-    UI-->>A: Doa dihapus
+    note over A,UI: Kelola doa
+    A->>UI: Isi form doa
+    UI->>API: Kirim data doa
+    API->>DB: Simpan data doa
+    DB-->>API: Berhasil
+    API-->>UI: Data doa
+    UI-->>A: Doa berhasil dikelola
   end
 

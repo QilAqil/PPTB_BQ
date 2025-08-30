@@ -5,20 +5,20 @@ sequenceDiagram
   participant DB as Database
 
   A->>UI: Masukkan email & password
-  UI->>API: POST /api/auth/login {email, password}
+  UI->>API: Kirim data login
   API->>DB: Cari user by email
   DB-->>API: User (jika ada)
   API->>API: Validasi password & isActive
   alt Valid
     API->>API: Buat sesi & set cookie auth-token
-    API-->>UI: 200 {user}
+    API-->>UI: Data user
     alt role == ADMIN
       UI-->>A: Redirect ke Dashboard Admin
     else bukan ADMIN
       UI-->>A: Tampilkan "Akses Admin Ditolak"
     end
   else Tidak valid / tidak aktif
-    API-->>UI: 401/403 {error}
+    API-->>UI: Pesan error
     UI-->>A: Login gagal
   end
 

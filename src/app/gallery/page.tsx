@@ -105,7 +105,7 @@ export default function GalleryPage() {
           Dokumentasi Kegiatan Pesantren
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-3xl mx-auto">
-          Lihat dokumentasi kegiatan dan aktivitas di Pondok Pesantren BAROKATUL
+          Lihat dokumentasi kegiatan dan aktivitas di Pondok Pesantren 
           <b>BAROKATUL QUR&apos;AN</b>.
         </p>
       </div>

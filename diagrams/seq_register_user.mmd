@@ -5,17 +5,17 @@ sequenceDiagram
   participant DB as Database
 
   U->>UI: Isi form (name, email, password)
-  UI->>API: POST /api/auth/register {name, email, password}
+  UI->>API: Kirim data registrasi
   API->>DB: Cek email unique
   DB-->>API: Ada/Tidak
   alt Email belum ada
     API->>API: Hash password
     API->>DB: Buat user role USER, isActive=true
     DB-->>API: User baru
-    API-->>UI: 201 {user}
+    API-->>UI: Data user
     UI-->>U: Registrasi berhasil
   else Email sudah ada
-    API-->>UI: 409 {error}
+    API-->>UI: Pesan error
     UI-->>U: Registrasi gagal
   end
 

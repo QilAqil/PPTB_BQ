@@ -1,15 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Calendar,
   User,
@@ -19,53 +11,10 @@ import {
   GraduationCap,
   FileText,
   Heart,
-  Lock,
-  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 
-interface User {
-  id: string;
-  email: string;
-  name: string | null;
-  role: string;
-}
-
 export default function RegistrationPage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/auth/me");
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-6 sm:py-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary mx-auto mb-3 sm:mb-4"></div>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Memeriksa status login...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
       <div className="max-w-4xl mx-auto">
@@ -234,79 +183,29 @@ export default function RegistrationPage() {
 
           {/* Sidebar */}
           <div className="space-y-4 sm:space-y-6">
-            {/* Registration Status */}
+            {/* Login Required */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base sm:text-lg">
-                  Status Pendaftaran
+                  Login Diperlukan
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {user ? (
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-sm sm:text-base">
-                        Sudah terdaftar
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      Anda sudah terdaftar sebagai {user.name || user.email}
-                    </p>
-                    <Link href="/dashboard">
-                      <Button className="w-full" size="sm">
-                        Lihat Dashboard
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
-                      <span className="text-sm sm:text-base">
-                        Belum terdaftar
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      Silakan daftar untuk mengakses pendaftaran santri
-                    </p>
-                    <Link href="/sign-up">
-                      <Button className="w-full" size="sm">
-                        Daftar Sekarang
-                      </Button>
-                    </Link>
-                    <Link href="/sign-in">
-                      <Button variant="outline" className="w-full" size="sm">
-                        Masuk
-                      </Button>
-                    </Link>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Quick Contact */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base sm:text-lg">
-                  Kontak Cepat
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 sm:space-y-4">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm sm:text-base">0852-2055-8881</span>
+                <div className="space-y-3 sm:space-y-4">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Anda harus login untuk mengisi formulir pendaftaran
+                  </p>
+                  <Link href="/sign-in">
+                    <Button className="w-full" size="sm">
+                      Login Sekarang
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button variant="outline" className="w-full" size="sm">
+                      Daftar Akun
+                    </Button>
+                  </Link>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-xs sm:text-sm text-muted-foreground">
-                    popestahfidzbarokatulquran@gmail.com
-                  </span>
-                </div>
-                <Button variant="outline" className="w-full" size="sm">
-                  <Phone className="h-4 w-4 mr-2" />
-                  Hubungi Kami
-                </Button>
               </CardContent>
             </Card>
 
