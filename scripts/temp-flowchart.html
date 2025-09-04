@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Flowchart Export</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; background: white; }
+        .mermaid { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="mermaid">
+%%{init: {'theme': 'default', 'themeVariables': { 'fontSize': '14px', 'fontFamily': 'Arial, sans-serif' }}}%%
+flowchart TD
+    A[START] --> B[Pengguna membuka website PPTB BQ]
+    B --> C{Apakah pengguna sudah login?}
+    
+    C -->|Ya| D[Tampilkan tombol Dashboard & Logout]
+    C -->|Tidak| E[Tampilkan tombol Masuk & Daftar]
+    
+    E --> F[Pengguna mengklik tombol Daftar]
+    E --> G[Pengguna mengklik tombol Masuk]
+    
+    %% User Registration Flow
+    F --> H[Tampilkan halaman Registrasi]
+    H --> I[Pengguna mengisi form registrasi]
+    I --> J[Input: nama, email, password]
+    J --> K[Klik tombol Daftar]
+    K --> L{Validasi data registrasi}
+    L -->|Email sudah ada| M[Tampilkan pesan error email sudah terdaftar]
+    L -->|Data tidak valid| N[Tampilkan pesan error validasi]
+    M --> O{Apakah user ingin mencoba lagi?}
+    N --> O
+    O -->|Ya| I
+    O -->|Tidak| P[Kembali ke halaman utama]
+    
+    L -->|Valid| Q[Hash password]
+    Q --> R[Simpan user baru ke database]
+    R --> S[Set role USER, isActive=true]
+    S --> T[Registrasi berhasil]
+    T --> U[Redirect ke halaman Login]
+    
+    %% Login Flow
+    G --> V[Tampilkan halaman Login]
+    V --> W[Pengguna mengisi form login]
+    W --> X[Input email & password]
+    X --> Y[Klik tombol Login]
+    
+    Y --> Z{Validasi email & password}
+    Z -->|Tidak valid| AA[Tampilkan pesan error]
+    AA --> BB{Apakah user ingin mencoba lagi?}
+    BB -->|Ya| W
+    BB -->|Tidak| P
+    
+    Z -->|Valid| CC{Cek role user}
+    CC -->|ADMIN| DD[Redirect ke Dashboard Admin]
+    CC -->|USER| EE[Redirect ke Dashboard User]
+    
+    %% Dashboard Access
+    D --> FF[Pengguna mengklik Dashboard]
+    FF --> GG{Cek role user}
+    GG -->|ADMIN| HH[Akses Admin Dashboard]
+    GG -->|USER| II[Akses User Dashboard]
+    
+    %% Admin Dashboard Menu
+    HH --> JJ[Menu Admin Dashboard]
+    JJ --> KK[Manajemen Pengguna]
+    JJ --> LL[Manajemen Berita]
+    JJ --> MM[Manajemen Galeri]
+    JJ --> NN[Manajemen Pendaftaran]
+    JJ --> OO[Manajemen Doa]
+    
+    %% User Dashboard Menu
+    II --> PP[Menu User Dashboard]
+    PP --> QQ[Pendaftaran Santri]
+    PP --> RR[Lihat Status Pendaftaran]
+    PP --> SS[Edit Profil]
+    
+    %% Student Registration Flow
+    QQ --> TT[Tampilkan form pendaftaran santri]
+    TT --> UU[Pengguna mengisi data santri]
+    UU --> VV[Input: nama lengkap, tempat lahir, tanggal lahir, alamat, nama orang tua, no HP]
+    VV --> WW[Klik tombol Daftar Santri]
+    WW --> XX{Validasi data pendaftaran}
+    XX -->|Tidak valid| YY[Tampilkan pesan error validasi]
+    YY --> ZZ{Apakah user ingin mencoba lagi?}
+    ZZ -->|Ya| UU
+    ZZ -->|Tidak| AAA[Kembali ke Dashboard User]
+    
+    XX -->|Valid| BBB[Simpan data pendaftaran ke database]
+    BBB --> CCC[Set status=PENDING]
+    CCC --> DDD[Pendaftaran berhasil dikirim]
+    DDD --> EEE[Redirect ke halaman status pendaftaran]
+    
+    %% View Registration Status
+    RR --> FFF[Lihat status pendaftaran]
+    FFF --> GGG{Cek status pendaftaran}
+    GGG -->|PENDING| HHH[Tampilkan status: Menunggu persetujuan admin]
+    GGG -->|APPROVED| III[Tampilkan status: Pendaftaran disetujui]
+    GGG -->|REJECTED| JJJ[Tampilkan status: Pendaftaran ditolak]
+    
+    %% Admin Management Operations
+    KK --> KKK{Operasi Manajemen Pengguna}
+    KKK --> LLL[Lihat semua user]
+    KKK --> MMM[Tambah user baru]
+    KKK --> NNN[Edit user]
+    KKK --> OOO[Hapus user]
+    KKK --> PPP[Ubah role user]
+    
+    LL --> QQQ{Operasi Manajemen Berita}
+    QQQ --> RRR[Lihat semua berita]
+    QQQ --> SSS[Tambah berita baru]
+    QQQ --> TTT[Edit berita]
+    QQQ --> UUU[Hapus berita]
+    
+    MM --> VVV{Operasi Manajemen Galeri}
+    VVV --> WWW[Lihat semua galeri]
+    VVV --> XXX[Tambah galeri baru]
+    VVV --> YYY[Edit galeri]
+    VVV --> ZZZ[Hapus galeri]
+    
+    NN --> AAAA{Operasi Manajemen Pendaftaran}
+    AAAA --> BBBB[Lihat semua pendaftaran]
+    AAAA --> CCCC[Setujui pendaftaran]
+    AAAA --> DDDD[Tolak pendaftaran]
+    AAAA --> EEEE[Lihat detail pendaftaran]
+    
+    OO --> FFFF{Operasi Manajemen Doa}
+    FFFF --> GGGG[Lihat semua doa]
+    FFFF --> HHHH[Tambah doa baru]
+    FFFF --> IIII[Edit doa]
+    FFFF --> JJJJ[Hapus doa]
+    
+    %% Profile Management
+    SS --> KKKK[Update informasi pribadi]
+    
+    %% End Points
+    P --> LLLL[STOP]
+    U --> LLLL
+    DD --> LLLL
+    EE --> LLLL
+    AAA --> LLLL
+    EEE --> LLLL
+    HHH --> LLLL
+    III --> LLLL
+    JJJ --> LLLL
+    
+    %% Styling dengan warna yang lebih kontras
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    classDef input fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef admin fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef user fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef registration fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef enrollment fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    
+    class A,LLLL startEnd
+    class B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,BB,CC,DD,EE,FF,GG,HH,II,JJ,KK,LL,MM,NN,OO,PP,QQ,RR,SS,TT,UU,VV,WW,XX,YY,ZZ,AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III,JJJ,KKK,LLL,MMM,NNN,OOO,PPP,QQQ,RRR,SSS,TTT,UUU,VVV,WWW,XXX,YYY,ZZZ,AAAA,BBBB,CCCC,DDDD,EEEE,FFFF,GGGG,HHHH,IIII,JJJJ,KKKK process
+    class C,K,L,O,Z,BB,CC,GG,XX,ZZ,GGG,KKK,QQQ,VVV,AAAA,FFFF decision
+    class I,J,X,VV,UUU input
+    class HH,JJ,KK,LL,MM,NN,OO,KKK,LLL,MMM,NNN,OOO,PPP,QQQ,RRR,SSS,TTT,UUU,VVV,WWW,XXX,YYY,ZZZ,AAAA,BBBB,CCCC,DDDD,EEEE,FFFF,GGGG,HHHH,IIII,JJJJ admin
+    class II,PP,QQ,RR,SS,TT,UU,VV,WW,XX,YY,ZZ,AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III,JJJ,KKKK user
+    class F,H,I,J,K,L,M,N,O,P,Q,R,S,T,U registration
+    class QQ,TT,UU,VV,WW,XX,YY,ZZ,AAA,BBB,CCC,DDD,EEE enrollment
+
+    </div>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+        
+        // Wait for the diagram to render, then convert to PNG
+        setTimeout(() => {
+            const svg = document.querySelector('.mermaid svg');
+            if (svg) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                const svgData = new XMLSerializer().serializeToString(svg);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // Convert canvas to blob and save
+                    canvas.toBlob((blob) => {
+                        const reader = new FileReader();
+                        reader.onload = function() {
+                            const base64 = reader.result.split(',')[1];
+                            console.log('PNG_BASE64:' + base64);
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/png');
+                    
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.src = url;
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

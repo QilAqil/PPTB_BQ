@@ -10,14 +10,14 @@ export async function POST(request: NextRequest) {
     // Validation
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Email dan password wajib diisi' },
         { status: 400 }
       )
     }
 
     if (password.length < 6) {
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters long' },
+        { error: 'Password minimal 6 karakter' },
         { status: 400 }
       )
     }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'User with this email already exists' },
+        { error: 'Email sudah terdaftar' },
         { status: 409 }
       )
     }
@@ -58,15 +58,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'User registered successfully',
+        message: 'Registrasi berhasil',
         user,
       },
       { status: 201 }
     )
   } catch (error) {
-    console.error('Registration error:', error)
+    console.error('Gagal registrasi:', error)
     return NextResponse.json(
-      { error: 'Failed to register user' },
+      { error: 'Gagal registrasi' },
       { status: 500 }
     )
   }

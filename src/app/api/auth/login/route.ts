@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     // Validation
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Email dan password wajib diisi' },
         { status: 400 }
       )
     }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Email atau password salah' },
         { status: 401 }
       )
     }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     // Check if user is active
     if (!user.isActive) {
       return NextResponse.json(
-        { error: 'Account is deactivated' },
+        { error: 'Akun anda dinonaktifkan' },
         { status: 403 }
       )
     }
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const isValidPassword = await comparePassword(password, user.password)
     if (!isValidPassword) {
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Email atau password salah' },
         { status: 401 }
       )
     }
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     // Set cookie
     const response = NextResponse.json({
-      message: 'Login successful',
+      message: 'Login berhasil',
       user: {
         id: user.id,
         email: user.email,
@@ -75,8 +75,9 @@ export async function POST(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Login error:', error)
+    console.error('Login error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Server error' },
       { status: 500 }
     )
   }

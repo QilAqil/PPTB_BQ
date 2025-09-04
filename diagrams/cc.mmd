@@ -1,0 +1,116 @@
+flowchart TD
+    A[START] --> B[Menampilkan Halaman Utama]
+    B --> C[Pengguna Memilih Menu]
+    
+    C --> D{Apakah Pilih Login/Register?}
+    
+    %% Login/Register Path
+    D -->|Ya| E[Menampilkan Tombol Login dan Register]
+    E --> F[Pengguna Mengklik Salah Satu Tombol]
+    
+    F --> G{Apakah Klik Register?}
+    G -->|Ya| H[Input Email, Password1, Password2]
+    H --> I{Apakah Email Sudah Terdaftar?}
+    I -->|Ya| J[TAMPILKAN 'Sudah terdaftar. Silakan login']
+    J --> Z[STOP]
+    I -->|Tidak| L{Apakah Password1 & Password2 Sama?}
+    L -->|Ya| M[TAMPILKAN 'Anda berhasil register']
+    M --> Z
+    L -->|Tidak| N[TAMPILKAN 'Password 1 & Password2 harus sama']
+    N --> O{Apakah User Ingin Mengulangi?}
+    O -->|Ya| H
+    O -->|Tidak| Z
+    
+    G -->|Tidak| P{Apakah Klik Login?}
+    P -->|Ya| Q[Input Email & Password]
+    Q --> R{Apakah Email Sudah Terdaftar?}
+    R -->|Tidak| S[TAMPILKAN 'Belum terdaftar']
+    S --> Z
+    R -->|Ya| T{Apakah Email & Password Sesuai?}
+    T -->|Tidak| U[TAMPILKAN 'Email/password salah']
+    U --> Z
+    T -->|Ya| V[TAMPILKAN 'Anda berhasil masuk']
+    V --> W[Redirect ke Dashboard]
+    
+    %% Public Content Path
+    D -->|Tidak| D1{Apakah Pilih Berita?}
+    D1 -->|Ya| X[Menampilkan Halaman Berita]
+    X --> Y[Pengguna Melihat Daftar Berita]
+    Y --> Z1[Pengguna Klik Berita Tertentu]
+    Z1 --> AA[Menampilkan Detail Berita]
+    AA --> Z
+    
+    D1 -->|Tidak| D2{Apakah Pilih Doa?}
+    D2 -->|Ya| CC[Menampilkan Halaman Doa]
+    CC --> DD[Pengguna Melihat Daftar Doa]
+    DD --> EE[Pengguna Klik Doa Tertentu]
+    EE --> FF[Menampilkan Detail Doa]
+    FF --> Z
+    
+    D2 -->|Tidak| D3{Apakah Pilih Galeri?}
+    D3 -->|Ya| GG[Menampilkan Halaman Galeri]
+    GG --> HH[Pengguna Melihat Koleksi Foto]
+    HH --> II[Pengguna Klik Foto Tertentu]
+    II --> JJ[Menampilkan Foto dalam Ukuran Besar]
+    JJ --> Z
+    
+    D3 -->|Tidak| D4{Apakah Pilih Kontak?}
+    D4 -->|Ya| RR[Menampilkan Halaman Kontak]
+    RR --> SS[Pengguna Melihat Informasi Kontak]
+    SS --> Z
+    
+    %% Pendaftaran Path (Requires Login)
+    D4 -->|Tidak| D5{Apakah Pilih Pendaftaran?}
+    D5 -->|Ya| KK1{User Sudah Login?}
+    KK1 -->|Tidak| KK2[TAMPILKAN 'Silakan login terlebih dahulu']
+    KK2 --> KK3[Redirect ke Halaman Login]
+    KK3 --> E
+    
+    KK1 -->|Ya| KK[Menampilkan Form Pendaftaran]
+    KK --> LL[Pengguna Mengisi Form]
+    LL --> MM{Apakah Semua Data Lengkap?}
+    MM -->|Tidak| NN[TAMPILKAN 'Mohon lengkapi semua data']
+    NN --> LL
+    MM -->|Ya| OO[Submit Pendaftaran]
+    OO --> PP[Simpan ke Database]
+    PP --> QQ[TAMPILKAN 'Pendaftaran berhasil dikirim']
+    QQ --> Z
+    
+    %% Error Handling for Invalid Menu
+    D5 -->|Tidak| FFF[Error/Invalid Menu]
+    FFF --> Z
+    
+    %% Dashboard Path
+    W --> TT{Apakah User Admin?}
+    TT -->|Ya| UU[Menampilkan Menu Admin]
+    UU --> VV[Admin Memilih Fitur]
+    
+    VV --> WW1{Apakah Pilih Manajemen Berita?}
+    WW1 -->|Ya| XX[CRUD Berita]
+    WW1 -->|Tidak| WW2{Apakah Pilih Manajemen Doa?}
+    WW2 -->|Ya| YY[CRUD Doa]
+    WW2 -->|Tidak| WW3{Apakah Pilih Manajemen Galeri?}
+    WW3 -->|Ya| ZZ1[CRUD Galeri]
+    WW3 -->|Tidak| WW4{Apakah Pilih Manajemen Pendaftaran?}
+    WW4 -->|Ya| AAA[Lihat & Approve Pendaftaran]
+    WW4 -->|Tidak| WW5{Apakah Pilih Manajemen User?}
+    WW5 -->|Ya| BBB[CRUD User]
+    WW5 -->|Tidak| CCC[Kembali ke Menu Admin]
+    CCC --> VV
+    
+    XX --> Z
+    YY --> Z
+    ZZ1 --> Z
+    AAA --> Z
+    BBB --> Z
+    
+    TT -->|Tidak| DDD[Menampilkan Menu User]
+    DDD --> EEE[User Melihat Dashboard]
+    EEE --> Z
+    
+    style A fill:#e1f5fe
+    style Z fill:#ffcdd2
+    style W fill:#c8e6c9
+    style UU fill:#c8e6c9
+    style KK1 fill:#fff3e0
+    style KK2 fill:#ffcdd2
