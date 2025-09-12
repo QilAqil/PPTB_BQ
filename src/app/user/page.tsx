@@ -1,29 +1,36 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  FileText, 
-  Calendar, 
-  MapPin, 
-  Shield, 
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  User,
+  FileText,
+  Calendar,
+  MapPin,
+  Shield,
   Loader2,
   CheckCircle,
   Clock,
   AlertCircle,
   Plus,
-  AlertTriangle
-} from 'lucide-react';
-import LogoutButton from '@/components/ui/logout-button';
-import Link from 'next/link';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Search } from 'lucide-react';
-
+  AlertTriangle,
+} from "lucide-react";
+import LogoutButton from "@/components/ui/logout-button";
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Search } from "lucide-react";
+import { ImageUpload } from "@/components/ui/image-upload";
+import Image from "next/image";
 
 interface UserProfile {
   id: string;
@@ -47,7 +54,9 @@ interface UserRegistration {
   parentName: string;
   parentPhone: string;
   motivation: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  familyCardPhotoUrl: string;
+  birthCertificatePhotoUrl: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   notes: string | null;
   createdAt: string;
   updatedAt: string;
@@ -55,12 +64,14 @@ interface UserRegistration {
 
 export default function UserPage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [userRegistrations, setUserRegistrations] = useState<UserRegistration[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [userRegistrations, setUserRegistrations] = useState<
+    UserRegistration[]
+  >([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [profileLoading, setProfileLoading] = useState(true);
   const [registrationsLoading, setRegistrationsLoading] = useState(true);
-  
+
   // Form registration states
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
@@ -76,7 +87,9 @@ export default function UserPage() {
     phoneNumber: "",
     parentName: "",
     parentPhone: "",
-    motivation: ""
+    motivation: "",
+    familyCardPhotoUrl: "",
+    birthCertificatePhotoUrl: "",
   });
 
   useEffect(() => {
@@ -87,17 +100,17 @@ export default function UserPage() {
   const fetchUserProfile = async () => {
     try {
       setProfileLoading(true);
-      const response = await fetch('/api/auth/me');
+      const response = await fetch("/api/auth/me");
       if (response.ok) {
         const data = await response.json();
         setUserProfile(data);
       } else {
         // Redirect to login if not authenticated
-        window.location.href = '/sign-in';
+        window.location.href = "/sign-in";
       }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
-      window.location.href = '/sign-in';
+      console.error("Error fetching user profile:", error);
+      window.location.href = "/sign-in";
     } finally {
       setProfileLoading(false);
     }
@@ -106,7 +119,7 @@ export default function UserPage() {
   const fetchUserRegistrations = async () => {
     try {
       setRegistrationsLoading(true);
-      const response = await fetch('/api/registration/user');
+      const response = await fetch("/api/registration/user");
       if (response.ok) {
         const data = await response.json();
         setUserRegistrations(data.registrations || data || []);
@@ -114,7 +127,7 @@ export default function UserPage() {
         setUserRegistrations([]);
       }
     } catch (error) {
-      console.error('Error fetching registrations:', error);
+      console.error("Error fetching registrations:", error);
       setUserRegistrations([]);
     } finally {
       setRegistrationsLoading(false);
@@ -122,7 +135,7 @@ export default function UserPage() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,16 +146,23 @@ export default function UserPage() {
     // Validasi NIK
     const nikRegex = /^\d{16}$/;
     if (!nikRegex.test(formData.nik)) {
-      setFormError('NIK harus berupa 16 digit angka');
+      setFormError("NIK harus berupa 16 digit angka");
+      setFormLoading(false);
+      return;
+    }
+
+    // Validasi foto wajib
+    if (!formData.familyCardPhotoUrl || !formData.birthCertificatePhotoUrl) {
+      setFormError("Foto Kartu Keluarga dan Foto Akta Kelahiran wajib diisi");
       setFormLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/registration', {
-        method: 'POST',
+      const response = await fetch("/api/registration", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -150,7 +170,9 @@ export default function UserPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Terjadi kesalahan saat mengirim pendaftaran');
+        throw new Error(
+          data.error || "Terjadi kesalahan saat mengirim pendaftaran"
+        );
       }
 
       setFormSuccess(true);
@@ -164,52 +186,56 @@ export default function UserPage() {
         phoneNumber: "",
         parentName: "",
         parentPhone: "",
-        motivation: ""
+        motivation: "",
+        familyCardPhotoUrl: "",
+        birthCertificatePhotoUrl: "",
       });
-      
+
       // Refresh registrations list
       fetchUserRegistrations();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Terjadi kesalahan');
+      setFormError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
       setFormLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'APPROVED':
+      case "APPROVED":
         return <Badge className="bg-green-100 text-green-800">Diterima</Badge>;
-      case 'REJECTED':
+      case "REJECTED":
         return <Badge className="bg-red-100 text-red-800">Ditolak</Badge>;
-      case 'PENDING':
+      case "PENDING":
       default:
-        return <Badge className="bg-yellow-100 text-yellow-800">Menunggu</Badge>;
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800">Menunggu</Badge>
+        );
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'APPROVED':
+      case "APPROVED":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'REJECTED':
+      case "REJECTED":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case 'PENDING':
+      case "PENDING":
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
     }
   };
 
   // Filter registrations based on search term
-  const filteredRegistrations = userRegistrations.filter(registration =>
+  const filteredRegistrations = userRegistrations.filter((registration) =>
     registration.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -236,9 +262,7 @@ export default function UserPage() {
                 Anda harus login terlebih dahulu untuk mengakses halaman ini.
               </p>
               <Link href="/sign-in">
-                <Button className="w-full">
-                  Login
-                </Button>
+                <Button className="w-full">Login</Button>
               </Link>
             </div>
           </CardContent>
@@ -268,35 +292,45 @@ export default function UserPage() {
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                     <User className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                   </div>
-                  <h3 className="font-semibold text-base sm:text-lg">{userProfile.name || 'N/A'}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground">{userProfile.email}</p>
+                  <h3 className="font-semibold text-base sm:text-lg">
+                    {userProfile.name || "N/A"}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    {userProfile.email}
+                  </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">Role: {userProfile.role}</span>
+                    <span className="text-xs sm:text-sm">
+                      Role: {userProfile.role}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">Bergabung: {formatDate(userProfile.createdAt)}</span>
+                    <span className="text-xs sm:text-sm">
+                      Bergabung: {formatDate(userProfile.createdAt)}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                    <span className="text-xs sm:text-sm">Status: {userProfile.isActive ? 'Aktif' : 'Tidak Aktif'}</span>
+                    <span className="text-xs sm:text-sm">
+                      Status: {userProfile.isActive ? "Aktif" : "Tidak Aktif"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t space-y-3">
-                  <Button 
+                  <Button
                     onClick={() => setShowRegistrationForm(true)}
                     className="w-full text-sm sm:text-base"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Daftar Santri Baru
                   </Button>
-                  
-                  <LogoutButton 
+
+                  <LogoutButton
                     variant="outline"
                     className="w-full text-sm sm:text-base"
                   />
@@ -310,11 +344,27 @@ export default function UserPage() {
             <div className="space-y-4 sm:space-y-6">
               {/* Header */}
               <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">Dashboard Pengguna</h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2">
+                  Dashboard Pengguna
+                </h1>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   Selamat datang di panel pengguna PPTB BAROKATUL QUR&apos;AN
                 </p>
               </div>
+
+              {/* Announcement */}
+              <Card className="border-green-200 bg-green-50">
+                <CardContent className="p-4 sm:p-5">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                    <p className="text-sm sm:text-base text-green-900">
+                      Pengumuman: Setelah santri di terima bisa mengumpulkan
+                      berkas-berkas ke pondok pesantren tahfidz & bahasa
+                      barokatul qur&apos;an
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
@@ -322,7 +372,9 @@ export default function UserPage() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Pendaftaran</p>
+                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+                          Total Pendaftaran
+                        </p>
                         <div className="text-xl sm:text-2xl font-bold">
                           {registrationsLoading ? (
                             <div className="animate-pulse bg-gray-200 h-6 sm:h-8 w-12 sm:w-16 rounded"></div>
@@ -340,12 +392,16 @@ export default function UserPage() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">Menunggu Review</p>
+                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+                          Menunggu Review
+                        </p>
                         <div className="text-xl sm:text-2xl font-bold text-yellow-600">
                           {registrationsLoading ? (
                             <div className="animate-pulse bg-gray-200 h-6 sm:h-8 w-12 sm:w-16 rounded"></div>
                           ) : (
-                            userRegistrations.filter(r => r.status === 'PENDING').length
+                            userRegistrations.filter(
+                              (r) => r.status === "PENDING"
+                            ).length
                           )}
                         </div>
                       </div>
@@ -358,12 +414,16 @@ export default function UserPage() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">Disetujui</p>
+                        <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+                          Disetujui
+                        </p>
                         <div className="text-xl sm:text-2xl font-bold text-green-600">
                           {registrationsLoading ? (
                             <div className="animate-pulse bg-gray-200 h-6 sm:h-8 w-12 sm:w-16 rounded"></div>
                           ) : (
-                            userRegistrations.filter(r => r.status === 'APPROVED').length
+                            userRegistrations.filter(
+                              (r) => r.status === "APPROVED"
+                            ).length
                           )}
                         </div>
                       </div>
@@ -402,7 +462,9 @@ export default function UserPage() {
                   {registrationsLoading ? (
                     <div className="flex items-center justify-center py-8 sm:py-12">
                       <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-primary mx-auto mb-4" />
-                      <p className="text-sm sm:text-base text-muted-foreground">Memuat data pendaftaran...</p>
+                      <p className="text-sm sm:text-base text-muted-foreground">
+                        Memuat data pendaftaran...
+                      </p>
                     </div>
                   ) : userRegistrations.length === 0 ? (
                     <div className="text-center py-8 sm:py-12">
@@ -410,7 +472,10 @@ export default function UserPage() {
                       <p className="text-sm sm:text-base text-muted-foreground mb-4">
                         Anda belum memiliki riwayat pendaftaran
                       </p>
-                      <Button onClick={() => setShowRegistrationForm(true)} className="text-sm sm:text-base">
+                      <Button
+                        onClick={() => setShowRegistrationForm(true)}
+                        className="text-sm sm:text-base"
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Daftar Sekarang
                       </Button>
@@ -421,50 +486,74 @@ export default function UserPage() {
                       <p className="text-sm sm:text-base text-muted-foreground mb-4">
                         Tidak ada pendaftaran yang sesuai dengan pencarian
                       </p>
-                      <Button variant="outline" onClick={() => setSearchTerm('')} className="text-sm sm:text-base">
+                      <Button
+                        variant="outline"
+                        onClick={() => setSearchTerm("")}
+                        className="text-sm sm:text-base"
+                      >
                         Reset Pencarian
                       </Button>
                     </div>
                   ) : (
                     <div className="space-y-3 sm:space-y-4">
                       {filteredRegistrations.map((registration) => (
-                        <Card key={registration.id} className="border-l-4 border-l-primary">
+                        <Card
+                          key={registration.id}
+                          className="border-l-4 border-l-primary"
+                        >
                           <CardContent className="p-4 sm:p-6">
                             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                               <div className="flex-1">
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                                  <h3 className="font-semibold text-base sm:text-lg">{registration.fullName}</h3>
+                                  <h3 className="font-semibold text-base sm:text-lg">
+                                    {registration.fullName}
+                                  </h3>
                                   {getStatusBadge(registration.status)}
                                 </div>
-                                
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                                   <div className="space-y-1">
                                     <div className="flex items-center gap-2">
                                       <MapPin className="h-3 w-3 flex-shrink-0" />
-                                      <span className="truncate">{registration.address}</span>
+                                      <span className="truncate">
+                                        {registration.address}
+                                      </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Tempat Lahir:</span>
+                                      <span className="font-medium">
+                                        Tempat Lahir:
+                                      </span>
                                       <span>{registration.birthPlace}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Tanggal Lahir:</span>
-                                      <span>{formatDate(registration.birthDate)}</span>
+                                      <span className="font-medium">
+                                        Tanggal Lahir:
+                                      </span>
+                                      <span>
+                                        {formatDate(registration.birthDate)}
+                                      </span>
                                     </div>
                                   </div>
-                                  
+
                                   <div className="space-y-1">
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Orang Tua:</span>
+                                      <span className="font-medium">
+                                        Orang Tua:
+                                      </span>
                                       <span>{registration.parentName}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Telepon:</span>
+                                      <span className="font-medium">
+                                        Telepon:
+                                      </span>
                                       <span>{registration.parentPhone}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                       <Calendar className="h-3 w-3 flex-shrink-0" />
-                                      <span>Daftar: {formatDate(registration.createdAt)}</span>
+                                      <span>
+                                        Daftar:{" "}
+                                        {formatDate(registration.createdAt)}
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
@@ -472,12 +561,13 @@ export default function UserPage() {
                                 {registration.notes && (
                                   <div className="mt-3 sm:mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                                     <p className="text-xs sm:text-sm text-yellow-800">
-                                      <strong>Catatan Admin:</strong> {registration.notes}
+                                      <strong>Catatan Admin:</strong>{" "}
+                                      {registration.notes}
                                     </p>
                                   </div>
                                 )}
                               </div>
-                              
+
                               <div className="flex items-center gap-2 sm:ml-4">
                                 {getStatusIcon(registration.status)}
                               </div>
@@ -499,7 +589,9 @@ export default function UserPage() {
             <div className="bg-white rounded-lg w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-4">
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl sm:text-2xl font-bold">Form Pendaftaran Santri</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold">
+                    Form Pendaftaran Santri
+                  </h2>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -513,7 +605,8 @@ export default function UserPage() {
                   </Button>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                  Silakan isi form pendaftaran dengan data yang lengkap dan benar
+                  Silakan isi form pendaftaran dengan data yang lengkap dan
+                  benar
                 </p>
               </div>
 
@@ -521,12 +614,15 @@ export default function UserPage() {
                 {formSuccess ? (
                   <div className="text-center py-8 sm:py-12">
                     <CheckCircle className="h-12 w-12 sm:h-16 sm:w-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-xl sm:text-2xl font-bold mb-2">Pendaftaran Berhasil!</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold mb-2">
+                      Pendaftaran Berhasil!
+                    </h3>
                     <p className="text-sm sm:text-base text-muted-foreground mb-6">
-                      Terima kasih telah mendaftar. Tim kami akan menghubungi Anda segera untuk informasi selanjutnya.
+                      Terima kasih telah mendaftar. Selanjutnya bisa datang ke
+                      lokasi untuk Wawancara dan Pengumpulan Berkas.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Button 
+                      <Button
                         onClick={() => {
                           setFormSuccess(false);
                           setShowRegistrationForm(false);
@@ -535,7 +631,7 @@ export default function UserPage() {
                       >
                         Tutup
                       </Button>
-                      <Button 
+                      <Button
                         variant="outline"
                         onClick={() => {
                           setFormSuccess(false);
@@ -549,7 +645,8 @@ export default function UserPage() {
                             phoneNumber: "",
                             parentName: "",
                             parentPhone: "",
-                            motivation: ""
+                            motivation: "",
+                            photoUrl: "",
                           });
                         }}
                         className="flex-1 text-sm sm:text-base"
@@ -559,72 +656,131 @@ export default function UserPage() {
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-4 sm:space-y-6"
+                  >
                     {formError && (
                       <div className="flex items-center gap-2 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
                         <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 flex-shrink-0" />
-                        <p className="text-sm sm:text-base text-red-700">{formError}</p>
+                        <p className="text-sm sm:text-base text-red-700">
+                          {formError}
+                        </p>
                       </div>
                     )}
 
                     {/* Data Pribadi */}
                     <div className="space-y-3 sm:space-y-4">
-                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">Data Pribadi</h3>
-                      
+                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">
+                        Data Pribadi
+                      </h3>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div className="sm:col-span-2">
+                          <Label className="text-sm">
+                            Foto Kartu Keluarga (wajib)
+                          </Label>
+                          <div className="mt-2">
+                            <ImageUpload
+                              value={formData.familyCardPhotoUrl}
+                              onChange={(url) =>
+                                handleInputChange("familyCardPhotoUrl", url)
+                              }
+                              endpoint="registrationFamilyCardUploader"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <Label className="text-sm">
+                            Foto Akta Kelahiran (wajib)
+                          </Label>
+                          <div className="mt-2">
+                            <ImageUpload
+                              value={formData.birthCertificatePhotoUrl}
+                              onChange={(url) =>
+                                handleInputChange(
+                                  "birthCertificatePhotoUrl",
+                                  url
+                                )
+                              }
+                              endpoint="registrationBirthCertificateUploader"
+                            />
+                          </div>
+                        </div>
                         <div>
-                          <Label htmlFor="fullName" className="text-sm">Nama Lengkap *</Label>
+                          <Label htmlFor="fullName" className="text-sm">
+                            Nama Lengkap *
+                          </Label>
                           <Input
                             id="fullName"
                             value={formData.fullName}
-                            onChange={(e) => handleInputChange('fullName', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("fullName", e.target.value)
+                            }
                             required
                             className="text-sm"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label htmlFor="nik" className="text-sm">NIK (Nomor Induk Kependudukan) *</Label>
+                          <Label htmlFor="nik" className="text-sm">
+                            NIK (Nomor Induk Kependudukan) *
+                          </Label>
                           <Input
                             id="nik"
                             value={formData.nik}
-                            onChange={(e) => handleInputChange('nik', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("nik", e.target.value)
+                            }
                             placeholder="Contoh: 3374010101010001"
                             maxLength={16}
                             required
                             className="text-sm"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label htmlFor="birthPlace" className="text-sm">Tempat Lahir *</Label>
+                          <Label htmlFor="birthPlace" className="text-sm">
+                            Tempat Lahir *
+                          </Label>
                           <Input
                             id="birthPlace"
                             value={formData.birthPlace}
-                            onChange={(e) => handleInputChange('birthPlace', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("birthPlace", e.target.value)
+                            }
                             required
                             className="text-sm"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label htmlFor="birthDate" className="text-sm">Tanggal Lahir *</Label>
+                          <Label htmlFor="birthDate" className="text-sm">
+                            Tanggal Lahir *
+                          </Label>
                           <Input
                             id="birthDate"
                             type="date"
                             value={formData.birthDate}
-                            onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("birthDate", e.target.value)
+                            }
                             required
                             className="text-sm"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label htmlFor="gender" className="text-sm">Jenis Kelamin *</Label>
-                          <select 
+                          <Label htmlFor="gender" className="text-sm">
+                            Jenis Kelamin *
+                          </Label>
+                          <select
                             id="gender"
-                            value={formData.gender} 
-                            onChange={(e) => handleInputChange('gender', e.target.value)}
+                            value={formData.gender}
+                            onChange={(e) =>
+                              handleInputChange("gender", e.target.value)
+                            }
                             required
                             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                           >
@@ -634,26 +790,34 @@ export default function UserPage() {
                           </select>
                         </div>
                       </div>
-                      
+
                       <div>
-                        <Label htmlFor="address" className="text-sm">Alamat Lengkap *</Label>
+                        <Label htmlFor="address" className="text-sm">
+                          Alamat Lengkap *
+                        </Label>
                         <Textarea
                           id="address"
                           value={formData.address}
-                          onChange={(e) => handleInputChange('address', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("address", e.target.value)
+                          }
                           required
                           rows={3}
                           className="text-sm"
                         />
                       </div>
-                      
+
                       <div>
-                        <Label htmlFor="phoneNumber" className="text-sm">Nomor Telepon *</Label>
+                        <Label htmlFor="phoneNumber" className="text-sm">
+                          Nomor Telepon *
+                        </Label>
                         <Input
                           id="phoneNumber"
                           type="tel"
                           value={formData.phoneNumber}
-                          onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("phoneNumber", e.target.value)
+                          }
                           placeholder="Contoh: 081234567890"
                           required
                           className="text-sm"
@@ -663,46 +827,61 @@ export default function UserPage() {
 
                     {/* Data Orang Tua */}
                     <div className="space-y-3 sm:space-y-4">
-                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">Data Orang Tua</h3>
-                      
+                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">
+                        Data Orang Tua
+                      </h3>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                          <Label htmlFor="parentName" className="text-sm">Nama Orang Tua *</Label>
+                          <Label htmlFor="parentName" className="text-sm">
+                            Nama Orang Tua *
+                          </Label>
                           <Input
                             id="parentName"
                             value={formData.parentName}
-                            onChange={(e) => handleInputChange('parentName', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("parentName", e.target.value)
+                            }
                             required
                             className="text-sm"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label htmlFor="parentPhone" className="text-sm">Nomor Telepon Orang Tua *</Label>
+                          <Label htmlFor="parentPhone" className="text-sm">
+                            Nomor Telepon Orang Tua *
+                          </Label>
                           <Input
                             id="parentPhone"
                             type="tel"
                             value={formData.parentPhone}
-                            onChange={(e) => handleInputChange('parentPhone', e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange("parentPhone", e.target.value)
+                            }
                             placeholder="Contoh: 081234567890"
                             required
                             className="text-sm"
                           />
                         </div>
                       </div>
-                      
                     </div>
 
                     {/* Motivasi */}
                     <div className="space-y-3 sm:space-y-4">
-                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">Motivasi</h3>
-                      
+                      <h3 className="text-base sm:text-lg font-semibold border-b pb-2">
+                        Motivasi
+                      </h3>
+
                       <div>
-                        <Label htmlFor="motivation" className="text-sm">Motivasi Masuk Pesantren *</Label>
+                        <Label htmlFor="motivation" className="text-sm">
+                          Motivasi Masuk Pesantren *
+                        </Label>
                         <Textarea
                           id="motivation"
                           value={formData.motivation}
-                          onChange={(e) => handleInputChange('motivation', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("motivation", e.target.value)
+                          }
                           required
                           rows={4}
                           placeholder="Jelaskan motivasi Anda untuk masuk pesantren..."
@@ -712,7 +891,7 @@ export default function UserPage() {
                     </div>
 
                     <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-4 border-t">
-                      <Button 
+                      <Button
                         type="button"
                         variant="outline"
                         onClick={() => {
@@ -723,8 +902,8 @@ export default function UserPage() {
                       >
                         Batal
                       </Button>
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         disabled={formLoading}
                         className="text-sm sm:text-base"
                       >
@@ -734,7 +913,7 @@ export default function UserPage() {
                             Mengirim...
                           </>
                         ) : (
-                          'Kirim Pendaftaran'
+                          "Kirim Pendaftaran"
                         )}
                       </Button>
                     </div>
@@ -747,4 +926,4 @@ export default function UserPage() {
       </div>
     </div>
   );
-} 
+}

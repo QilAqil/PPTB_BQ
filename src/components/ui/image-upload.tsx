@@ -1,40 +1,50 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { UploadDropzone } from '@/utils/uploadthing'
-import { Button } from './button'
-import { X } from 'lucide-react'
-import Image from 'next/image'
+import { useState } from "react";
+import { UploadDropzone } from "@/utils/uploadthing";
+import { Button } from "./button";
+import { X } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploadProps {
-  value?: string
-  onChange: (url: string) => void
-  endpoint: 'newsImageUploader' | 'galleryImageUploader'
-  className?: string
+  value?: string;
+  onChange: (url: string) => void;
+  endpoint:
+    | "newsImageUploader"
+    | "galleryImageUploader"
+    | "registrationPhotoUploader"
+    | "registrationFamilyCardUploader"
+    | "registrationBirthCertificateUploader";
+  className?: string;
 }
 
-export function ImageUpload({ value, onChange, endpoint, className }: ImageUploadProps) {
-  const [isUploading, setIsUploading] = useState(false)
+export function ImageUpload({
+  value,
+  onChange,
+  endpoint,
+  className,
+}: ImageUploadProps) {
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleUploadComplete = (res: { ufsUrl: string }[]) => {
     if (res && res.length > 0) {
-      onChange(res[0].ufsUrl)
+      onChange(res[0].ufsUrl);
     }
-    setIsUploading(false)
-  }
+    setIsUploading(false);
+  };
 
   const handleUploadError = (error: Error) => {
-    console.error('Upload error:', error)
-    setIsUploading(false)
-  }
+    console.error("Upload error:", error);
+    setIsUploading(false);
+  };
 
   const handleUploadBegin = () => {
-    setIsUploading(true)
-  }
+    setIsUploading(true);
+  };
 
   const removeImage = () => {
-    onChange('')
-  }
+    onChange("");
+  };
 
   return (
     <div className={`space-y-4 ${className}`}>
@@ -65,7 +75,7 @@ export function ImageUpload({ value, onChange, endpoint, className }: ImageUploa
             onClientUploadComplete={handleUploadComplete}
             onUploadError={handleUploadError}
             onUploadBegin={handleUploadBegin}
-            config={{ 
+            config={{
               mode: "auto",
               appendOnPaste: true,
             }}
@@ -80,5 +90,5 @@ export function ImageUpload({ value, onChange, endpoint, className }: ImageUploa
         </div>
       )}
     </div>
-  )
-} 
+  );
+}

@@ -70,6 +70,8 @@ export async function POST(request: NextRequest) {
       parentName,
       parentPhone,
       motivation,
+      familyCardPhotoUrl,
+      birthCertificatePhotoUrl,
     } = body;
 
     // Validate required fields
@@ -83,10 +85,12 @@ export async function POST(request: NextRequest) {
       !phoneNumber ||
       !parentName ||
       !parentPhone ||
-      !motivation
+      !motivation ||
+      !familyCardPhotoUrl ||
+      !birthCertificatePhotoUrl
     ) {
       return NextResponse.json(
-        { error: "All required fields are required" },
+        { error: "Semua field wajib harus diisi termasuk foto KK dan Akta" },
         { status: 400 }
       );
     }
@@ -115,6 +119,8 @@ export async function POST(request: NextRequest) {
         parentName,
         parentPhone,
         motivation,
+        familyCardPhotoUrl,
+        birthCertificatePhotoUrl,
         status: "PENDING",
       },
     });

@@ -12,7 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { 
+import Image from "next/image";
+import {
   CheckCircle,
   XCircle,
   Search,
@@ -39,6 +40,8 @@ interface Registration {
   parentName: string;
   parentPhone: string;
   motivation: string;
+  familyCardPhotoUrl: string;
+  birthCertificatePhotoUrl: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
   notes: string | null;
   processedBy: string | null;
@@ -74,11 +77,11 @@ export function RegistrationManagement() {
       setLoading(true);
       setError(null);
       const response = await fetch("/api/registration");
-      
+
       if (!response.ok) {
         throw new Error("Gagal mengambil data pendaftaran");
       }
-      
+
       const result = await response.json();
       const data = result.data || result;
       setRegistrations(Array.isArray(data) ? data : []);
@@ -198,8 +201,8 @@ export function RegistrationManagement() {
   const filteredRegistrations = registrations.filter((registration) => {
     const matchesSearch =
       registration.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         registration.nik.includes(searchTerm) ||
-                         registration.parentName.toLowerCase().includes(searchTerm.toLowerCase());
+      registration.nik.includes(searchTerm) ||
+      registration.parentName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "ALL" || registration.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -287,7 +290,7 @@ export function RegistrationManagement() {
 
       {/* Search and Filter */}
       <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
@@ -297,9 +300,9 @@ export function RegistrationManagement() {
               className="pl-10"
             />
           </div>
-          <Button 
-            onClick={fetchRegistrations} 
-            variant="outline" 
+          <Button
+            onClick={fetchRegistrations}
+            variant="outline"
             size="sm"
             disabled={loading}
           >
@@ -348,8 +351,8 @@ export function RegistrationManagement() {
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Memuat data pendaftaran...</p>
-                  </div>
-                </div>
+            </div>
+          </div>
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">{error}</p>
@@ -365,12 +368,12 @@ export function RegistrationManagement() {
                 : "Belum ada pendaftaran yang terdaftar"}
             </p>
             {(searchTerm || statusFilter !== "ALL") && (
-              <Button 
+              <Button
                 onClick={() => {
                   setSearchTerm("");
                   setStatusFilter("ALL");
-                }} 
-                variant="outline" 
+                }}
+                variant="outline"
                 className="mt-4"
               >
                 Reset Filter
@@ -394,6 +397,41 @@ export function RegistrationManagement() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                      {(registration.familyCardPhotoUrl ||
+                        registration.birthCertificatePhotoUrl) && (
+                        <div className="md:col-span-2">
+                          <div className="flex gap-4 items-start">
+                            {registration.familyCardPhotoUrl && (
+                              <div>
+                                <Image
+                                  src={registration.familyCardPhotoUrl}
+                                  alt="Foto Kartu Keluarga"
+                                  width={160}
+                                  height={120}
+                                  className="h-24 w-32 object-cover rounded border"
+                                />
+                                <div className="text-xs text-gray-600 mt-1">
+                                  Kartu Keluarga
+                                </div>
+                              </div>
+                            )}
+                            {registration.birthCertificatePhotoUrl && (
+                              <div>
+                                <Image
+                                  src={registration.birthCertificatePhotoUrl}
+                                  alt="Foto Akta Kelahiran"
+                                  width={160}
+                                  height={120}
+                                  className="h-24 w-32 object-cover rounded border"
+                                />
+                                <div className="text-xs text-gray-600 mt-1">
+                                  Akta Kelahiran
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-gray-400" />
@@ -448,11 +486,11 @@ export function RegistrationManagement() {
                           Status:
                         </span> */}
                         <div className="mt-1">
-                  {/* {getStatusBadge(registration.status)} */}
-                </div>
-                 </div>
-              </div>
-              
+                          {/* {getStatusBadge(registration.status)} */}
+                        </div>
+                      </div>
+                    </div>
+
                     {registration.notes && (
                       <div className="mt-3 p-3 bg-blue-50 rounded-lg">
                         <div className="flex items-center gap-2 mb-2">
@@ -509,28 +547,28 @@ export function RegistrationManagement() {
                               handleStatusChange(registration.id, "APPROVED")
                             }
                             className="text-green-600 border-green-600 hover:bg-green-50"
-                      >
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Terima
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Terima
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() =>
                               handleStatusChange(registration.id, "REJECTED")
                             }
-                        className="text-red-600 border-red-600 hover:bg-red-50"
-                      >
-                        <XCircle className="h-4 w-4 mr-2" />
-                        Tolak
-                      </Button>
+                            className="text-red-600 border-red-600 hover:bg-red-50"
+                          >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Tolak
+                          </Button>
                         </>
                       )}
                     </div>
                   </div>
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              </CardContent>
+            </Card>
           ))
         )}
       </div>
@@ -785,4 +823,4 @@ export function RegistrationManagement() {
       </Dialog>
     </div>
   );
-} 
+}
