@@ -30,7 +30,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Search } from "lucide-react";
 import { ImageUpload } from "@/components/ui/image-upload";
-import Image from "next/image";
+// import Image from "next/image";
 
 interface UserProfile {
   id: string;
@@ -646,7 +646,8 @@ export default function UserPage() {
                             parentName: "",
                             parentPhone: "",
                             motivation: "",
-                            photoUrl: "",
+                            familyCardPhotoUrl: "",
+                            birthCertificatePhotoUrl: "",
                           });
                         }}
                         className="flex-1 text-sm sm:text-base"
